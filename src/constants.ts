@@ -25,3 +25,14 @@ export const PENTOMINO_DIMENSIONS: PentominoDimensions = {
   4: "grid-cols-4",
   5: "grid-cols-5",
 };
+
+export const EMPTY_GRID = [
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+];
