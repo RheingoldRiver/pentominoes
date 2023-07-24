@@ -1,15 +1,16 @@
 import "./App.css";
 import AppStateProvider from "./AppStateProvider/AppStateProvider";
-import { Pentomino } from "./components/Pentomino/Pentomino";
+import { Board } from "./components/Board/Board";
+import { Header } from "./components/Header/Header";
+import GameStateProvider from "./GameStateProvider/GameStateProvider";
 
 function App() {
   return (
     <AppStateProvider>
-      <Pentomino letter="P"></Pentomino>
-      <br />
-      <Pentomino letter="I"></Pentomino>
-      <br />
-      <Pentomino letter="F"></Pentomino>
+      <GameStateProvider>
+        <Header></Header>
+        <Board></Board>
+      </GameStateProvider>
     </AppStateProvider>
   );
 }
