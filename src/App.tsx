@@ -1,18 +1,16 @@
-import { useState } from "react";
 import "./App.css";
+import AppStateProvider from "./AppStateProvider/AppStateProvider";
 import { Pentomino } from "./components/Pentomino/Pentomino";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
+    <AppStateProvider>
       <Pentomino letter="P"></Pentomino>
       <br />
       <Pentomino letter="I"></Pentomino>
       <br />
       <Pentomino letter="F"></Pentomino>
-    </>
+    </AppStateProvider>
   );
 }
 
