@@ -1,9 +1,20 @@
-import { Coordinates } from "./constants";
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
+interface Orientations {
+  [key: number]: Shape[];
+}
+
+interface Shape {
+  center: Coordinates;
+  shape: number[][];
+}
 
 export interface Pentomino {
   name: string;
-  center: Coordinates;
-  shape: number[][];
+  orientations: Orientations;
 }
 
 interface Pentominoes {
@@ -11,43 +22,225 @@ interface Pentominoes {
 }
 
 export const PENTOMINOES: Pentominoes = {
-  "": {
+  None: {
     name: "",
-    center: {
-      x: 0,
-      y: 0,
+    orientations: {
+      0: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
+      1: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
     },
-    shape: [[0]],
+  },
+  Terrain: {
+    name: "terrain",
+    orientations: {
+      0: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
+      1: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
+    },
   },
   F: {
     name: "F",
-    center: {
-      x: 1,
-      y: 1,
+    orientations: {
+      0: [
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 1],
+            [1, 1, 0],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 0, 1],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [0, 1, 1],
+            [1, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [1, 0, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+      ],
+      1: [
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 0],
+            [0, 1, 1],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [1, 0, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [1, 1, 0],
+            [0, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 0, 1],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+      ],
     },
-    shape: [
-      [0, 1, 1],
-      [1, 1, 0],
-      [0, 1, 0],
-    ],
   },
   I: {
     name: "I",
-    center: {
-      x: 2,
-      y: 0,
+    orientations: {
+      0: [
+        {
+          center: {
+            x: 2,
+            y: 0,
+          },
+          shape: [[1], [1], [1], [1], [1]],
+        },
+        { center: { x: 0, y: 2 }, shape: [[1, 1, 1, 1, 1]] },
+        {
+          center: {
+            x: 2,
+            y: 0,
+          },
+          shape: [[1], [1], [1], [1], [1]],
+        },
+        { center: { x: 0, y: 2 }, shape: [[1, 1, 1, 1, 1]] },
+      ],
+      1: [
+        {
+          center: {
+            x: 2,
+            y: 0,
+          },
+          shape: [[1], [1], [1], [1], [1]],
+        },
+        { center: { x: 0, y: 2 }, shape: [[1, 1, 1, 1, 1]] },
+        {
+          center: {
+            x: 2,
+            y: 0,
+          },
+          shape: [[1], [1], [1], [1], [1]],
+        },
+        { center: { x: 0, y: 2 }, shape: [[1, 1, 1, 1, 1]] },
+      ],
     },
-    shape: [[1], [1], [1], [1], [1]],
   },
   P: {
     name: "P",
-    center: {
-      x: 1,
-      y: 1,
+    orientations: {
+      0: [
+        {
+          center: {
+            x: 1,
+            y: 1,
+          },
+          shape: [
+            [1, 1, 0],
+            [1, 1, 1],
+          ],
+        },
+        {
+          center: {
+            x: 0,
+            y: 1,
+          },
+          shape: [
+            [1, 1],
+            [1, 1],
+            [1, 0],
+          ],
+        },
+        {
+          center: {
+            x: 1,
+            y: 1,
+          },
+          shape: [
+            [1, 1, 1],
+            [0, 1, 1],
+          ],
+        },
+        {
+          center: {
+            x: 0,
+            y: 1,
+          },
+          shape: [
+            [0, 1],
+            [1, 1],
+            [1, 1],
+          ],
+        },
+      ],
+      1: [
+        {
+          center: {
+            x: 1,
+            y: 1,
+          },
+          shape: [
+            [1, 1, 1],
+            [1, 1, 0],
+          ],
+        },
+        {
+          center: {
+            x: 0,
+            y: 1,
+          },
+          shape: [
+            [1, 1],
+            [1, 1],
+            [0, 1],
+          ],
+        },
+        {
+          center: {
+            x: 1,
+            y: 1,
+          },
+          shape: [
+            [0, 1, 1],
+            [1, 1, 1],
+          ],
+        },
+        {
+          center: {
+            x: 0,
+            y: 1,
+          },
+          shape: [
+            [1, 0],
+            [1, 1],
+            [1, 1],
+          ],
+        },
+      ],
     },
-    shape: [
-      [1, 1, 0],
-      [1, 1, 1],
-    ],
   },
 };

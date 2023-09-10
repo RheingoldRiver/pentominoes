@@ -1,11 +1,6 @@
 import { range } from "lodash";
 import { Pentomino, PENTOMINOES } from "./pentominoes";
 
-export interface Coordinates {
-  x: number;
-  y: number;
-}
-
 interface PentominoSizes {
   [key: number]: string;
 }
@@ -62,3 +57,16 @@ export interface PaintedCell {
   borderBot: boolean;
   borderRight: boolean;
 }
+
+export const EMPTY_PAINTED_GRID: PaintedCell[][] = range(8).map(() =>
+  range(8).map(() => {
+    return {
+      pentomino: PENTOMINOES.None,
+      conflict: false,
+      borderTop: false,
+      borderLeft: false,
+      borderBot: false,
+      borderRight: false,
+    };
+  })
+);

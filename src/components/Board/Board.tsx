@@ -20,22 +20,47 @@ export const Board = () => {
       };
     })
   );
-  // Check the grid to see if anything overlaps here
+  // Update the painted grid
   grid.map((r, x) =>
     r.map((p, y) => {
       if (p.pentomino === PENTOMINOES.None) return;
-      p.pentomino.shape.map((pr, px) =>
+      const orientation = p.pentomino.orientations[p.reflection][p.rotation];
+      orientation.shape.map((pr, px) =>
         pr.map((val, py) => {
-          if (val === 0) return; // the pentomino isn't here
-          const cellToPaint = paintedGrid[x + px - p.pentomino.center.x][y + py - p.pentomino.center.y];
+          if (val === 0) return; // the pentomino isn't taking up this square of its grid, return
+          const newX = x + px - orientation.center.x;
+          const newY = y + py - orientation.center.y;
+
+          // error check
+          if (newX < 0 || newX > grid.length - 1) {
+            const correctedX = newX < 0 ? 0 : grid.length - 1;
+            if (newY < 0) {
+              paintedGrid[correctedX][0].conflict = true;
+            } else if (newY > grid.length - 1) {
+              paintedGrid[correctedX][grid.length - 1].conflict = true;
+            } else {
+              paintedGrid[correctedX][newY].conflict = true;
+            }
+            return;
+          }
+          if (newY < 0) {
+            paintedGrid[newX][0].conflict = true;
+            return;
+          }
+          if (newY > grid.length - 1) {
+            paintedGrid[newX][grid.length - 1].conflict = true;
+            return;
+          }
+          // ok should be a valid placement now
+          const cellToPaint = paintedGrid[newX][newY];
           if (cellToPaint.pentomino !== PENTOMINOES.None) {
             cellToPaint.conflict = true;
           }
           cellToPaint.pentomino = p.pentomino;
-          if (px === 0 || p.pentomino.shape[px - 1][py] === 0) cellToPaint.borderTop = true;
-          if (py === 0 || p.pentomino.shape[px][py - 1] === 0) cellToPaint.borderLeft = true;
-          if (px === p.pentomino.shape.length - 1 || p.pentomino.shape[px + 1][py] === 0) cellToPaint.borderBot = true;
-          if (py === p.pentomino.shape[0].length - 1 || p.pentomino.shape[px][py + 1] === 0)
+          if (px === 0 || orientation.shape[px - 1][py] === 0) cellToPaint.borderTop = true;
+          if (py === 0 || orientation.shape[px][py - 1] === 0) cellToPaint.borderLeft = true;
+          if (px === orientation.shape.length - 1 || orientation.shape[px + 1][py] === 0) cellToPaint.borderBot = true;
+          if (py === orientation.shape[0].length - 1 || orientation.shape[px][py + 1] === 0)
             cellToPaint.borderRight = true;
         })
       );
