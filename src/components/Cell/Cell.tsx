@@ -9,7 +9,7 @@ export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: 
   const { pentominoSize } = useContext(AppStateContext);
   const { drawPentomino, setCurrentGridCoords } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino !== PENTOMINOES.None;
-  function borderStyle(b) {
+  function borderStyle(b: boolean) {
     if (b === true) return "2px solid red";
     if (hasPentomino) return "";
     return "1px solid white";
@@ -19,7 +19,7 @@ export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: 
       className={clsx(
         "cursor-pointer",
         PENTOMINO_SIZES[pentominoSize],
-        cell.conflict ? "bg-red-700" : hasPentomino ? "bg-violet-800" : "bg-gray-200"
+        cell.conflict === true ? "bg-red-700" : hasPentomino === true ? "bg-violet-800" : "bg-gray-200"
       )}
       style={{
         borderTop: borderStyle(cell.borderTop),
@@ -28,7 +28,7 @@ export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: 
         borderRight: borderStyle(cell.borderRight),
       }}
       onClick={() => {
-        setCurrentGridCoords(x, y); // I think I don't need this
+        setCurrentGridCoords({ x: x, y: y }); // I think I don't need this
         drawPentomino(x, y);
       }}
     ></div>
