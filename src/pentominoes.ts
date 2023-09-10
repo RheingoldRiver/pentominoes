@@ -1,9 +1,6 @@
-interface Coordinates {
-  x: number;
-  y: number;
-}
+import { Coordinates } from "./constants";
 
-interface Pentomino {
+export interface Pentomino {
   name: string;
   center: Coordinates;
   shape: number[][];
@@ -14,6 +11,14 @@ interface Pentominoes {
 }
 
 export const PENTOMINOES: Pentominoes = {
+  "": {
+    name: "",
+    center: {
+      x: 0,
+      y: 0,
+    },
+    shape: [[0]],
+  },
   F: {
     name: "F",
     center: {

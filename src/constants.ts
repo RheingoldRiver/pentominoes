@@ -1,3 +1,11 @@
+import { range } from "lodash";
+import { Pentomino, PENTOMINOES } from "./pentominoes";
+
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
 interface PentominoSizes {
   [key: number]: string;
 }
@@ -26,13 +34,31 @@ export const PENTOMINO_DIMENSIONS: PentominoDimensions = {
   5: "grid-cols-5",
 };
 
-export const EMPTY_GRID = [
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-  [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-];
+export interface PlacedPentomino {
+  pentomino: Pentomino;
+  rotation: number;
+  reflection: number;
+  x: number;
+  y: number;
+}
+
+export const EMPTY_GRID: PlacedPentomino[][] = range(0, 8).map((x) =>
+  range(0, 8).map((y) => {
+    return {
+      pentomino: PENTOMINOES.None,
+      rotation: 0,
+      reflection: 0,
+      x: x,
+      y: y,
+    };
+  })
+);
+
+export interface PaintedCell {
+  pentomino: Pentomino;
+  conflict: boolean;
+  borderTop: boolean;
+  borderLeft: boolean;
+  borderBot: boolean;
+  borderRight: boolean;
+}
