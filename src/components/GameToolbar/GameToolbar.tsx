@@ -32,6 +32,9 @@ const GameToolbar = () => {
       <Toolbar.Button
         className={styles.button}
         onClick={() => {
+          if (currentRotation % 2 === 1) {
+            setCurrentRotation((currentRotation + 2) % 4);
+          }
           setCurrentReflection((currentReflection + 1) % 2);
         }}
         aria-label="Reflect X"
@@ -41,8 +44,10 @@ const GameToolbar = () => {
       <Toolbar.Button
         className={styles.button}
         onClick={() => {
+          if (currentRotation % 2 === 0) {
+            setCurrentRotation((currentRotation + 2) % 4);
+          }
           setCurrentReflection((currentReflection + 1) % 2);
-          setCurrentRotation((currentRotation + 2) % 4);
         }}
         aria-label="Reflect Y"
       >

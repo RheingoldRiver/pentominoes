@@ -1,6 +1,6 @@
 import { range } from "lodash";
 import { useContext } from "react";
-import { PaintedCell } from "../../constants";
+import { defaultPlacedPentomino, PaintedCell } from "../../constants";
 import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { Cell } from "../Cell/Cell";
@@ -8,10 +8,10 @@ import { Grid } from "../Grid/Grid";
 
 export const Board = () => {
   const { grid } = useContext(GameStateContext);
-  const paintedGrid: PaintedCell[][] = range(8).map(() =>
-    range(8).map(() => {
+  const paintedGrid: PaintedCell[][] = range(8).map((x) =>
+    range(8).map((y) => {
       return {
-        pentomino: PENTOMINOES.None,
+        pentomino: defaultPlacedPentomino(x, y),
         conflict: false,
         borderTop: false,
         borderLeft: false,
@@ -53,10 +53,10 @@ export const Board = () => {
           }
           // ok should be a valid placement now
           const cellToPaint = paintedGrid[newX][newY];
-          if (cellToPaint.pentomino !== PENTOMINOES.None) {
+          if (cellToPaint.pentomino.pentomino !== PENTOMINOES.None) {
             cellToPaint.conflict = true;
           }
-          cellToPaint.pentomino = p.pentomino;
+          cellToPaint.pentomino = p;
           if (px === 0 || orientation.shape[px - 1][py] === 0) cellToPaint.borderTop = true;
           if (py === 0 || orientation.shape[px][py - 1] === 0) cellToPaint.borderLeft = true;
           if (px === orientation.shape.length - 1 || orientation.shape[px + 1][py] === 0) cellToPaint.borderBot = true;
