@@ -32,8 +32,8 @@ export const PENTOMINOES: Pentominoes = {
   Terrain: {
     name: "terrain",
     orientations: {
-      0: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
-      1: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
+      0: [{ center: { x: 0, y: 0 }, shape: [[1]] }],
+      1: [{ center: { x: 0, y: 0 }, shape: [[1]] }],
     },
   },
   F: {
@@ -166,7 +166,7 @@ export const PENTOMINOES: Pentominoes = {
         },
         {
           center: {
-            x: 0,
+            x: 1,
             y: 1,
           },
           shape: [
@@ -187,7 +187,7 @@ export const PENTOMINOES: Pentominoes = {
         },
         {
           center: {
-            x: 0,
+            x: 1,
             y: 1,
           },
           shape: [
@@ -210,7 +210,7 @@ export const PENTOMINOES: Pentominoes = {
         },
         {
           center: {
-            x: 0,
+            x: 1,
             y: 1,
           },
           shape: [
@@ -231,13 +231,86 @@ export const PENTOMINOES: Pentominoes = {
         },
         {
           center: {
-            x: 0,
+            x: 1,
             y: 1,
           },
           shape: [
             [1, 0],
             [1, 1],
             [1, 1],
+          ],
+        },
+      ],
+    },
+  },
+  X: {
+    name: "X",
+    orientations: {
+      0: [
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+      ],
+      1: [
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
+          ],
+        },
+        {
+          center: { x: 1, y: 1 },
+          shape: [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0],
           ],
         },
       ],

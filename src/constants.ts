@@ -37,36 +37,27 @@ export interface PlacedPentomino {
   y: number;
 }
 
+export function defaultPlacedPentomino(x: number, y: number) {
+  return {
+    pentomino: PENTOMINOES.None,
+    rotation: 0,
+    reflection: 0,
+    x: x,
+    y: y,
+  };
+}
+
 export const EMPTY_GRID: PlacedPentomino[][] = range(0, 8).map((x) =>
   range(0, 8).map((y) => {
-    return {
-      pentomino: PENTOMINOES.None,
-      rotation: 0,
-      reflection: 0,
-      x: x,
-      y: y,
-    };
+    return defaultPlacedPentomino(x, y);
   })
 );
 
 export interface PaintedCell {
-  pentomino: Pentomino;
+  pentomino: PlacedPentomino;
   conflict: boolean;
   borderTop: boolean;
   borderLeft: boolean;
   borderBot: boolean;
   borderRight: boolean;
 }
-
-export const EMPTY_PAINTED_GRID: PaintedCell[][] = range(8).map(() =>
-  range(8).map(() => {
-    return {
-      pentomino: PENTOMINOES.None,
-      conflict: false,
-      borderTop: false,
-      borderLeft: false,
-      borderBot: false,
-      borderRight: false,
-    };
-  })
-);

@@ -5,7 +5,7 @@ interface AppState {
   setPentominoSize: Dispatch<SetStateAction<number>>;
 }
 
-export const DEFAULT_APP_STATE: AppState = {
+const DEFAULT_APP_STATE: AppState = {
   pentominoSize: 0,
   setPentominoSize: () => {},
 };

@@ -1,7 +1,40 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useState, Dispatch, SetStateAction } from "react";
 import { EMPTY_GRID, PlacedPentomino } from "../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../pentominoes";
-import { DEFAULT_GAME_STATE } from "./gameStateConstants";
+
+interface GameState {
+  grid: PlacedPentomino[][];
+  setGrid: Dispatch<SetStateAction<PlacedPentomino[][]>>;
+  currentPentomino: Pentomino;
+  setCurrentPentomino: Dispatch<SetStateAction<Pentomino>>;
+  toolbarPentomino: Pentomino;
+  setToolbarPentomino: Dispatch<SetStateAction<Pentomino>>;
+  currentGridCoords: Coordinates;
+  setCurrentGridCoords: Dispatch<SetStateAction<Coordinates>>;
+  currentReflection: number;
+  setCurrentReflection: Dispatch<SetStateAction<number>>;
+  currentRotation: number;
+  setCurrentRotation: Dispatch<SetStateAction<number>>;
+  drawPentomino: (newX: number, newY: number) => void;
+  erasePentomino: (givenX: number, givenY: number) => void;
+}
+
+const DEFAULT_GAME_STATE: GameState = {
+  grid: [],
+  setGrid: () => {},
+  currentPentomino: PENTOMINOES.None,
+  setCurrentPentomino: () => {},
+  toolbarPentomino: PENTOMINOES.None,
+  setToolbarPentomino: () => {},
+  currentGridCoords: { x: 0, y: 0 },
+  setCurrentGridCoords: () => {},
+  currentReflection: 0,
+  setCurrentReflection: () => {},
+  currentRotation: 0,
+  setCurrentRotation: () => {},
+  drawPentomino: () => {},
+  erasePentomino: () => {},
+};
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
 export default function GameStateProvider({ children }: { children: ReactNode }) {
@@ -23,6 +56,23 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     };
     setGrid(newGrid);
   }
+  function erasePentomino(givenX: number, givenY: number) {
+    const newGrid = grid.map((row, x) =>
+      row.map((c, y) => {
+        if (x === givenX && y === givenY) {
+          return {
+            pentomino: PENTOMINOES.None,
+            reflection: 0,
+            rotation: 0,
+            x: x,
+            y: y,
+          };
+        }
+        return c;
+      })
+    );
+    setGrid(newGrid);
+  }
 
   return (
     <GameStateContext.Provider
@@ -40,6 +90,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         currentRotation,
         setCurrentRotation,
         drawPentomino,
+        erasePentomino,
       }}
     >
       {children}
