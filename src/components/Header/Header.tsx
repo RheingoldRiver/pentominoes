@@ -11,8 +11,8 @@ export const Header = () => {
     <>
       <div className="flex flex-row pb-6">
         <div className={clsx("flex items-center gap-4 p-2")}>
-          {["Terrain", "F", "I", "P", "X"].map((l) => (
-            <PentominoDisplay pentomino={PENTOMINOES[l]}></PentominoDisplay>
+          {["Terrain", "F", "I", "L", "P", "N", "T", "U", "V", "W", "X", "Y", "Z"].map((l) => (
+            <PentominoDisplay key={l} pentomino={PENTOMINOES[l]}></PentominoDisplay>
           ))}
         </div>
         <div className="ml-20 p-1 border-solid border-black rounded border min-w-[11em] flex justify-center items-center">
