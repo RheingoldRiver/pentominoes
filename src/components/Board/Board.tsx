@@ -20,9 +20,6 @@ export const Board = ({ ...rest }) => {
       };
     })
   );
-  console.log(grid);
-  console.log(paintedGrid);
-  console.log("!!!!!!!!!!!!!!!!!!!!");
   // Update the painted grid
   grid.map((r, x) =>
     r.map((p, y) => {
