@@ -6,6 +6,7 @@ import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 
 export const Header = ({ ...rest }) => {
   const { currentPentomino, currentRotation, currentReflection } = useContext(GameStateContext);
+
   return (
     <div {...rest} className="flex flex-row pb-6">
       <div className={clsx("flex items-center gap-4 p-2")}>
