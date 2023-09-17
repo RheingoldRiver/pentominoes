@@ -7,10 +7,10 @@ const styles = {
   button: clsx("cursor-pointer p-2 rounded", "shadow-sm shadow-zinc-900"),
 };
 
-const GameToolbar = () => {
+const GameToolbar = ({ ...rest }) => {
   const { currentRotation, setCurrentRotation, currentReflection, setCurrentReflection } = useContext(GameStateContext);
   return (
-    <Toolbar.Root className="space-x-3 mb-2 w-full flex justify-start" aria-label="Game controls">
+    <Toolbar.Root {...rest} className="space-x-3 mb-2 w-full flex justify-start" aria-label="Game controls">
       <Toolbar.Button
         className={styles.button}
         onClick={() => {

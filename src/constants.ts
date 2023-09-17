@@ -9,12 +9,11 @@ export const PENTOMINO_SIZES: PentominoSizes = {
   4: "w-4 h-4",
   5: "w-5 h-5",
   6: "w-6 h-6",
-  7: "w-7 h-7",
   8: "w-8 h-8",
-  9: "w-9 h-9",
-  11: "w-11 h-11",
-  12: "w-12 h-12",
   10: "w-10 h-10",
+  12: "w-12 h-12",
+  14: "w-14 h-14",
+  16: "w-16 h-16",
 };
 
 interface PentominoDimensions {
@@ -37,7 +36,7 @@ export interface PlacedPentomino {
   y: number;
 }
 
-export function defaultPlacedPentomino(x: number, y: number) {
+export function EMPTY_PENTOMINO(x: number, y: number) {
   return {
     pentomino: PENTOMINOES.None,
     rotation: 0,
@@ -49,7 +48,7 @@ export function defaultPlacedPentomino(x: number, y: number) {
 
 export const EMPTY_GRID: PlacedPentomino[][] = range(0, 8).map((x) =>
   range(0, 8).map((y) => {
-    return defaultPlacedPentomino(x, y);
+    return EMPTY_PENTOMINO(x, y);
   })
 );
 
