@@ -1,15 +1,14 @@
-import "./App.css";
-import AppStateProvider from "./AppStateProvider/AppStateProvider";
 import { Game } from "./components/Game/Game";
-import GameStateProvider from "./GameStateProvider/GameStateProvider";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <AppStateProvider>
-      <GameStateProvider>
-        <Game></Game>
-      </GameStateProvider>
-    </AppStateProvider>
+    <HashRouter>
+      <Routes>
+        <Route index element={<Game />} />
+        <Route path=":config" element={<Game />} />
+      </Routes>
+    </HashRouter>
   );
 }
 

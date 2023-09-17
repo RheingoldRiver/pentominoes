@@ -128,14 +128,14 @@ const pentominoPrimitives: PentominoPrimitive[] = [
 
 export const PENTOMINOES: Pentominoes = {
   None: {
-    name: "",
+    name: "None",
     orientations: {
       0: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
       1: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
     },
   },
   Terrain: {
-    name: "terrain",
+    name: "Terrain",
     orientations: {
       0: [{ center: { x: 0, y: 0 }, shape: [[1]] }],
       1: [{ center: { x: 0, y: 0 }, shape: [[1]] }],

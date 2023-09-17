@@ -1,6 +1,5 @@
 import { range } from "lodash";
 import { useContext } from "react";
-import { AppStateContext } from "../../AppStateProvider/AppStateProvider";
 import { EMPTY_PENTOMINO, PaintedCell } from "../../constants";
 import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
@@ -8,8 +7,7 @@ import { Cell } from "../Cell/Cell";
 import { Grid } from "../Grid/Grid";
 
 export const Board = ({ ...rest }) => {
-  const { grid } = useContext(GameStateContext);
-  const { gridWidth, gridHeight } = useContext(AppStateContext);
+  const { grid, gridWidth, gridHeight } = useContext(GameStateContext);
   const paintedGrid: PaintedCell[][] = range(gridHeight).map((x) =>
     range(gridWidth).map((y) => {
       return {

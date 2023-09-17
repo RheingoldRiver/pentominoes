@@ -46,7 +46,7 @@ export function EMPTY_PENTOMINO(x: number, y: number) {
   };
 }
 
-export const EMPTY_GRID: PlacedPentomino[][] = range(0, 8).map((x) =>
+export const DEFAULT_EMPTY_GRID: PlacedPentomino[][] = range(0, 8).map((x) =>
   range(0, 8).map((y) => {
     return EMPTY_PENTOMINO(x, y);
   })
