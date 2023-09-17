@@ -1,17 +1,19 @@
 import { range } from "lodash";
 import { useContext } from "react";
-import { defaultPlacedPentomino, PaintedCell } from "../../constants";
+import { AppStateContext } from "../../AppStateProvider/AppStateProvider";
+import { EMPTY_PENTOMINO, PaintedCell } from "../../constants";
 import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { Cell } from "../Cell/Cell";
 import { Grid } from "../Grid/Grid";
 
-export const Board = () => {
+export const Board = ({ ...rest }) => {
   const { grid } = useContext(GameStateContext);
-  const paintedGrid: PaintedCell[][] = range(8).map((x) =>
-    range(8).map((y) => {
+  const { gridWidth, gridHeight } = useContext(AppStateContext);
+  const paintedGrid: PaintedCell[][] = range(gridHeight).map((x) =>
+    range(gridWidth).map((y) => {
       return {
-        pentomino: defaultPlacedPentomino(x, y),
+        pentomino: EMPTY_PENTOMINO(x, y),
         conflict: false,
         borderTop: false,
         borderLeft: false,
@@ -67,7 +69,7 @@ export const Board = () => {
     })
   );
   return (
-    <div>
+    <div {...rest}>
       <Grid>
         {paintedGrid.map((r, x) => r.map((c, y) => <Cell key={`cell-${x}_${y}`} cell={c} x={x} y={y}></Cell>))}
       </Grid>

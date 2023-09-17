@@ -17,12 +17,12 @@ export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: 
   } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
   function borderStyle(b: boolean) {
-    if (b === true) return "2px solid red";
+    if (b === true) return "2px solid #C4B5FD";
     if (hasPentomino) return "";
     return "1px solid white";
   }
   function backgroundColor() {
-    if (cell.conflict === true) return "bg-red-700";
+    if (cell.conflict === true && hasPentomino === true) return "bg-red-700";
     if (cell.pentomino.pentomino === PENTOMINOES.Terrain) return "bg-gray-600";
     if (hasPentomino === true) return "bg-violet-800";
     return "bg-gray-200";
