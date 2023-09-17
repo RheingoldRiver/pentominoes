@@ -8,9 +8,8 @@ import { EMPTY_PENTOMINO } from "../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 
 export const Settings = ({ ...rest }) => {
-  const { pentominoSize, setPentominoSize, gridWidth, setGridWidth, gridHeight, setGridHeight } =
-    useContext(AppStateContext);
-  const { setGrid } = useContext(GameStateContext);
+  const { pentominoSize, setPentominoSize } = useContext(AppStateContext);
+  const { setGrid, gridWidth, setGridWidth, gridHeight, setGridHeight } = useContext(GameStateContext);
   const [curPentominoSize, setCurPentominoSize] = useState(pentominoSize);
   const [curGridWidth, setCurGridWidth] = useState(gridWidth);
   const [curGridHeight, setCurGridHeight] = useState(gridHeight);
