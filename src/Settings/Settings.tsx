@@ -22,8 +22,8 @@ export const Settings = ({ ...rest }) => {
           </button>
         </Dialog.Trigger>
         <Dialog.Portal>
-          <Dialog.Overlay className="bg-gray-900 opacity-50 fixed inset-0" />
-          <Dialog.Content className="bg-gray-200 rounded-lg fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-8">
+          <Dialog.Overlay className="bg-gray-900 opacity-40 fixed inset-0" />
+          <Dialog.Content className="bg-gray-200 rounded-lg fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-8 shadow-md shadow-gray-500">
             <Dialog.Title className="text-center font-bold text-md mb-2">Settings</Dialog.Title>
             <Dialog.Description className="text-xs mb-4">Change view & puzzle settings</Dialog.Description>
             <fieldset className="flex gap-4 items-center mb-4">
