@@ -124,24 +124,17 @@ const pentominoPrimitives: PentominoPrimitive[] = [
       [0, 1, 1],
     ],
   },
+  {
+    name: "None",
+    shape: [[0]],
+  },
+  {
+    name: "Terrain",
+    shape: [[2]],
+  },
 ];
 
-export const PENTOMINOES: Pentominoes = {
-  None: {
-    name: "None",
-    orientations: {
-      0: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
-      1: [{ center: { x: 0, y: 0 }, shape: [[0]] }],
-    },
-  },
-  Terrain: {
-    name: "Terrain",
-    orientations: {
-      0: [{ center: { x: 0, y: 0 }, shape: [[1]] }],
-      1: [{ center: { x: 0, y: 0 }, shape: [[1]] }],
-    },
-  },
-};
+export const PENTOMINOES: Pentominoes = {};
 
 pentominoPrimitives.map((p) => {
   const reflectedShape = reflectX(p.shape);
