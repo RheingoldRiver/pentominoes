@@ -20,6 +20,9 @@ export const Board = ({ ...rest }) => {
       };
     })
   );
+  console.log(grid);
+  console.log(paintedGrid);
+  console.log("!!!!!!!!!!!!!!!!!!!!");
   // Update the painted grid
   grid.map((r, x) =>
     r.map((p, y) => {
@@ -31,13 +34,16 @@ export const Board = ({ ...rest }) => {
           const newX = x + px - orientation.center.x;
           const newY = y + py - orientation.center.y;
 
+          const height = grid.length;
+          const width = grid[0].length;
+
           // error check
-          if (newX < 0 || newX > grid.length - 1) {
-            const correctedX = newX < 0 ? 0 : grid.length - 1;
+          if (newX < 0 || newX > height - 1) {
+            const correctedX = newX < 0 ? 0 : height - 1;
             if (newY < 0) {
               paintedGrid[correctedX][0].conflict = true;
-            } else if (newY > grid.length - 1) {
-              paintedGrid[correctedX][grid.length - 1].conflict = true;
+            } else if (newY > width - 1) {
+              paintedGrid[correctedX][width - 1].conflict = true;
             } else {
               paintedGrid[correctedX][newY].conflict = true;
             }
@@ -47,8 +53,8 @@ export const Board = ({ ...rest }) => {
             paintedGrid[newX][0].conflict = true;
             return;
           }
-          if (newY > grid.length - 1) {
-            paintedGrid[newX][grid.length - 1].conflict = true;
+          if (newY > width - 1) {
+            paintedGrid[newX][width - 1].conflict = true;
             return;
           }
           // ok should be a valid placement now
