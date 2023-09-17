@@ -5,8 +5,8 @@ import { PENTOMINOES } from "./pentominoes";
 
 export type UrlConfig = {
   g: PlacedPentomino[][];
-  x: number;
-  y: number;
+  h: number;
+  w: number;
 };
 
 interface StringifiedPlacedPentomino {
@@ -19,11 +19,11 @@ interface StringifiedPlacedPentomino {
 
 type StringifiedUrlSupportedConfig = {
   g: StringifiedPlacedPentomino[];
-  x: number;
-  y: number;
+  h: number;
+  w: number;
 };
 
-export function serializeUrl({ g: grid, x, y }: UrlConfig): string {
+export function serializeUrl({ g: grid, h, w }: UrlConfig): string {
   const placedPentominoes: StringifiedPlacedPentomino[] = [];
   grid.map((row, x) =>
     row.map((p, y) => {
@@ -37,16 +37,16 @@ export function serializeUrl({ g: grid, x, y }: UrlConfig): string {
         });
     })
   );
-  const s = JSON.stringify({ g: placedPentominoes, x: x, y: y });
+  const s = JSON.stringify({ g: placedPentominoes, h: h, w: w });
   return encodeURIComponent(JSONCrush.crush(s));
 }
 
 export function deserializeUrl(s: string): UrlConfig {
   const j: StringifiedUrlSupportedConfig = JSON.parse(JSONCrush.uncrush(decodeURIComponent(s)));
   const ret = {
-    x: j.x,
-    y: j.y,
-    g: range(0, j.y).map((y) => range(j.x).map((x) => EMPTY_PENTOMINO(x, y))),
+    h: j.h,
+    w: j.w,
+    g: range(j.h).map((x) => range(j.w).map((y) => EMPTY_PENTOMINO(x, y))),
   };
   j.g.map((p) => {
     ret.g[p.x][p.y] = {
@@ -62,6 +62,6 @@ export function deserializeUrl(s: string): UrlConfig {
 
 export const DEFAULT_CONFIG = {
   g: DEFAULT_EMPTY_GRID,
-  x: 8,
-  y: 8,
+  h: 8,
+  w: 8,
 };

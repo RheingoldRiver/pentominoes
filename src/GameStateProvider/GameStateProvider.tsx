@@ -56,10 +56,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const { config } = params;
   const parsedConfig = config ? deserializeUrl(config) : DEFAULT_CONFIG;
 
-  console.log(parsedConfig);
+  // console.log(parsedConfig);
 
-  const [gridWidth, setGridWidth] = useState<number>(parsedConfig.x);
-  const [gridHeight, setGridHeight] = useState<number>(parsedConfig.y);
+  const [gridWidth, setGridWidth] = useState<number>(parsedConfig.w);
+  const [gridHeight, setGridHeight] = useState<number>(parsedConfig.h);
   const [grid, setGrid] = useState<PlacedPentomino[][]>(parsedConfig.g);
   const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [toolbarPentomino, setToolbarPentomino] = useState<Pentomino>(PENTOMINOES.None);
@@ -71,8 +71,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
         g: grid,
-        x: gridWidth,
-        y: gridHeight,
+        w: gridHeight,
+        h: gridWidth,
         ...config,
       };
       navigate("/" + serializeUrl(finalConfig));
@@ -86,8 +86,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   });
 
   useEffect(() => {
-    updateUrl.current({ g: grid });
-  }, [grid]);
+    updateUrl.current({ g: grid, h: gridHeight, w: gridWidth });
+  }, [grid, gridWidth, gridHeight]);
 
   function drawPentomino(newX: number, newY: number) {
     const newGrid = [...grid];
