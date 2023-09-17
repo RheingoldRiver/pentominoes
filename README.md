@@ -1,1 +1,1 @@
-![image](https://github.com/RheingoldRiver/pentominoes/assets/18037011/0e87637f-015e-4c15-ada2-416d7a34b4a9)
+![image](https://github.com/RheingoldRiver/pentominoes/assets/18037011/bea041ae-3c26-4c0a-a06f-1f4aee406bac)
