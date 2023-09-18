@@ -13,7 +13,7 @@ export const Header = ({ ...rest }) => {
           "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 p-2"
         )}
       >
-        {["Terrain", "F", "I", "L", "P", "N", "T", "U", "V", "W", "X", "Y", "Z"].map((l) => (
+        {["R", "F", "I", "L", "P", "N", "T", "U", "V", "W", "X", "Y", "Z"].map((l) => (
           <PentominoDisplay key={l} pentomino={PENTOMINOES[l]}></PentominoDisplay>
         ))}
       </div>

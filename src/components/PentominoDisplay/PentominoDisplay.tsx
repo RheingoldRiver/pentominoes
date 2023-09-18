@@ -17,7 +17,7 @@ export const PentominoDisplay = ({
   const { grid, setCurrentPentomino, setCurrentRotation, setCurrentReflection } = useContext(GameStateContext);
   const p = pentomino.orientations[reflection][rotation];
   function bgColor(cell: number) {
-    if (pentomino === PENTOMINOES.Terrain) return "bg-gray-600";
+    if (pentomino === PENTOMINOES.R) return "bg-gray-600";
     let found = false;
     grid.map((row) =>
       row.map((p) => {

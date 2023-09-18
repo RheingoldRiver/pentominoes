@@ -1,8 +1,8 @@
-import { debounce, DebouncedFunc } from "lodash";
+import { debounce } from "lodash";
 import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
 import { PlacedPentomino } from "../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../pentominoes";
-import { DEFAULT_CONFIG, deserializeUrl, serializeUrl, UrlConfig } from "../urlConfig";
+import { DEFAULT_CONFIG, deserializeUrl, serializeUrl, UrlConfig } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface GameState {
@@ -24,7 +24,6 @@ interface GameState {
   setGridWidth: Dispatch<SetStateAction<number>>;
   gridHeight: number;
   setGridHeight: Dispatch<SetStateAction<number>>;
-  updateUrl: DebouncedFunc<(config: Partial<UrlConfig>) => void>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -46,12 +45,10 @@ const DEFAULT_GAME_STATE: GameState = {
   setGridWidth: () => {},
   gridHeight: 0,
   setGridHeight: () => {},
-  updateUrl: debounce(() => {}),
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
 export default function GameStateProvider({ children }: { children: ReactNode }) {
-  const navigate = useNavigate();
   const params = useParams();
   const { config } = params;
   const parsedConfig = config ? deserializeUrl(config) : DEFAULT_CONFIG;
@@ -64,9 +61,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [toolbarPentomino, setToolbarPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [currentGridCoords, setCurrentGridCoords] = useState<Coordinates>({ x: 0, y: 0 });
-  const [currentReflection, setCurrentReflection] = useState<number>(0); // 0, 1, 2, 3: 0, x, y, both
+  const [currentReflection, setCurrentReflection] = useState<number>(0); // 0, 1
   const [currentRotation, setCurrentRotation] = useState<number>(0); // 0, 1, 2, 3
 
+  const navigate = useNavigate();
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
@@ -80,14 +78,14 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   );
 
   useEffect(() => {
+    updateUrl.current({ g: grid, h: gridHeight, w: gridWidth });
+  }, [grid, gridWidth, gridHeight]);
+
+  useEffect(() => {
     window.addEventListener("hashchange", function () {
       window.location.reload();
     });
   });
-
-  useEffect(() => {
-    updateUrl.current({ g: grid, h: gridHeight, w: gridWidth });
-  }, [grid, gridWidth, gridHeight]);
 
   function drawPentomino(newX: number, newY: number) {
     const newGrid = [...grid];
@@ -139,7 +137,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setGridWidth,
         gridHeight,
         setGridHeight,
-        updateUrl: updateUrl.current,
       }}
     >
       {children}
