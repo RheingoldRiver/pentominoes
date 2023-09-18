@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useContext } from "react";
-import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 

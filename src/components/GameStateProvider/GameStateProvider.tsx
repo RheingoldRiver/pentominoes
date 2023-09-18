@@ -1,7 +1,7 @@
 import { debounce } from "lodash";
 import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
-import { PlacedPentomino } from "../constants";
-import { Coordinates, Pentomino, PENTOMINOES } from "../pentominoes";
+import { PlacedPentomino } from "../../constants";
+import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { DEFAULT_CONFIG, deserializeUrl, serializeUrl, UrlConfig } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
 

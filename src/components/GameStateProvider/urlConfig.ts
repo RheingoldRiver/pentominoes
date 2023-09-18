@@ -1,6 +1,6 @@
 import { range, toInteger, toNumber } from "lodash";
-import { DEFAULT_EMPTY_GRID, EMPTY_PENTOMINO, PlacedPentomino } from "../constants";
-import { PENTOMINOES } from "../pentominoes";
+import { DEFAULT_EMPTY_GRID, EMPTY_PENTOMINO, PlacedPentomino } from "../../constants";
+import { PENTOMINOES } from "../../pentominoes";
 
 export type UrlConfig = {
   g: PlacedPentomino[][];
