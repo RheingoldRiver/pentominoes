@@ -1,4 +1,4 @@
-import { range, toInteger, toNumber } from "lodash";
+import { range, toInteger } from "lodash";
 import { DEFAULT_EMPTY_GRID, EMPTY_PENTOMINO, PlacedPentomino } from "../../constants";
 import { PENTOMINOES } from "../../pentominoes";
 
@@ -11,7 +11,7 @@ export type UrlConfig = {
 interface StringifiedPlacedPentomino {
   p: string;
   r: number; // rotation & reflection
-  c: number; // coordinates
+  c: string; // coordinates
 }
 
 interface StringifiedUrlConfig {
@@ -28,7 +28,7 @@ export function serializeUrl({ g: grid, h, w }: UrlConfig): string {
         placedPentominoes.push({
           p: p.pentomino.name,
           r: p.reflection === 1 ? 4 + p.rotation : p.rotation,
-          c: toNumber(`${x}.${y}`),
+          c: `${x}.${y}`,
         });
     })
   );
@@ -45,33 +45,42 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
   let expectRotation = false; // ['name', 'r', 'c']
   s.split("").map((c) => {
     if (c === "." && curPos === 0) {
+      // console.log(curToken);
       h = toInteger(curToken);
+      // console.log(h);
       curToken = "";
       curPos += 1;
     } else if (expectRotation === true) {
       pentominoes[pentominoes.length - 1].r = toInteger(c);
       expectRotation = false;
-    } else if (c.match("/[\\.0-9]/")) {
+    } else if (c.match(/[\\.0-9]/)) {
       curToken = `${curToken}${c}`;
-    } else if (c.match("/[A-Z]/")) {
+    } else if (c.match(/[A-Z]/)) {
       if (curPos === 1) {
         // finish width
         w = toInteger(curToken);
+        // console.log(w);
         curPos += 1;
       } else {
         // finish last pentomino
-        pentominoes[pentominoes.length - 1].c = toNumber(curToken);
+        pentominoes[pentominoes.length - 1].c = curToken;
       }
       curToken = "";
       // start a new pentomino
       pentominoes.push({
         p: c,
         r: -1,
-        c: -1,
+        c: "",
       });
       expectRotation = true;
     }
   });
+  // resolve the last character
+  if (pentominoes.length > 0) {
+    pentominoes[pentominoes.length - 1].c = curToken;
+  } else {
+    w = toInteger(curToken);
+  }
   return {
     h: h,
     w: w,
@@ -87,7 +96,7 @@ export function deserializeUrl(s: string): UrlConfig {
     g: range(config.h).map((x) => range(config.w).map((y) => EMPTY_PENTOMINO(x, y))),
   };
   config.g.map((p) => {
-    const coords = p.c.toString().split(".");
+    const coords = p.c.split(".");
     const x = toInteger(coords[0]);
     const y = toInteger(coords[1]);
     ret.g[x][y] = {
@@ -106,7 +115,3 @@ export const DEFAULT_CONFIG = {
   h: 8,
   w: 8,
 };
-
-export function sum(a: number, b: number) {
-  return a + b;
-}
