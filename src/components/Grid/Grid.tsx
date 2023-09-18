@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { ReactNode, useContext } from "react";
-import { AppStateContext } from "../../AppStateProvider/AppStateProvider";
+import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import { PENTOMINO_DIMENSIONS } from "../../constants";
-import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 
 export const Grid = ({ children }: { children: ReactNode }) => {
   const { pentominoSize } = useContext(AppStateContext);

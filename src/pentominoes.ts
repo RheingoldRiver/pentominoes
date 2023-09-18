@@ -129,7 +129,7 @@ const pentominoPrimitives: PentominoPrimitive[] = [
     shape: [[0]],
   },
   {
-    name: "Terrain",
+    name: "R", // Terrain
     shape: [[2]],
   },
 ];

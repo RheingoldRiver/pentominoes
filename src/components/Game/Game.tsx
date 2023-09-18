@@ -1,9 +1,9 @@
 import { Board } from "../Board/Board";
 import { Header } from "../Header/Header";
 import GameToolbar from "../GameToolbar/GameToolbar";
-import { Settings } from "../../Settings/Settings";
-import AppStateProvider from "../../AppStateProvider/AppStateProvider";
-import GameStateProvider from "../../GameStateProvider/GameStateProvider";
+import { Settings } from "../Settings/Settings";
+import AppStateProvider from "../AppStateProvider/AppStateProvider";
+import GameStateProvider from "../GameStateProvider/GameStateProvider";
 
 export const Game = () => {
   return (

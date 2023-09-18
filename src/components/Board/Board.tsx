@@ -1,7 +1,7 @@
 import { range } from "lodash";
 import { useContext } from "react";
 import { EMPTY_PENTOMINO, PaintedCell } from "../../constants";
-import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { Cell } from "../Cell/Cell";
 import { Grid } from "../Grid/Grid";

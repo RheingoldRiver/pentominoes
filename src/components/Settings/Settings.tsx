@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { range, toNumber } from "lodash";
 import { useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
-import { EMPTY_PENTOMINO } from "../constants";
+import { EMPTY_PENTOMINO } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 
 export const Settings = ({ ...rest }) => {

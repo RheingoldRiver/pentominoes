@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import * as Toolbar from "@radix-ui/react-toolbar";
-import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import clsx from "clsx";
 
 const styles = {

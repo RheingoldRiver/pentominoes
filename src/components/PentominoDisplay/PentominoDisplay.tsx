@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { PENTOMINO_DIMENSIONS, PENTOMINO_SIZES } from "../../constants";
 import { Pentomino, PENTOMINOES } from "../../pentominoes";
 import { useContext } from "react";
-import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { DotFilledIcon } from "@radix-ui/react-icons";
 
 export const PentominoDisplay = ({
@@ -17,7 +17,7 @@ export const PentominoDisplay = ({
   const { grid, setCurrentPentomino, setCurrentRotation, setCurrentReflection } = useContext(GameStateContext);
   const p = pentomino.orientations[reflection][rotation];
   function bgColor(cell: number) {
-    if (pentomino === PENTOMINOES.Terrain) return "bg-gray-600";
+    if (pentomino === PENTOMINOES.R) return "bg-gray-600";
     let found = false;
     grid.map((row) =>
       row.map((p) => {

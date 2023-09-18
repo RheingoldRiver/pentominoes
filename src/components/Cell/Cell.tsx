@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { useContext } from "react";
-import { AppStateContext } from "../../AppStateProvider/AppStateProvider";
+import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
-import { GameStateContext } from "../../GameStateProvider/GameStateProvider";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 
 export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: number }) => {
@@ -23,7 +23,7 @@ export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: 
   }
   function backgroundColor() {
     if (cell.conflict === true && hasPentomino === true) return "bg-red-700";
-    if (cell.pentomino.pentomino === PENTOMINOES.Terrain) return "bg-gray-600";
+    if (cell.pentomino.pentomino === PENTOMINOES.R) return "bg-gray-600";
     if (hasPentomino === true) return "bg-violet-800";
     return "bg-gray-200";
   }
