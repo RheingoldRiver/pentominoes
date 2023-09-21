@@ -6,7 +6,8 @@ import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 
 export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: number }) => {
-  const { pentominoSize } = useContext(AppStateContext);
+  const { pentominoSize, displayColors } = useContext(AppStateContext);
+  const { pentominoColors } = useContext(GameStateContext);
   const {
     drawPentomino,
     erasePentomino,
@@ -22,19 +23,22 @@ export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: 
     return "1px solid white";
   }
   function backgroundColor() {
-    if (cell.conflict === true && hasPentomino === true) return "bg-red-700";
-    if (cell.pentomino.pentomino === PENTOMINOES.R) return "bg-gray-600";
-    if (hasPentomino === true) return "bg-violet-800";
-    return "bg-gray-200";
+    if (cell.conflict === true && hasPentomino === true) return { class: "bg-red-700", style: "" };
+    if (cell.pentomino.pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };
+    if (hasPentomino === true)
+      return { class: "", style: displayColors[pentominoColors[cell.pentomino.pentomino.name]] };
+    return { class: "bg-gray-200", style: "" };
   }
+  const bg = backgroundColor();
   return (
     <div
-      className={clsx("cursor-pointer", PENTOMINO_SIZES[pentominoSize], backgroundColor())}
+      className={clsx("cursor-pointer", PENTOMINO_SIZES[pentominoSize], bg.class)}
       style={{
         borderTop: borderStyle(cell.borderTop),
         borderLeft: borderStyle(cell.borderLeft),
         borderBottom: borderStyle(cell.borderBot),
         borderRight: borderStyle(cell.borderRight),
+        backgroundColor: bg.style,
       }}
       onClick={() => {
         setCurrentGridCoords({ x: x, y: y }); // I think I don't need this

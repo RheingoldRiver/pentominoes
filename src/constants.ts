@@ -36,7 +36,7 @@ export interface PlacedPentomino {
   y: number;
 }
 
-export function EMPTY_PENTOMINO(x: number, y: number) {
+export function EMPTY_PENTOMINO(x: number, y: number): PlacedPentomino {
   return {
     pentomino: PENTOMINOES.None,
     rotation: 0,
@@ -46,12 +46,6 @@ export function EMPTY_PENTOMINO(x: number, y: number) {
   };
 }
 
-export const DEFAULT_EMPTY_GRID: PlacedPentomino[][] = range(0, 8).map((x) =>
-  range(0, 8).map((y) => {
-    return EMPTY_PENTOMINO(x, y);
-  })
-);
-
 export interface PaintedCell {
   pentomino: PlacedPentomino;
   conflict: boolean;
@@ -60,3 +54,44 @@ export interface PaintedCell {
   borderBot: boolean;
   borderRight: boolean;
 }
+
+export const MAX_NUM_COLORS = 6;
+
+export interface Colors {
+  [key: string]: number;
+}
+
+export const PENTOMINO_NAMES = ["F", "I", "L", "P", "N", "T", "U", "V", "W", "X", "Y", "Z"];
+
+export const DEFAULT_COLORS: Colors = {};
+
+PENTOMINO_NAMES.map((p) => (DEFAULT_COLORS[p] = 0));
+
+export type UrlConfig = {
+  grid: PlacedPentomino[][];
+  colors: Colors;
+};
+
+export function EMPTY_GRID(w: number, h: number): PlacedPentomino[][] {
+  return range(0, h).map((x) =>
+    range(0, w).map((y) => {
+      return EMPTY_PENTOMINO(x, y);
+    })
+  );
+}
+
+export const DEFAULT_CONFIG: UrlConfig = {
+  grid: EMPTY_GRID(8, 8),
+  colors: DEFAULT_COLORS,
+};
+
+export const DEFAULT_DISPLAY_COLORS = ["#4C1D95", "#9D174D", "#1E40AF", "#155E75", "#065F46", "#3F6212"];
+
+export const shuffleArray = <T>(array: T[]): void => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+};

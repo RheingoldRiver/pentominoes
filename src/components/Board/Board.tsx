@@ -7,9 +7,9 @@ import { Cell } from "../Cell/Cell";
 import { Grid } from "../Grid/Grid";
 
 export const Board = ({ ...rest }) => {
-  const { grid, gridWidth, gridHeight } = useContext(GameStateContext);
-  const paintedGrid: PaintedCell[][] = range(gridHeight).map((x) =>
-    range(gridWidth).map((y) => {
+  const { grid } = useContext(GameStateContext);
+  const paintedGrid: PaintedCell[][] = range(grid.length).map((x) =>
+    range(grid[0].length).map((y) => {
       return {
         pentomino: EMPTY_PENTOMINO(x, y),
         conflict: false,
