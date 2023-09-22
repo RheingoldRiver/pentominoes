@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
+import { PENTOMINO_NAMES } from "../../constants";
 
 export const Header = ({ ...rest }) => {
   const { currentPentomino, currentRotation, currentReflection } = useContext(GameStateContext);
@@ -13,7 +14,7 @@ export const Header = ({ ...rest }) => {
           "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 p-2"
         )}
       >
-        {["R", "F", "I", "L", "P", "N", "T", "U", "V", "W", "X", "Y", "Z"].map((l) => (
+        {["R"].concat(PENTOMINO_NAMES).map((l) => (
           <PentominoDisplay key={l} pentomino={PENTOMINOES[l]}></PentominoDisplay>
         ))}
       </div>

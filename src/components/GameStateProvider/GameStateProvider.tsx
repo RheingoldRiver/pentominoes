@@ -1,8 +1,8 @@
 import { debounce } from "lodash";
 import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
-import { PlacedPentomino } from "../../constants";
+import { Colors, DEFAULT_CONFIG, PlacedPentomino, UrlConfig } from "../../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
-import { DEFAULT_CONFIG, deserializeUrl, serializeUrl, UrlConfig } from "./urlConfig";
+import { deserializeUrl, serializeUrl } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface GameState {
@@ -20,10 +20,8 @@ interface GameState {
   setCurrentRotation: Dispatch<SetStateAction<number>>;
   drawPentomino: (newX: number, newY: number) => void;
   erasePentomino: (givenX: number, givenY: number) => void;
-  gridWidth: number;
-  setGridWidth: Dispatch<SetStateAction<number>>;
-  gridHeight: number;
-  setGridHeight: Dispatch<SetStateAction<number>>;
+  pentominoColors: Colors;
+  setPentominoColors: Dispatch<SetStateAction<Colors>>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -41,10 +39,8 @@ const DEFAULT_GAME_STATE: GameState = {
   setCurrentRotation: () => {},
   drawPentomino: () => {},
   erasePentomino: () => {},
-  gridWidth: 0,
-  setGridWidth: () => {},
-  gridHeight: 0,
-  setGridHeight: () => {},
+  pentominoColors: {},
+  setPentominoColors: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -53,11 +49,9 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const { config } = params;
   const parsedConfig = config ? deserializeUrl(config) : DEFAULT_CONFIG;
 
-  // console.log(parsedConfig);
+  const [grid, setGrid] = useState<PlacedPentomino[][]>(parsedConfig.grid);
+  const [pentominoColors, setPentominoColors] = useState<Colors>(parsedConfig.colors);
 
-  const [gridWidth, setGridWidth] = useState<number>(parsedConfig.w);
-  const [gridHeight, setGridHeight] = useState<number>(parsedConfig.h);
-  const [grid, setGrid] = useState<PlacedPentomino[][]>(parsedConfig.g);
   const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [toolbarPentomino, setToolbarPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [currentGridCoords, setCurrentGridCoords] = useState<Coordinates>({ x: 0, y: 0 });
@@ -68,9 +62,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
-        g: grid,
-        w: gridHeight,
-        h: gridWidth,
+        grid: grid,
+        colors: pentominoColors,
         ...config,
       };
       navigate("/" + serializeUrl(finalConfig));
@@ -78,8 +71,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   );
 
   useEffect(() => {
-    updateUrl.current({ g: grid, h: gridHeight, w: gridWidth });
-  }, [grid, gridWidth, gridHeight]);
+    updateUrl.current({ grid: grid, colors: pentominoColors });
+  }, [grid, pentominoColors]);
 
   useEffect(() => {
     window.addEventListener("hashchange", function () {
@@ -133,10 +126,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setCurrentRotation,
         drawPentomino,
         erasePentomino,
-        gridWidth,
-        setGridWidth,
-        gridHeight,
-        setGridHeight,
+        pentominoColors,
+        setPentominoColors,
       }}
     >
       {children}

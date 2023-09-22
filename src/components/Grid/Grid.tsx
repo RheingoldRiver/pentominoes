@@ -6,13 +6,13 @@ import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 
 export const Grid = ({ children }: { children: ReactNode }) => {
   const { pentominoSize } = useContext(AppStateContext);
-  const { gridWidth, gridHeight } = useContext(GameStateContext);
+  const { grid } = useContext(GameStateContext);
   return (
     <div
       className={clsx("grid grid-flow-row w-fit", PENTOMINO_DIMENSIONS[pentominoSize])}
       style={{
-        gridTemplateRows: `repeat(${gridHeight}, minmax(0, 1fr))`,
-        gridTemplateColumns: `repeat(${gridWidth}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
+        gridTemplateColumns: `repeat(${grid[0].length}, minmax(0, 1fr))`,
       }}
     >
       {children}
