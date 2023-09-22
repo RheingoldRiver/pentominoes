@@ -2,7 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon, GearIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { range, toNumber } from "lodash";
-import { useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   DEFAULT_COLORS,
@@ -135,36 +135,14 @@ export const Settings = ({ ...rest }) => {
             </fieldset>
             <div className={"grid grid-flow-row grid-cols-2 mb-4 gap-y-4"}>
               {range(curNumColors).map((x) => (
-                <>
-                  <fieldset className="flex gap-4 items-center4">
-                    <label className="text-right" htmlFor={`colorNum${x}`}>
-                      Color {x + 1}
-                    </label>
-                    <input
-                      type="color"
-                      id={`colorNum${x}`}
-                      value={curDColors[x]}
-                      pattern="[0-9]*"
-                      onChange={(e) => {
-                        const nextColors = [...curDColors];
-                        nextColors[x] = e.target.value;
-                        setCurDColors(nextColors);
-                      }}
-                    />
-                  </fieldset>
-                  <fieldset className="flex gap-4 items-center4">
-                    <input
-                      id={`colorPentominoesNum${x}`}
-                      value={curPColors[x]}
-                      pattern="[0-9]*"
-                      onChange={(e) => {
-                        const nextColors = [...curPColors];
-                        nextColors[x] = e.target.value;
-                        setCurPColors(nextColors);
-                      }}
-                    />
-                  </fieldset>
-                </>
+                <SettingsColorRow
+                  key={`settings-color-${x}`}
+                  x={x}
+                  curDColors={curDColors}
+                  setCurDColors={setCurDColors}
+                  curPColors={curPColors}
+                  setCurPColors={setCurPColors}
+                ></SettingsColorRow>
               ))}
             </div>
             <div className="flex flex-row gap-4">
@@ -238,5 +216,52 @@ export const Settings = ({ ...rest }) => {
         </Dialog.Portal>
       </Dialog.Root>
     </div>
+  );
+};
+
+const SettingsColorRow = ({
+  x,
+  curDColors,
+  setCurDColors,
+  curPColors,
+  setCurPColors,
+}: {
+  x: number;
+  curDColors: string[];
+  setCurDColors: Dispatch<SetStateAction<string[]>>;
+  curPColors: string[];
+  setCurPColors: Dispatch<SetStateAction<string[]>>;
+}) => {
+  return (
+    <>
+      <fieldset className="flex gap-4 items-center4">
+        <label className="text-right" htmlFor={`colorNum${x}`}>
+          Color {x + 1}
+        </label>
+        <input
+          type="color"
+          id={`colorNum${x}`}
+          value={curDColors[x]}
+          pattern="[0-9]*"
+          onChange={(e) => {
+            const nextColors = [...curDColors];
+            nextColors[x] = e.target.value;
+            setCurDColors(nextColors);
+          }}
+        />
+      </fieldset>
+      <fieldset className="flex gap-4 items-center4">
+        <input
+          id={`colorPentominoesNum${x}`}
+          value={curPColors[x]}
+          pattern="[0-9]*"
+          onChange={(e) => {
+            const nextColors = [...curPColors];
+            nextColors[x] = e.target.value;
+            setCurPColors(nextColors);
+          }}
+        />
+      </fieldset>
+    </>
   );
 };
