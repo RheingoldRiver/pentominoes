@@ -49,7 +49,7 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
   const placedPentominoes: StringifiedPlacedPentomino[] = [];
   grid.map((row, x) =>
     row.map((p, y) => {
-      if (p.pentomino !== PENTOMINOES.None)
+      if (p.pentomino.name !== PENTOMINOES.None.name)
         placedPentominoes.push({
           p: p.pentomino.name,
           r: encodeOrientation(p.rotation, p.reflection, colors[p.pentomino.name]),
@@ -61,7 +61,7 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
 
   const pentominoesInGrid: string[] = grid.reduce((acc: string[], row) => {
     row.map((p) => {
-      if (p.pentomino !== PENTOMINOES.None) acc.push(p.pentomino.name);
+      if (p.pentomino.name !== PENTOMINOES.None.name) acc.push(p.pentomino.name);
     });
     return acc;
   }, []);

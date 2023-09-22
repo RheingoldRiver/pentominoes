@@ -23,7 +23,7 @@ export const Board = ({ ...rest }) => {
   // Update the painted grid
   grid.map((r, x) =>
     r.map((p, y) => {
-      if (p.pentomino === PENTOMINOES.None) return;
+      if (p.pentomino.name === PENTOMINOES.None.name) return;
       const orientation = p.pentomino.orientations[p.reflection][p.rotation];
       orientation.shape.map((pr, px) =>
         pr.map((val, py) => {
@@ -56,7 +56,7 @@ export const Board = ({ ...rest }) => {
           }
           // ok should be a valid placement now
           const cellToPaint = paintedGrid[newX][newY];
-          if (cellToPaint.pentomino.pentomino !== PENTOMINOES.None) {
+          if (cellToPaint.pentomino.pentomino.name !== PENTOMINOES.None.name) {
             cellToPaint.conflict = true;
           }
           cellToPaint.pentomino = p;
