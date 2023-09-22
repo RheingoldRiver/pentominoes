@@ -23,6 +23,14 @@ test("encoding terrain works", () => {
   expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8R03_3");
 });
 
+test("encoding colors when pentominoes are placed works", () => {
+  const grid = EMPTY_GRID(8, 8);
+  grid[3][3].pentomino = PENTOMINOES.X;
+  const colors = { ...DEFAULT_COLORS };
+  colors.X = 1;
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8X03_3");
+});
+
 test("a URL is properly decoded when no pentominoes are placed", () => {
   expect(decodeUrl("8_8")).toStrictEqual({
     h: 8,

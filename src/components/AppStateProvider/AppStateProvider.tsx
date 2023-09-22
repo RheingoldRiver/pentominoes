@@ -22,7 +22,7 @@ const DEFAULT_APP_STATE: AppState = {
 export const AppStateContext = createContext(DEFAULT_APP_STATE);
 export default function AppStateProvider({ children }: { children: ReactNode }) {
   const [pentominoSize, setPentominoSize] = useState<number>(() => {
-    return Number(window.localStorage.getItem("size") ?? 8);
+    return Number(window.localStorage.getItem("size") ?? 12);
   });
   const [displayColors, setDisplayColors] = useState<string[]>(() => {
     const localVal = window.localStorage.getItem("colors");

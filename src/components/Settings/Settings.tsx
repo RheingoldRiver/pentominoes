@@ -181,12 +181,13 @@ export const Settings = ({ ...rest }) => {
                 onClick={() => {
                   const pentominoes = [...PENTOMINO_NAMES];
                   shuffleArray(pentominoes);
-                  const nextColors = pentominoes.reduce((acc: string[], p, i) => {
-                    const val = i % curNumColors;
-                    if (!acc[val]) acc.push("");
-                    acc[val] = `${acc[val]}${p}`;
-                    return acc;
-                  }, []);
+                  const nextColors = pentominoes
+                    .reduce((acc: string[][], p, i) => {
+                      const val = i % curNumColors;
+                      acc[val] = [...(acc[val] || []), p];
+                      return acc;
+                    }, [])
+                    .map((arr) => arr.sort().join(""));
 
                   setCurPColors(nextColors);
                 }}

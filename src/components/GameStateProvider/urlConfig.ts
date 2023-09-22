@@ -59,8 +59,18 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
   );
   const sP = placedPentominoes.map((p) => `${p.p}${p.r}${p.c}`);
 
+  const pentominoesInGrid: string[] = grid.reduce((acc: string[], row) => {
+    row.map((p) => {
+      if (p.pentomino !== PENTOMINOES.None) acc.push(p.pentomino.name);
+    });
+    return acc;
+  }, []);
+
   const serializedColors: SerializedColors = Object.entries(colors).reduce((acc: SerializedColors, [k, v]) => {
     if (v === 0) return acc;
+    // check the pentomino isn't in the grid; if so, its color info will be encoded
+    // along with its orientation
+    if (pentominoesInGrid.indexOf(k) !== -1) return acc;
     acc[v] = [...(acc[v] || []), k];
     return acc;
   }, {});
