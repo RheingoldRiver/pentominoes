@@ -29,7 +29,7 @@ export const PentominoDisplay = ({
     );
     if (cell !== 0)
       return {
-        class: found === false ? "" : "opacity-40",
+        class: found === false ? "" : "opacity-30",
         style: `${displayColors[pentominoColors[pentomino.name]]}`,
       };
     return { class: "", style: "" };
