@@ -1,9 +1,10 @@
-import { debounce } from "lodash";
+import { cloneDeep, debounce } from "lodash";
 import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
-import { Colors, DEFAULT_CONFIG, PlacedPentomino, UrlConfig } from "../../constants";
+import { Action, Colors, DEFAULT_CONFIG, PlacedPentomino, UrlConfig } from "../../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { deserializeUrl, serializeUrl } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
+import useHotkey from "../../hooks/use-hotkey";
 
 interface GameState {
   grid: PlacedPentomino[][];
@@ -58,6 +59,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [currentReflection, setCurrentReflection] = useState<number>(0); // 0, 1
   const [currentRotation, setCurrentRotation] = useState<number>(0); // 0, 1, 2, 3
 
+  const [actionHistory, setActionHistory] = useState<Action[]>([]);
+
   const navigate = useNavigate();
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
@@ -80,7 +83,38 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     });
   });
 
+  useHotkey("Control", "Z", () => {
+    const nextActionHistory = [...actionHistory];
+    const lastAction = nextActionHistory.pop();
+    if (lastAction === undefined) return;
+    const nextGrid = cloneDeep(grid);
+    nextGrid[lastAction.x][lastAction.y].pentomino = PENTOMINOES[lastAction.prevName];
+    nextGrid[lastAction.x][lastAction.y].rotation = lastAction.prevRotation;
+    nextGrid[lastAction.x][lastAction.y].reflection = lastAction.prevReflection;
+    setGrid(nextGrid);
+    setActionHistory(nextActionHistory);
+  });
+
+  function recordActionHistory(x: number, y: number) {
+    const nextActionHistory = [
+      ...actionHistory,
+      {
+        // grid not nextGrid
+        prevName: grid[x][y].pentomino.name,
+        prevRotation: grid[x][y].rotation,
+        prevReflection: grid[x][y].reflection,
+        x: x,
+        y: y,
+      },
+    ];
+
+    setActionHistory(nextActionHistory);
+
+    console.log(nextActionHistory);
+  }
+
   function drawPentomino(newX: number, newY: number) {
+    recordActionHistory(newX, newY);
     const newGrid = [...grid];
     newGrid[newX][newY] = {
       pentomino: currentPentomino,
@@ -92,6 +126,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setGrid(newGrid);
   }
   function erasePentomino(givenX: number, givenY: number) {
+    recordActionHistory(givenX, givenY);
     const newGrid = grid.map((row, x) =>
       row.map((c, y) => {
         if (x === givenX && y === givenY) {

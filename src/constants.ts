@@ -95,3 +95,11 @@ export const shuffleArray = <T>(array: T[]): void => {
     array[j] = temp;
   }
 };
+
+export interface Action {
+  prevName: string;
+  prevRotation: number;
+  prevReflection: number;
+  x: number;
+  y: number;
+}
