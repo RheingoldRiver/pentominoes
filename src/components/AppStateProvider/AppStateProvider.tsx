@@ -30,7 +30,7 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
     return DEFAULT_DISPLAY_COLORS;
   });
   const [numVisibleColors, setNumVisibleColors] = useState(() => {
-    return Number(window.localStorage.getItem("numColors") ?? 1);
+    return Number(window.localStorage.getItem("numColors") ?? 3);
   });
 
   function updatePentominoSize(newSize: number) {
