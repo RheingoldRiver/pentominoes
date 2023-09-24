@@ -7,10 +7,6 @@ import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 
 const PENTOMINO_COLOR_DRAGGABLE_TYPE = "pcolor";
 
-interface DropResult {
-  newColor: string;
-}
-
 export const ColorSettings = ({
   curDColors,
   setCurDColors,
