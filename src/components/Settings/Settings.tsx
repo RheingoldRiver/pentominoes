@@ -2,9 +2,10 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon, GearIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { range, toNumber } from "lodash";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
+  Colors,
   DEFAULT_COLORS,
   DEFAULT_DISPLAY_COLORS,
   EMPTY_PENTOMINO,
@@ -13,6 +14,7 @@ import {
   shuffleArray,
 } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
+import { ColorSettings } from "../ColorSettings/ColorSettings";
 
 export const Settings = ({ ...rest }) => {
   const {
@@ -29,17 +31,10 @@ export const Settings = ({ ...rest }) => {
   const [curWidth, setCurWidth] = useState(grid[0].length);
   const [curNumColors, setCurNumColors] = useState(numVisibleColors);
   const [curDColors, setCurDColors] = useState(displayColors);
-  const [curPColors, setCurPColors] = useState<string[]>(() => {
-    return range(curNumColors).map((x) => {
-      return PENTOMINO_NAMES.reduce((acc: string[], p) => {
-        if (pentominoColors[p] !== x) return acc;
-        acc.push(p);
-        return acc;
-      }, [])
-        .sort()
-        .join("");
-    });
-  });
+  const [curPColors, setCurPColors] = useState<Colors>({ ...pentominoColors });
+
+  console.log("curPColors");
+  console.log(curPColors);
 
   return (
     <div {...rest} className="flex flex-row items-start justify-end w-full h-full pr-2">
@@ -133,18 +128,13 @@ export const Settings = ({ ...rest }) => {
                 }}
               />
             </fieldset>
-            <div className={"grid grid-flow-row grid-cols-2 mb-4 gap-y-4"}>
-              {range(curNumColors).map((x) => (
-                <SettingsColorRow
-                  key={`settings-color-${x}`}
-                  x={x}
-                  curDColors={curDColors}
-                  setCurDColors={setCurDColors}
-                  curPColors={curPColors}
-                  setCurPColors={setCurPColors}
-                ></SettingsColorRow>
-              ))}
-            </div>
+            <ColorSettings
+              curDColors={curDColors}
+              setCurDColors={setCurDColors}
+              curPColors={curPColors}
+              setCurPColors={setCurPColors}
+              curNumColors={curNumColors}
+            ></ColorSettings>
             <div className="flex flex-row gap-4">
               <button
                 className={clsx("cursor-pointer p-2 rounded", "shadow-sm shadow-zinc-600")}
@@ -159,13 +149,14 @@ export const Settings = ({ ...rest }) => {
                 onClick={() => {
                   const pentominoes = [...PENTOMINO_NAMES];
                   shuffleArray(pentominoes);
-                  const nextColors = pentominoes
-                    .reduce((acc: string[][], p, i) => {
+                  const nextColors = pentominoes.reduce(
+                    (acc: Colors, p, i) => {
                       const val = i % curNumColors;
-                      acc[val] = [...(acc[val] || []), p];
+                      acc[p] = val;
                       return acc;
-                    }, [])
-                    .map((arr) => arr.sort().join(""));
+                    },
+                    { ...DEFAULT_COLORS }
+                  );
 
                   setCurPColors(nextColors);
                 }}
@@ -194,13 +185,7 @@ export const Settings = ({ ...rest }) => {
                       );
                     }
 
-                    const nextPentominoColors = { ...DEFAULT_COLORS };
-                    curPColors.map((s, i) => {
-                      s.split("").map((p) => {
-                        nextPentominoColors[p] = i;
-                      });
-                    });
-                    setPentominoColors(nextPentominoColors);
+                    setPentominoColors(curPColors);
                   }}
                 >
                   Save changes
@@ -216,52 +201,5 @@ export const Settings = ({ ...rest }) => {
         </Dialog.Portal>
       </Dialog.Root>
     </div>
-  );
-};
-
-const SettingsColorRow = ({
-  x,
-  curDColors,
-  setCurDColors,
-  curPColors,
-  setCurPColors,
-}: {
-  x: number;
-  curDColors: string[];
-  setCurDColors: Dispatch<SetStateAction<string[]>>;
-  curPColors: string[];
-  setCurPColors: Dispatch<SetStateAction<string[]>>;
-}) => {
-  return (
-    <>
-      <fieldset className="flex gap-4 items-center4">
-        <label className="text-right" htmlFor={`colorNum${x}`}>
-          Color {x + 1}
-        </label>
-        <input
-          type="color"
-          id={`colorNum${x}`}
-          value={curDColors[x]}
-          pattern="[0-9]*"
-          onChange={(e) => {
-            const nextColors = [...curDColors];
-            nextColors[x] = e.target.value;
-            setCurDColors(nextColors);
-          }}
-        />
-      </fieldset>
-      <fieldset className="flex gap-4 items-center4">
-        <input
-          id={`colorPentominoesNum${x}`}
-          value={curPColors[x]}
-          pattern="[0-9]*"
-          onChange={(e) => {
-            const nextColors = [...curPColors];
-            nextColors[x] = e.target.value;
-            setCurPColors(nextColors);
-          }}
-        />
-      </fieldset>
-    </>
   );
 };
