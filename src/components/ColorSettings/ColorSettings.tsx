@@ -63,12 +63,15 @@ const ColorSettingsRow = ({
     return acc;
   }, []);
 
-  const [, dropRef] = useDrop(() => ({
-    accept: PENTOMINO_COLOR_DRAGGABLE_TYPE,
-    drop: () => {
-      return { newColor: x };
-    },
-  }));
+  const [, dropRef] = useDrop(
+    () => ({
+      accept: PENTOMINO_COLOR_DRAGGABLE_TYPE,
+      drop: ({ pentomino }: { pentomino: string }) => {
+        setCurPColors({ ...curPColors, [pentomino]: x });
+      },
+    }),
+    [curPColors]
+  );
 
   return (
     <>
@@ -90,45 +93,22 @@ const ColorSettingsRow = ({
       </fieldset>
       <div ref={dropRef} className="flex flex-row flex-wrap gap-2 p-2 border-slate-600 border border-solid rounded-md">
         {thisColorPentominoes.map((p) => (
-          <ColorSettingsItem
-            key={p}
-            pentomino={p}
-            curPColors={curPColors}
-            setCurPColors={setCurPColors}
-          ></ColorSettingsItem>
+          <ColorSettingsItem key={p} pentomino={p} displayColor={curDColors[curPColors[p]]}></ColorSettingsItem>
         ))}
       </div>
     </>
   );
 };
 
-const ColorSettingsItem = ({
-  pentomino,
-  curPColors,
-  setCurPColors,
-}: {
-  pentomino: string;
-  curPColors: Colors;
-  setCurPColors: Dispatch<SetStateAction<Colors>>;
-}) => {
+const ColorSettingsItem = ({ pentomino, displayColor }: { pentomino: string; displayColor: string }) => {
   const [, dragRef] = useDrag(() => ({
     type: PENTOMINO_COLOR_DRAGGABLE_TYPE,
     item: { pentomino },
-    end: (_item, monitor) => {
-      const dropResult = monitor.getDropResult() as DropResult;
-      if (!dropResult) {
-        return;
-      }
-      console.log(pentomino);
-      const nextColors = { ...curPColors, [pentomino]: dropResult.newColor as unknown as number };
-      console.log(nextColors);
-      setCurPColors(nextColors);
-    },
   }));
 
   return (
     <div ref={dragRef}>
-      <PentominoDisplay pentomino={PENTOMINOES[pentomino]}></PentominoDisplay>
+      <PentominoDisplay pentomino={PENTOMINOES[pentomino]} color={displayColor} checkGrid={false}></PentominoDisplay>
     </div>
   );
 };

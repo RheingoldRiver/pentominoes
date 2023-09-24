@@ -33,9 +33,6 @@ export const Settings = ({ ...rest }) => {
   const [curDColors, setCurDColors] = useState(displayColors);
   const [curPColors, setCurPColors] = useState<Colors>({ ...pentominoColors });
 
-  console.log("curPColors");
-  console.log(curPColors);
-
   return (
     <div {...rest} className="flex flex-row items-start justify-end w-full h-full pr-2">
       <Dialog.Root>
