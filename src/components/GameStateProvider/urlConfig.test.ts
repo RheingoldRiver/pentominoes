@@ -1,6 +1,7 @@
 import { DEFAULT_COLORS, EMPTY_GRID, MAX_NUM_COLORS, PlacedPentomino } from "./../../constants";
 import { expect, test } from "vitest";
 import {
+  decodeCoordinates,
   decodeOrientation,
   decodeUrl,
   deserializeUrl,
@@ -14,13 +15,13 @@ import { PENTOMINOES } from "../../pentominoes";
 test("encoding works when there are no colors", () => {
   const grid = EMPTY_GRID(8, 8);
   grid[3][3].pentomino = PENTOMINOES.X;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8X03_3");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8X033");
 });
 
 test("encoding terrain works", () => {
   const grid = EMPTY_GRID(8, 8);
   grid[3][3].pentomino = PENTOMINOES.R;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8R03_3");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8R033");
 });
 
 test("encoding colors when pentominoes are placed works", () => {
@@ -28,7 +29,27 @@ test("encoding colors when pentominoes are placed works", () => {
   grid[3][3].pentomino = PENTOMINOES.X;
   const colors = { ...DEFAULT_COLORS };
   colors.X = 1;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8X03_3");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8X033");
+});
+
+test("lowercase is correctly added to the URL", () => {
+  const grid = EMPTY_GRID(20, 20);
+  grid[14][14].pentomino = PENTOMINOES.X;
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("20_20x01414");
+});
+
+test("decoding an uppercase orientation works", () => {
+  expect(decodeCoordinates("510", false)).toStrictEqual({
+    x: 5,
+    y: 10,
+  });
+});
+
+test("decoding an uppercase orientation works", () => {
+  expect(decodeCoordinates("1414", true)).toStrictEqual({
+    x: 14,
+    y: 14,
+  });
 });
 
 test("a URL is properly decoded when no pentominoes are placed", () => {
@@ -62,6 +83,18 @@ test("a URL is properly decoded with colors and pentominoes", () => {
     ],
     colors: { 1: ["F"] },
   });
+  expect(decodeUrl("8_8I044_1F")).toStrictEqual({
+    h: 8,
+    w: 8,
+    grid: [
+      {
+        p: "I",
+        r: "0",
+        c: "44",
+      },
+    ],
+    colors: { 1: ["F"] },
+  });
 });
 
 test("a URL is properly decoded, no asymmetry", () => {
@@ -73,6 +106,18 @@ test("a URL is properly decoded, no asymmetry", () => {
         p: "I",
         r: "0",
         c: "4_4",
+      },
+    ],
+    colors: {},
+  });
+  expect(decodeUrl("8_8I044")).toStrictEqual({
+    h: 8,
+    w: 8,
+    grid: [
+      {
+        p: "I",
+        r: "0",
+        c: "44",
       },
     ],
     colors: {},
@@ -92,6 +137,18 @@ test("a URL is properly decoded, asymmetry", () => {
     ],
     colors: {},
   });
+  expect(decodeUrl("6_10I046")).toStrictEqual({
+    h: 6,
+    w: 10,
+    grid: [
+      {
+        p: "I",
+        r: "0",
+        c: "46",
+      },
+    ],
+    colors: {},
+  });
 });
 
 test("you get the right grid, no asymmetry", () => {
@@ -101,12 +158,20 @@ test("you get the right grid, no asymmetry", () => {
     grid: grid,
     colors: DEFAULT_COLORS,
   });
+  expect(deserializeUrl("8_8I044")).toStrictEqual({
+    grid: grid,
+    colors: DEFAULT_COLORS,
+  });
 });
 
 test("you get the right grid, asymmetry", () => {
   const grid: PlacedPentomino[][] = EMPTY_GRID(10, 6);
   grid[4][6].pentomino = PENTOMINOES["I"];
   expect(deserializeUrl("6_10I04_6")).toStrictEqual({
+    grid: grid,
+    colors: DEFAULT_COLORS,
+  });
+  expect(deserializeUrl("6_10I046")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
   });

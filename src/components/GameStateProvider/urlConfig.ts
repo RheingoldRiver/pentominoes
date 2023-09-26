@@ -1,7 +1,7 @@
 import { DEFAULT_COLORS } from "./../../constants";
 import { range, toNumber } from "lodash";
 import { EMPTY_PENTOMINO, UrlConfig } from "../../constants";
-import { PENTOMINOES } from "../../pentominoes";
+import { Coordinates, PENTOMINOES } from "../../pentominoes";
 
 interface StringifiedPlacedPentomino {
   p: string;
@@ -51,9 +51,9 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
     row.forEach((p, y) => {
       if (p.pentomino.name !== PENTOMINOES.None.name)
         placedPentominoes.push({
-          p: p.pentomino.name,
+          p: x.toString().length === 2 ? p.pentomino.name.toLowerCase() : p.pentomino.name,
           r: encodeOrientation(p.rotation, p.reflection, colors[p.pentomino.name]),
-          c: `${x}_${y}`,
+          c: `${x}${y}`,
         });
     })
   );
@@ -81,6 +81,23 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
   return `${grid.length}_${grid[0].length}${sP.join("")}${sC === "" ? "" : "_"}${sC}`;
 }
 
+export function colorStartUnderscore(curToken: string, expectTwoXDigits: boolean) {
+  // expected one digit if it's an uppercase letter
+  // legacy urls cannot have lowercase pentomino names
+
+  // if two digits are expected, then we're 100% guaranteed in a nonlegacy url
+  if (expectTwoXDigits === true) return true;
+
+  // in this case, we obviously see a new underscore as a new section
+  if (curToken.indexOf("_") !== -1) return true;
+
+  // if the length is 1 or 2 then it's a legacy URL; an uppercase letter requires
+  // length to be 3 for it to be the start of the color section
+  // and a single number taking up 3 digits is impossible because
+  // max values of len, width are 99
+  return curToken.length > 2;
+}
+
 export function decodeUrl(s: string): StringifiedUrlConfig {
   let h = -1;
   let w = -1;
@@ -89,17 +106,25 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
   let curPos = 0; // ['height', 'width', 'pentominoes', 'colors']
   let pentominoPosition = 0; // ['name', 'r', 'c']
   let curColor = -1;
+  let lowercaseLetter = false;
   const colors: SerializedColors = {};
   s.split("").forEach((c) => {
     if ((c === "." || c === "_") && curPos === 0) {
       h = toNumber(curToken);
       curToken = "";
-      curPos += 1;
+      curPos = 1;
     } else if (curPos === 3 && c.match(/[0-9]/)) {
       colors[toNumber(c)] = [];
       curColor = toNumber(c);
     } else if (curPos === 3 && c.match(/[A-Z]/)) {
+      // option 1: legacy support for underscores, where we incremented _ properly
+      // option 2: expecting a number & we get a letter
       colors[curColor].push(c);
+
+      // in legacy support mode, curPos was already 3
+      curPos = 3;
+    } else if ((c === "." || c === "_") && pentominoPosition === 2 && colorStartUnderscore(curToken, lowercaseLetter)) {
+      curPos = 3;
     } else if ((c === "." || c === "_") && pentominoPosition === 2) {
       curToken = `${curToken}${c}`;
       pentominoPosition = 3;
@@ -113,7 +138,8 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
       pentominoPosition = 2;
     } else if (c.match(/[0-9]/)) {
       curToken = `${curToken}${c}`;
-    } else if (c.match(/[A-Z]/)) {
+    } else if (c.match(/[A-Za-z]/)) {
+      lowercaseLetter = !!c.match(/[a-z]/);
       if (curPos === 1) {
         // finish width
         w = toNumber(curToken);
@@ -172,6 +198,28 @@ export function decodeOrientation(r: string): Orientation {
   }
 }
 
+export function decodeCoordinates(s: string, xHasTwoCharacters: boolean): Coordinates {
+  // support for legacy format where underscores were used
+  const coords = s.split(/[\\._]/);
+  if (coords.length === 2) {
+    return {
+      x: toNumber(coords[0]),
+      y: toNumber(coords[1]),
+    };
+  }
+  // current support
+  if (xHasTwoCharacters) {
+    return {
+      x: toNumber(s.slice(0, 2)),
+      y: toNumber(s.slice(2)),
+    };
+  }
+  return {
+    x: toNumber(s.slice(0, 1)),
+    y: toNumber(s.slice(1)),
+  };
+}
+
 export function deserializeUrl(s: string): UrlConfig {
   const config = decodeUrl(s);
   const ret = {
@@ -186,11 +234,9 @@ export function deserializeUrl(s: string): UrlConfig {
   };
   config.grid.forEach((p) => {
     const r = decodeOrientation(p.r);
-    const coords = p.c.split(/[\\._]/);
-    const x = toNumber(coords[0]);
-    const y = toNumber(coords[1]);
+    const { x, y } = decodeCoordinates(p.c, p.p !== p.p.toUpperCase());
     ret.grid[x][y] = {
-      pentomino: PENTOMINOES[p.p],
+      pentomino: PENTOMINOES[p.p.toUpperCase()],
       rotation: r.rotation,
       reflection: r.reflection,
       x: x,
