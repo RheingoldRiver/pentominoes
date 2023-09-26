@@ -8,14 +8,7 @@ import { PENTOMINOES } from "../../pentominoes";
 export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: number }) => {
   const { pentominoSize, displayColors } = useContext(AppStateContext);
   const { pentominoColors } = useContext(GameStateContext);
-  const {
-    drawPentomino,
-    erasePentomino,
-    setCurrentGridCoords,
-    setCurrentPentomino,
-    setCurrentRotation,
-    setCurrentReflection,
-  } = useContext(GameStateContext);
+  const { clickBoard } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
   function borderStyle(b: boolean) {
     if (b === true) return "2px solid #C4B5FD";
@@ -40,17 +33,7 @@ export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: 
         borderRight: borderStyle(cell.borderRight),
         backgroundColor: bg.style,
       }}
-      onClick={() => {
-        setCurrentGridCoords({ x: x, y: y }); // I think I don't need this
-        if (hasPentomino === false) {
-          drawPentomino(x, y);
-        } else {
-          setCurrentPentomino(cell.pentomino.pentomino);
-          erasePentomino(cell.pentomino.x, cell.pentomino.y);
-          setCurrentRotation(cell.pentomino.rotation);
-          setCurrentReflection(cell.pentomino.reflection);
-        }
-      }}
+      onClick={() => clickBoard(x, y, hasPentomino, cell)}
     ></div>
   );
 };

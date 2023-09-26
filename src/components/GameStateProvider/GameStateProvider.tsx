@@ -1,6 +1,6 @@
 import { cloneDeep, debounce } from "lodash";
 import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
-import { Action, Colors, DEFAULT_CONFIG, PlacedPentomino, UrlConfig } from "../../constants";
+import { Action, Colors, DEFAULT_CONFIG, PaintedCell, PlacedPentomino, UrlConfig } from "../../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { deserializeUrl, serializeUrl } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,13 +14,11 @@ interface GameState {
   toolbarPentomino: Pentomino;
   setToolbarPentomino: Dispatch<SetStateAction<Pentomino>>;
   currentGridCoords: Coordinates;
-  setCurrentGridCoords: Dispatch<SetStateAction<Coordinates>>;
   currentReflection: number;
   setCurrentReflection: Dispatch<SetStateAction<number>>;
   currentRotation: number;
   setCurrentRotation: Dispatch<SetStateAction<number>>;
-  drawPentomino: (newX: number, newY: number) => void;
-  erasePentomino: (givenX: number, givenY: number) => void;
+  clickBoard: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
   pentominoColors: Colors;
   setPentominoColors: Dispatch<SetStateAction<Colors>>;
 }
@@ -33,13 +31,11 @@ const DEFAULT_GAME_STATE: GameState = {
   toolbarPentomino: PENTOMINOES.None,
   setToolbarPentomino: () => {},
   currentGridCoords: { x: 0, y: 0 },
-  setCurrentGridCoords: () => {},
   currentReflection: 0,
   setCurrentReflection: () => {},
   currentRotation: 0,
   setCurrentRotation: () => {},
-  drawPentomino: () => {},
-  erasePentomino: () => {},
+  clickBoard: () => {},
   pentominoColors: {},
   setPentominoColors: () => {},
 };
@@ -144,6 +140,18 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setGrid(newGrid);
   }
 
+  function clickBoard(x: number, y: number, hasPentomino: boolean, cell: PaintedCell) {
+    setCurrentGridCoords({ x: x, y: y }); // I think I don't need this
+    if (hasPentomino === false) {
+      drawPentomino(x, y);
+    } else {
+      setCurrentPentomino(cell.pentomino.pentomino);
+      erasePentomino(cell.pentomino.x, cell.pentomino.y);
+      setCurrentRotation(cell.pentomino.rotation);
+      setCurrentReflection(cell.pentomino.reflection);
+    }
+  }
+
   return (
     <GameStateContext.Provider
       value={{
@@ -154,13 +162,11 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         toolbarPentomino,
         setToolbarPentomino,
         currentGridCoords,
-        setCurrentGridCoords,
         currentReflection,
         setCurrentReflection,
         currentRotation,
         setCurrentRotation,
-        drawPentomino,
-        erasePentomino,
+        clickBoard,
         pentominoColors,
         setPentominoColors,
       }}
