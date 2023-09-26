@@ -106,7 +106,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
     setActionHistory(nextActionHistory);
 
-    console.log(nextActionHistory);
+    // console.log(nextActionHistory);
   }
 
   function drawPentomino(newX: number, newY: number) {
