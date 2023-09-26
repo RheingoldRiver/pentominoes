@@ -51,7 +51,7 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
     row.forEach((p, y) => {
       if (p.pentomino.name !== PENTOMINOES.None.name)
         placedPentominoes.push({
-          p: x.toString().length === 2 ? p.pentomino.name.toLowerCase() : p.pentomino.name,
+          p: x.toString().length === 1 ? p.pentomino.name.toLowerCase() : p.pentomino.name,
           r: encodeOrientation(p.rotation, p.reflection, colors[p.pentomino.name]),
           c: `${x}${y}`,
         });
@@ -82,11 +82,11 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
 }
 
 export function colorStartUnderscore(curToken: string, expectTwoXDigits: boolean) {
-  // expected one digit if it's an uppercase letter
+  // expected two digits if it's an uppercase letter
   // legacy urls cannot have lowercase pentomino names
 
-  // if two digits are expected, then we're 100% guaranteed in a nonlegacy url
-  if (expectTwoXDigits === true) return true;
+  // if one digit is expected, then we're 100% guaranteed in a nonlegacy url
+  if (expectTwoXDigits === false) return true;
 
   // in this case, we obviously see a new underscore as a new section
   if (curToken.indexOf("_") !== -1) return true;
@@ -123,7 +123,11 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
 
       // in legacy support mode, curPos was already 3
       curPos = 3;
-    } else if ((c === "." || c === "_") && pentominoPosition === 2 && colorStartUnderscore(curToken, lowercaseLetter)) {
+    } else if (
+      (c === "." || c === "_") &&
+      pentominoPosition === 2 &&
+      colorStartUnderscore(curToken, !lowercaseLetter)
+    ) {
       curPos = 3;
     } else if ((c === "." || c === "_") && pentominoPosition === 2) {
       curToken = `${curToken}${c}`;
@@ -227,14 +231,17 @@ export function deserializeUrl(s: string): UrlConfig {
     // pentominoes that aren't placed
     colors: Object.entries(config.colors).reduce((acc, [k, v]) => {
       v.forEach((p: string) => {
-        acc[p] = toNumber(k);
+        acc[p.toUpperCase()] = toNumber(k);
       });
       return acc;
     }, DEFAULT_COLORS),
   };
   config.grid.forEach((p) => {
     const r = decodeOrientation(p.r);
-    const { x, y } = decodeCoordinates(p.c, p.p !== p.p.toUpperCase());
+    const { x, y } = decodeCoordinates(p.c, p.p === p.p.toUpperCase());
+    // console.log(p);
+    // console.log(`x: ${x}`);
+    // console.log(`y: ${y}`);
     ret.grid[x][y] = {
       pentomino: PENTOMINOES[p.p.toUpperCase()],
       rotation: r.rotation,
@@ -242,7 +249,7 @@ export function deserializeUrl(s: string): UrlConfig {
       x: x,
       y: y,
     };
-    ret.colors[p.p] = r.color;
+    ret.colors[p.p.toUpperCase()] = r.color;
   });
   return ret;
 }

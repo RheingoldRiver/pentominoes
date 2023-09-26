@@ -15,13 +15,13 @@ import { PENTOMINOES } from "../../pentominoes";
 test("encoding works when there are no colors", () => {
   const grid = EMPTY_GRID(8, 8);
   grid[3][3].pentomino = PENTOMINOES.X;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8X033");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8x033");
 });
 
 test("encoding terrain works", () => {
   const grid = EMPTY_GRID(8, 8);
   grid[3][3].pentomino = PENTOMINOES.R;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8R033");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8r033");
 });
 
 test("encoding colors when pentominoes are placed works", () => {
@@ -29,13 +29,13 @@ test("encoding colors when pentominoes are placed works", () => {
   grid[3][3].pentomino = PENTOMINOES.X;
   const colors = { ...DEFAULT_COLORS };
   colors.X = 1;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8X033");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("8_8x033");
 });
 
 test("lowercase is correctly added to the URL", () => {
   const grid = EMPTY_GRID(20, 20);
   grid[14][14].pentomino = PENTOMINOES.X;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("20_20x01414");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS })).toBe("20_20X01414");
 });
 
 test("decoding an uppercase orientation works", () => {
@@ -83,12 +83,12 @@ test("a URL is properly decoded with colors and pentominoes", () => {
     ],
     colors: { 1: ["F"] },
   });
-  expect(decodeUrl("8_8I044_1F")).toStrictEqual({
+  expect(decodeUrl("8_8i044_1F")).toStrictEqual({
     h: 8,
     w: 8,
     grid: [
       {
-        p: "I",
+        p: "i", // will be uppercased when it's put into the grid
         r: "0",
         c: "44",
       },
@@ -110,12 +110,12 @@ test("a URL is properly decoded, no asymmetry", () => {
     ],
     colors: {},
   });
-  expect(decodeUrl("8_8I044")).toStrictEqual({
+  expect(decodeUrl("8_8i044")).toStrictEqual({
     h: 8,
     w: 8,
     grid: [
       {
-        p: "I",
+        p: "i", // will be uppercased when it's put into the grid
         r: "0",
         c: "44",
       },
@@ -137,12 +137,12 @@ test("a URL is properly decoded, asymmetry", () => {
     ],
     colors: {},
   });
-  expect(decodeUrl("6_10I046")).toStrictEqual({
+  expect(decodeUrl("6_10i046")).toStrictEqual({
     h: 6,
     w: 10,
     grid: [
       {
-        p: "I",
+        p: "i", // will be uppercased when it's put into the grid
         r: "0",
         c: "46",
       },
@@ -158,7 +158,7 @@ test("you get the right grid, no asymmetry", () => {
     grid: grid,
     colors: DEFAULT_COLORS,
   });
-  expect(deserializeUrl("8_8I044")).toStrictEqual({
+  expect(deserializeUrl("8_8i044")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
   });
@@ -171,7 +171,7 @@ test("you get the right grid, asymmetry", () => {
     grid: grid,
     colors: DEFAULT_COLORS,
   });
-  expect(deserializeUrl("6_10I046")).toStrictEqual({
+  expect(deserializeUrl("6_10i046")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
   });
