@@ -103,3 +103,5 @@ export interface Action {
   x: number;
   y: number;
 }
+
+export const MAX_DIMENSION_SIZE = 99;

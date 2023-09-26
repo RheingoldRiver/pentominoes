@@ -9,6 +9,7 @@ import {
   DEFAULT_COLORS,
   DEFAULT_DISPLAY_COLORS,
   EMPTY_PENTOMINO,
+  MAX_DIMENSION_SIZE,
   MAX_NUM_COLORS,
   PENTOMINO_NAMES,
   shuffleArray,
@@ -80,7 +81,7 @@ export const Settings = ({ ...rest }) => {
                 onChange={(e) => {
                   const valAsNum = toNumber(e.target.value);
                   if (isNaN(valAsNum)) return;
-                  setCurWidth(valAsNum);
+                  setCurWidth(Math.min(valAsNum, MAX_DIMENSION_SIZE));
                 }}
               />
             </fieldset>
@@ -97,7 +98,7 @@ export const Settings = ({ ...rest }) => {
                 onChange={(e) => {
                   const valAsNum = toNumber(e.target.value);
                   if (isNaN(valAsNum)) return;
-                  setCurHeight(valAsNum);
+                  setCurHeight(Math.min(valAsNum, MAX_DIMENSION_SIZE));
                 }}
               />
             </fieldset>
