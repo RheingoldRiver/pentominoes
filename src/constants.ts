@@ -65,7 +65,7 @@ export const PENTOMINO_NAMES = ["F", "I", "L", "P", "N", "T", "U", "V", "W", "X"
 
 export const DEFAULT_COLORS: Colors = {};
 
-PENTOMINO_NAMES.map((p) => (DEFAULT_COLORS[p] = 0));
+PENTOMINO_NAMES.forEach((p) => (DEFAULT_COLORS[p] = 0));
 
 export type UrlConfig = {
   grid: PlacedPentomino[][];

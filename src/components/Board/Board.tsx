@@ -1,13 +1,15 @@
 import { range } from "lodash";
 import { useContext } from "react";
-import { EMPTY_PENTOMINO, PaintedCell } from "../../constants";
+import { EMPTY_PENTOMINO, PaintedCell, PENTOMINO_DIMENSIONS } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { Cell } from "../Cell/Cell";
-import { Grid } from "../Grid/Grid";
+import { AppStateContext } from "../AppStateProvider/AppStateProvider";
+import clsx from "clsx";
 
-export const Board = ({ ...rest }) => {
+export const Board = ({ gridArea }: { gridArea: string }) => {
   const { grid } = useContext(GameStateContext);
+  const { pentominoSize } = useContext(AppStateContext);
   const paintedGrid: PaintedCell[][] = range(grid.length).map((x) =>
     range(grid[0].length).map((y) => {
       return {
@@ -21,12 +23,12 @@ export const Board = ({ ...rest }) => {
     })
   );
   // Update the painted grid
-  grid.map((r, x) =>
-    r.map((p, y) => {
+  grid.forEach((r, x) =>
+    r.forEach((p, y) => {
       if (p.pentomino.name === PENTOMINOES.None.name) return;
       const orientation = p.pentomino.orientations[p.reflection][p.rotation];
-      orientation.shape.map((pr, px) =>
-        pr.map((val, py) => {
+      orientation.shape.forEach((pr, px) =>
+        pr.forEach((val, py) => {
           if (val === 0) return; // the pentomino isn't taking up this square of its grid, return
           const newX = x + px - orientation.center.x;
           const newY = y + py - orientation.center.y;
@@ -70,10 +72,15 @@ export const Board = ({ ...rest }) => {
     })
   );
   return (
-    <div {...rest}>
-      <Grid>
-        {paintedGrid.map((r, x) => r.map((c, y) => <Cell key={`cell-${x}_${y}`} cell={c} x={x} y={y}></Cell>))}
-      </Grid>
+    <div
+      className={clsx("grid grid-flow-row w-fit", PENTOMINO_DIMENSIONS[pentominoSize])}
+      style={{
+        gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
+        gridTemplateColumns: `repeat(${grid[0].length}, minmax(0, 1fr))`,
+        gridArea,
+      }}
+    >
+      {paintedGrid.map((r, x) => r.map((c, y) => <Cell key={`cell-${x}_${y}`} cell={c} x={x} y={y}></Cell>))}
     </div>
   );
 };

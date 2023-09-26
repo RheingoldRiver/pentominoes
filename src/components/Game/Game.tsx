@@ -19,7 +19,7 @@ export const Game = () => {
             <Header style={{ gridArea: "header" }}></Header>
             <Settings style={{ gridArea: "settings" }}></Settings>
             <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
-            <Board style={{ gridArea: "board" }}></Board>
+            <Board gridArea="board"></Board>
           </div>
         </div>
       </GameStateProvider>

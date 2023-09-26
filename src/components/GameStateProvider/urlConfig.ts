@@ -47,8 +47,8 @@ export function encodeOrientation(rotation: number, reflection: number, color: n
 
 export function serializeUrl({ grid, colors }: UrlConfig): string {
   const placedPentominoes: StringifiedPlacedPentomino[] = [];
-  grid.map((row, x) =>
-    row.map((p, y) => {
+  grid.forEach((row, x) =>
+    row.forEach((p, y) => {
       if (p.pentomino.name !== PENTOMINOES.None.name)
         placedPentominoes.push({
           p: p.pentomino.name,
@@ -60,7 +60,7 @@ export function serializeUrl({ grid, colors }: UrlConfig): string {
   const sP = placedPentominoes.map((p) => `${p.p}${p.r}${p.c}`);
 
   const pentominoesInGrid: string[] = grid.reduce((acc: string[], row) => {
-    row.map((p) => {
+    row.forEach((p) => {
       if (p.pentomino.name !== PENTOMINOES.None.name) acc.push(p.pentomino.name);
     });
     return acc;
@@ -90,7 +90,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
   let pentominoPosition = 0; // ['name', 'r', 'c']
   let curColor = -1;
   const colors: SerializedColors = {};
-  s.split("").map((c) => {
+  s.split("").forEach((c) => {
     if ((c === "." || c === "_") && curPos === 0) {
       h = toNumber(curToken);
       curToken = "";
@@ -178,13 +178,13 @@ export function deserializeUrl(s: string): UrlConfig {
     grid: range(config.h).map((x) => range(config.w).map((y) => EMPTY_PENTOMINO(x, y))),
     // pentominoes that aren't placed
     colors: Object.entries(config.colors).reduce((acc, [k, v]) => {
-      v.map((p: string) => {
+      v.forEach((p: string) => {
         acc[p] = toNumber(k);
       });
       return acc;
     }, DEFAULT_COLORS),
   };
-  config.grid.map((p) => {
+  config.grid.forEach((p) => {
     const r = decodeOrientation(p.r);
     const coords = p.c.split(/[\\._]/);
     const x = toNumber(coords[0]);

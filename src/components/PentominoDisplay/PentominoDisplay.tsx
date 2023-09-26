@@ -27,8 +27,8 @@ export const PentominoDisplay = ({
     if (pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };
     let found = false;
     if (checkGrid) {
-      grid.map((row) =>
-        row.map((p) => {
+      grid.forEach((row) =>
+        row.forEach((p) => {
           if (p.pentomino.name === pentomino.name) found = true;
         })
       );

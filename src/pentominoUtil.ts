@@ -6,8 +6,8 @@ export function center(shape: number[][]) {
     x: -1,
     y: -1,
   };
-  shape.map((row, x) =>
-    row.map((cell, y) => {
+  shape.forEach((row, x) =>
+    row.forEach((cell, y) => {
       if (cell === 2) {
         ret.x = x;
         ret.y = y;
@@ -19,8 +19,8 @@ export function center(shape: number[][]) {
 
 export function reflectX(shape: number[][]) {
   const ret = cloneDeep(shape);
-  shape.map((row, x) =>
-    row.map((_, y) => {
+  shape.forEach((row, x) =>
+    row.forEach((_, y) => {
       ret[x][y] = shape[shape.length - 1 - x][y];
     })
   );
@@ -28,19 +28,17 @@ export function reflectX(shape: number[][]) {
 }
 
 export function rotateRight(shape: number[][]) {
-  const ret: number[][] = [];
-  // this is super bs because typescript is yelling at me if i try to just
-  // map it all at once
-  range(0, shape[0].length).map(() => {
-    ret.push([]);
-  });
-  range(0, shape[0].length).map((newX) => {
-    range(0, shape.length).map(() => {
-      ret[newX].push(-1);
-    });
-  });
-  shape.map((row, x) =>
-    row.map((_, y) => {
+  const ret: number[][] = range(0, shape[0].length).reduce((acc: number[][]) => {
+    acc.push(
+      range(0, shape.length).reduce((acc2: number[]) => {
+        acc2.push(-1);
+        return acc2;
+      }, [])
+    );
+    return acc;
+  }, []);
+  shape.forEach((row, x) =>
+    row.forEach((_, y) => {
       ret[y][x] = shape[shape.length - 1 - x][y];
     })
   );

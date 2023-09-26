@@ -174,8 +174,8 @@ export const Settings = ({ ...rest }) => {
                     updateNumVisibleColors(Math.min(curNumColors, MAX_NUM_COLORS));
                     if (curHeight !== grid.length || curWidth !== grid[0].length) {
                       setGrid(
-                        range(0, curHeight).map((x) =>
-                          range(0, curWidth).map((y) => {
+                        range(curHeight).map((x) =>
+                          range(curWidth).map((y) => {
                             return EMPTY_PENTOMINO(x, y);
                           })
                         )
