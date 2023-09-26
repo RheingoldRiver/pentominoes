@@ -45,8 +45,7 @@ export const Settings = ({ ...rest }) => {
         <Dialog.Portal>
           <Dialog.Overlay className="bg-gray-900 opacity-40 fixed inset-0" />
           <Dialog.Content className="bg-gray-200 rounded-lg fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-8 shadow-md shadow-gray-500 max-h-[90vh] overflow-y-auto">
-            <Dialog.Title className="text-center font-bold text-md mb-2">Settings</Dialog.Title>
-            <Dialog.Description className="text-xs mb-4">Change view & puzzle settings</Dialog.Description>
+            <Dialog.Title className="text-center font-bold text-md mb-2">Tile Size</Dialog.Title>
             <fieldset className="flex gap-4 items-center mb-4">
               <label className="text-right" htmlFor="name">
                 Size
@@ -68,9 +67,10 @@ export const Settings = ({ ...rest }) => {
                 <option value="16">16</option>
               </select>
             </fieldset>
+            <Dialog.Title className="text-center font-bold text-md mb-2">Grid shape</Dialog.Title>
             <fieldset className="flex gap-4 items-center mb-4">
               <label className="text-right" htmlFor="width">
-                Grid Width
+                Width
               </label>
               <input
                 className="Input"
@@ -87,7 +87,7 @@ export const Settings = ({ ...rest }) => {
             </fieldset>
             <fieldset className="flex gap-4 items-center mb-4">
               <label className="text-right" htmlFor="height">
-                Grid Height
+                Length
               </label>
               <input
                 className="Input"
@@ -109,6 +109,10 @@ export const Settings = ({ ...rest }) => {
               </span>{" "}
               (min: 60)
             </div>
+            <Dialog.Title className="text-center font-bold text-md mb-2">
+              Pentomino tile colors (click & drag to rearrange)
+            </Dialog.Title>
+
             <fieldset className="flex gap-4 items-center mb-4">
               <label className="text-right" htmlFor="numColors">
                 Number of colors

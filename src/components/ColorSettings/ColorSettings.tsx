@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { range } from "lodash";
 import { Dispatch, SetStateAction } from "react";
 import { useDrag, useDrop } from "react-dnd/dist/hooks";
@@ -59,12 +60,16 @@ const ColorSettingsRow = ({
     return acc;
   }, []);
 
-  const [, dropRef] = useDrop(
+  const [{ isHovered }, dropRef] = useDrop(
     () => ({
       accept: PENTOMINO_COLOR_DRAGGABLE_TYPE,
-      drop: ({ pentomino }: { pentomino: string }) => {
-        setCurPColors({ ...curPColors, [pentomino]: x });
+      drop: ({ draggingPentomino }: { draggingPentomino: string }, monitor) => {
+        if (monitor.didDrop()) return;
+        setCurPColors({ ...curPColors, [draggingPentomino]: x });
       },
+      collect: (monitor) => ({
+        isHovered: !!monitor.isOver({ shallow: true }),
+      }),
     }),
     [curPColors]
   );
@@ -87,24 +92,69 @@ const ColorSettingsRow = ({
           }}
         />
       </fieldset>
-      <div ref={dropRef} className="flex flex-row flex-wrap gap-2 p-2 border-slate-600 border border-solid rounded-md">
+      <div
+        ref={dropRef}
+        className={clsx(
+          "flex flex-row items-center flex-wrap p-2 border-slate-600 border border-solid rounded-md",
+          isHovered ? "bg-emerald-200" : ""
+        )}
+      >
         {thisColorPentominoes.map((p) => (
-          <ColorSettingsItem key={p} pentomino={p} displayColor={curDColors[curPColors[p]]}></ColorSettingsItem>
+          <ColorSettingsItem
+            key={p}
+            pentomino={p}
+            color={curPColors[p]}
+            curPColors={curPColors}
+            setCurPColors={setCurPColors}
+            curDColors={curDColors}
+          ></ColorSettingsItem>
         ))}
       </div>
     </>
   );
 };
 
-const ColorSettingsItem = ({ pentomino, displayColor }: { pentomino: string; displayColor: string }) => {
+const ColorSettingsItem = ({
+  pentomino,
+  color,
+  curPColors,
+  setCurPColors,
+  curDColors,
+}: {
+  pentomino: string;
+  color: number;
+  curPColors: Colors;
+  setCurPColors: Dispatch<SetStateAction<Colors>>;
+  curDColors: string[];
+}) => {
   const [, dragRef] = useDrag(() => ({
     type: PENTOMINO_COLOR_DRAGGABLE_TYPE,
-    item: { pentomino },
+    item: { draggingPentomino: pentomino, prevColor: color },
   }));
 
+  const [{ isHovered }, dropRef] = useDrop(
+    () => ({
+      accept: PENTOMINO_COLOR_DRAGGABLE_TYPE,
+      drop: ({ draggingPentomino, prevColor }: { draggingPentomino: string; prevColor: number }) => {
+        setCurPColors({ ...curPColors, [draggingPentomino]: color, [pentomino]: prevColor } as Colors);
+      },
+      collect: (monitor) => ({
+        isHovered: !!monitor.isOver(),
+      }),
+    }),
+    [curPColors]
+  );
+
   return (
-    <div ref={dragRef}>
-      <PentominoDisplay pentomino={PENTOMINOES[pentomino]} color={displayColor} checkGrid={false}></PentominoDisplay>
+    <div
+      ref={(node) => dragRef(dropRef(node))}
+      className={clsx("p-2 rounded-sm h-min", isHovered ? "bg-yellow-200" : "")}
+    >
+      <PentominoDisplay
+        pentomino={PENTOMINOES[pentomino]}
+        color={curDColors[color]}
+        checkGrid={false}
+      ></PentominoDisplay>
     </div>
   );
 };
