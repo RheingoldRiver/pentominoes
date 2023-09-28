@@ -5,15 +5,27 @@ import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 
-export const Cell = ({ cell, x = 0, y = 0 }: { cell: PaintedCell; x: number; y: number }) => {
-  const { pentominoSize, displayColors } = useContext(AppStateContext);
+export const Cell = ({
+  cell,
+  x = 0,
+  y = 0,
+  pentominoSize,
+  borderColor,
+}: {
+  cell: PaintedCell;
+  x: number;
+  y: number;
+  pentominoSize: number;
+  borderColor: string;
+}) => {
+  const { displayColors } = useContext(AppStateContext);
   const { pentominoColors } = useContext(GameStateContext);
   const { clickBoard } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
   function borderStyle(b: boolean) {
     if (b === true) return "2px solid #C4B5FD";
     if (hasPentomino) return "";
-    return "1px solid white";
+    return `1px solid ${borderColor}`;
   }
   function backgroundColor() {
     if (cell.conflict === true && hasPentomino === true) return { class: "bg-red-700", style: "" };
