@@ -3,8 +3,9 @@ import { EMPTY_PENTOMINO, PaintedCell, PlacedPentomino } from "../../constants";
 import { PENTOMINOES } from "../../pentominoes";
 import { Cell } from "../Cell/Cell";
 import clsx from "clsx";
+import { memo } from "react";
 
-export const Board = ({
+function BoardComponent({
   grid,
   pentominoSize,
   gridArea,
@@ -16,7 +17,7 @@ export const Board = ({
   gridArea?: string;
   borderColor?: string;
   clickBoard?: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
-}) => {
+}) {
   const paintedGrid: PaintedCell[][] = range(grid.length).map((x) =>
     range(grid[0].length).map((y) => {
       return {
@@ -102,4 +103,6 @@ export const Board = ({
       )}
     </div>
   );
-};
+}
+
+export const Board = memo(BoardComponent);
