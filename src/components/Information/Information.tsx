@@ -73,19 +73,19 @@ const gridExampleStructure: GridExample[] = [
     ],
   },
   {
-    w: 10,
-    l: 6,
+    w: 6,
+    l: 10,
     terrain: [],
   },
   {
-    w: 12,
-    l: 5,
+    w: 5,
+    l: 12,
     terrain: [],
   },
 ];
 
 const exampleGrids = gridExampleStructure.map((e) => {
-  const grid = EMPTY_GRID(e.l, e.w);
+  const grid = EMPTY_GRID(e.w, e.l);
   e.terrain.forEach(({ x, y }) => {
     grid[x][y].pentomino = PENTOMINOES.R;
   });
@@ -139,7 +139,7 @@ export const Information = () => {
             {exampleGrids.map((grid, i) => (
               <div className="flex flex-col items-center justify-center">
                 <Board key={i} grid={grid} pentominoSize={4} borderColor="black"></Board>
-                Width: {grid.length} Length: {grid[0].length}
+                Width: {grid[0].length} Length: {grid.length}
               </div>
             ))}
           </div>
