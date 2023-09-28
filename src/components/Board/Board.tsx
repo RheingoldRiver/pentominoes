@@ -9,11 +9,13 @@ export const Board = ({
   pentominoSize,
   gridArea,
   borderColor = "white",
+  clickBoard,
 }: {
   grid: PlacedPentomino[][];
   pentominoSize: number;
   gridArea?: string;
   borderColor?: string;
+  clickBoard?: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
 }) => {
   const paintedGrid: PaintedCell[][] = range(grid.length).map((x) =>
     range(grid[0].length).map((y) => {
@@ -94,6 +96,7 @@ export const Board = ({
             y={y}
             pentominoSize={pentominoSize}
             borderColor={borderColor}
+            onClick={clickBoard}
           ></Cell>
         ))
       )}

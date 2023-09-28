@@ -20,7 +20,7 @@ export const Game = () => {
 };
 
 const GameContent = () => {
-  const { grid } = useContext(GameStateContext);
+  const { grid, clickBoard } = useContext(GameStateContext);
   const { pentominoSize } = useContext(AppStateContext);
   return (
     <div
@@ -35,7 +35,7 @@ const GameContent = () => {
         <Settings></Settings>
       </div>
       <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
-      <Board grid={grid} gridArea="board" pentominoSize={pentominoSize}></Board>
+      <Board grid={grid} gridArea="board" pentominoSize={pentominoSize} clickBoard={clickBoard}></Board>
     </div>
   );
 };

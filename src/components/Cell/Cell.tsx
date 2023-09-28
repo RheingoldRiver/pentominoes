@@ -11,16 +11,17 @@ export const Cell = ({
   y = 0,
   pentominoSize,
   borderColor,
+  onClick,
 }: {
   cell: PaintedCell;
   x: number;
   y: number;
   pentominoSize: number;
   borderColor: string;
+  onClick?: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
 }) => {
   const { displayColors } = useContext(AppStateContext);
   const { pentominoColors } = useContext(GameStateContext);
-  const { clickBoard } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
   function borderStyle(b: boolean) {
     if (b === true) return "2px solid #C4B5FD";
@@ -37,7 +38,7 @@ export const Cell = ({
   const bg = backgroundColor();
   return (
     <div
-      className={clsx("cursor-pointer", PENTOMINO_SIZES[pentominoSize], bg.class)}
+      className={clsx(onClick === undefined ? "" : "cursor-pointer", PENTOMINO_SIZES[pentominoSize], bg.class)}
       style={{
         borderTop: borderStyle(cell.borderTop),
         borderLeft: borderStyle(cell.borderLeft),
@@ -45,7 +46,9 @@ export const Cell = ({
         borderRight: borderStyle(cell.borderRight),
         backgroundColor: bg.style,
       }}
-      onClick={() => clickBoard(x, y, hasPentomino, cell)}
+      onClick={() => {
+        if (onClick !== undefined) onClick(x, y, hasPentomino, cell);
+      }}
     ></div>
   );
 };

@@ -11,7 +11,7 @@ export const PentominoDisplay = ({
   color,
   rotation = 0,
   reflection = 0,
-  onClick = () => {},
+  onClick,
   checkGrid = true,
   size = 5,
 }: {
@@ -47,7 +47,11 @@ export const PentominoDisplay = ({
 
   return (
     <div
-      className={clsx("grid grid-flow-row w-fit h-fit cursor-pointer", PENTOMINO_DIMENSIONS[p.shape[0].length])}
+      className={clsx(
+        "grid grid-flow-row w-fit h-fit",
+        PENTOMINO_DIMENSIONS[p.shape[0].length],
+        onClick === undefined ? "" : "cursor-pointer"
+      )}
       onClick={onClick}
     >
       {p.shape.map((row, x) =>
