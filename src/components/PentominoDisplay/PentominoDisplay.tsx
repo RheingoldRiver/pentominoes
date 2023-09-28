@@ -4,6 +4,7 @@ import { Pentomino, PENTOMINOES } from "../../pentominoes";
 import { MouseEvent, useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { DotFilledIcon } from "@radix-ui/react-icons";
+import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 
 export const PentominoDisplay = ({
   pentomino,
@@ -12,16 +13,19 @@ export const PentominoDisplay = ({
   reflection = 0,
   onClick = () => {},
   checkGrid = true,
+  size = 5,
 }: {
   pentomino: Pentomino;
-  color: string;
+  color?: string;
   rotation?: number;
   reflection?: number;
   onClick?: (event: MouseEvent<HTMLDivElement>) => void;
   checkGrid?: boolean;
+  size?: number;
 }) => {
   const { grid } = useContext(GameStateContext);
-
+  const { displayColors } = useContext(AppStateContext);
+  if (color === undefined) color = displayColors[0];
   const p = pentomino.orientations[reflection][rotation];
   function bgColor(cell: number) {
     if (pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };
@@ -43,7 +47,7 @@ export const PentominoDisplay = ({
 
   return (
     <div
-      className={clsx("grid grid-flow-row w-fit h-fit cursor-pointer", PENTOMINO_DIMENSIONS[p.shape[0].length])}
+      className={clsx("inline-grid grid-flow-row w-fit h-fit cursor-pointer", PENTOMINO_DIMENSIONS[p.shape[0].length])}
       onClick={onClick}
     >
       {p.shape.map((row, x) =>
@@ -52,7 +56,7 @@ export const PentominoDisplay = ({
           return (
             <div
               key={`${pentomino.name}_${x}_${y}`}
-              className={clsx(PENTOMINO_SIZES[5], bg.class, "text-white flex flex-row items-center justify-center")}
+              className={clsx(PENTOMINO_SIZES[size], bg.class, "text-white flex flex-row items-center justify-center")}
               style={{
                 fontSize: "1rem",
                 lineHeight: "0.5rem",

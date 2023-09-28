@@ -1,15 +1,20 @@
 import { range } from "lodash";
-import { useContext } from "react";
-import { EMPTY_PENTOMINO, PaintedCell, PENTOMINO_DIMENSIONS } from "../../constants";
-import { GameStateContext } from "../GameStateProvider/GameStateProvider";
+import { EMPTY_PENTOMINO, PaintedCell, PlacedPentomino } from "../../constants";
 import { PENTOMINOES } from "../../pentominoes";
 import { Cell } from "../Cell/Cell";
-import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import clsx from "clsx";
 
-export const Board = ({ gridArea }: { gridArea: string }) => {
-  const { grid } = useContext(GameStateContext);
-  const { pentominoSize } = useContext(AppStateContext);
+export const Board = ({
+  grid,
+  pentominoSize,
+  gridArea,
+  borderColor = "white",
+}: {
+  grid: PlacedPentomino[][];
+  pentominoSize: number;
+  gridArea?: string;
+  borderColor?: string;
+}) => {
   const paintedGrid: PaintedCell[][] = range(grid.length).map((x) =>
     range(grid[0].length).map((y) => {
       return {
@@ -73,14 +78,25 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
   );
   return (
     <div
-      className={clsx("grid grid-flow-row w-fit", PENTOMINO_DIMENSIONS[pentominoSize])}
+      className={clsx("grid grid-flow-row w-fit h-fit")}
       style={{
         gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
         gridTemplateColumns: `repeat(${grid[0].length}, minmax(0, 1fr))`,
         gridArea,
       }}
     >
-      {paintedGrid.map((r, x) => r.map((c, y) => <Cell key={`cell-${x}_${y}`} cell={c} x={x} y={y}></Cell>))}
+      {paintedGrid.map((r, x) =>
+        r.map((c, y) => (
+          <Cell
+            key={`cell-${x}_${y}`}
+            cell={c}
+            x={x}
+            y={y}
+            pentominoSize={pentominoSize}
+            borderColor={borderColor}
+          ></Cell>
+        ))
+      )}
     </div>
   );
 };
