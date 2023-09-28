@@ -156,12 +156,7 @@ export const Information = () => {
 
 const InformationPentominoDisplay = ({ p }: { p: string }) => {
   return (
-    <div
-      className="inline-block"
-      style={{
-        verticalAlign: "middle",
-      }}
-    >
+    <div className="inline-block align-middle">
       <PentominoDisplay pentomino={PENTOMINOES[p]} size={2} checkGrid={false}></PentominoDisplay>
     </div>
   );
