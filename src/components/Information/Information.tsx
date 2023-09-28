@@ -104,34 +104,12 @@ export const Information = () => {
         <Dialog.Overlay className="bg-gray-900 opacity-40 fixed inset-0" />
         <Dialog.Content className="bg-gray-200 rounded-lg fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-8 shadow-md shadow-gray-500 max-h-[90vh] overflow-y-auto w-[min(90vw,_48rem)]">
           <Dialog.Title className="text-center font-bold text-md mb-2">About Pentominoes</Dialog.Title>
-          <p
-            className="mb-2"
-            // style={{
-            //   display: "table-cell",
-            // }}
-          >
-            <span
-              style={{
-                verticalAlign: "middle",
-              }}
-            >
-              Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each
-              tile having somewhere between 2 (the{" "}
-            </span>
-            {<PentominoDisplay pentomino={PENTOMINOES.I} size={4} checkGrid={false}></PentominoDisplay>}{" "}
-            <span
-              style={{
-                verticalAlign: "middle",
-              }}
-            >
-              tile) and 8 (
-            </span>
-            {<PentominoDisplay pentomino={PENTOMINOES.F} size={4} checkGrid={false}></PentominoDisplay>}{" "}
-            {<PentominoDisplay pentomino={PENTOMINOES.L} size={4} checkGrid={false}></PentominoDisplay>}{" "}
-            {<PentominoDisplay pentomino={PENTOMINOES.N} size={4} checkGrid={false}></PentominoDisplay>}{" "}
-            {<PentominoDisplay pentomino={PENTOMINOES.P} size={4} checkGrid={false}></PentominoDisplay>}{" "}
-            {<PentominoDisplay pentomino={PENTOMINOES.Y} size={4} checkGrid={false}></PentominoDisplay>}) distinct
-            orientations.
+          <p className="mb-2">
+            Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each
+            tile having somewhere between 2 (the {<InformationPentominoDisplay p="I" />} tile) and 8 (
+            {<InformationPentominoDisplay p="F" />} {<InformationPentominoDisplay p="L" />}{" "}
+            {<InformationPentominoDisplay p="N" />} {<InformationPentominoDisplay p="P" />}{" "}
+            {<InformationPentominoDisplay p="Y" />}) distinct orientations.
           </p>
           <p className="mb-2">
             There are several different ways to enjoy the puzzle game of Pentominoes, but the common theme is that you
@@ -142,8 +120,7 @@ export const Information = () => {
           <p className="mb-2">
             Generally, you want to use one of each pentomino to tile the board, but you're welcome to use this app
             however you like, and there are no prohibitions against using a tile more than once unless you want there to
-            be. One suggestion is to attempt to tile an area with just the{" "}
-            {<PentominoDisplay pentomino={PENTOMINOES.P} size={4} checkGrid={false}></PentominoDisplay>} tile.
+            be. One suggestion is to attempt to tile an area with just the {<InformationPentominoDisplay p="P" />} tile.
           </p>
           <p className="mb-2">
             For an added challenge, you can also choose to apply "colorways" to your tiles. Then, constrain yourself to
@@ -155,6 +132,8 @@ export const Information = () => {
             If you're new to pentominoes, feel free to "cheat" in your first few solve attempts and move terrain around,
             or use one piece twice - this is a single-player puzzle game, so the rules are whatever you make them to be!
           </p>
+          <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
+          You can use <code>Ctrl+Z</code> to undo your last grid-modifying action (adding or removing a piece).
           <Dialog.Title className="text-center font-bold text-md mb-2">Suggested Puzzles</Dialog.Title>
           <div className="flex flex-row flex-wrap gap-3 justify-center">
             {exampleGrids.map((grid, i) => (
@@ -172,5 +151,18 @@ export const Information = () => {
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  );
+};
+
+const InformationPentominoDisplay = ({ p }: { p: string }) => {
+  return (
+    <div
+      className="inline-block"
+      style={{
+        verticalAlign: "middle",
+      }}
+    >
+      <PentominoDisplay pentomino={PENTOMINOES[p]} size={2} checkGrid={false}></PentominoDisplay>
+    </div>
   );
 };

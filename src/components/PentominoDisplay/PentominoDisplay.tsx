@@ -47,7 +47,7 @@ export const PentominoDisplay = ({
 
   return (
     <div
-      className={clsx("inline-grid grid-flow-row w-fit h-fit cursor-pointer", PENTOMINO_DIMENSIONS[p.shape[0].length])}
+      className={clsx("grid grid-flow-row w-fit h-fit cursor-pointer", PENTOMINO_DIMENSIONS[p.shape[0].length])}
       onClick={onClick}
     >
       {p.shape.map((row, x) =>
