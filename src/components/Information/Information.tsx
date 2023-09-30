@@ -137,8 +137,8 @@ export const Information = () => {
           <Dialog.Title className="text-center font-bold text-md mb-2">Suggested Puzzles</Dialog.Title>
           <div className="flex flex-row flex-wrap gap-3 justify-center">
             {exampleGrids.map((grid, i) => (
-              <div className="flex flex-col items-center justify-center">
-                <Board key={i} grid={grid} pentominoSize={4} borderColor="black"></Board>
+              <div key={i} className="flex flex-col items-center justify-center">
+                <Board grid={grid} pentominoSize={4} borderColor="black"></Board>
                 Width: {grid[0].length} Length: {grid.length}
               </div>
             ))}
