@@ -1,6 +1,6 @@
 import { cloneDeep, debounce } from "lodash";
 import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
-import { Action, Colors, DEFAULT_CONFIG, PaintedCell, PlacedPentomino, UrlConfig } from "../../constants";
+import { Action, Colors, DEFAULT_CONFIG, PaintedCell, PlacedPentomino, Surface, UrlConfig } from "../../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { deserializeUrl, serializeUrl } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,6 +21,8 @@ interface GameState {
   clickBoard: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
   pentominoColors: Colors;
   setPentominoColors: Dispatch<SetStateAction<Colors>>;
+  surface: Surface;
+  setSurface: Dispatch<SetStateAction<Surface>>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -38,6 +40,8 @@ const DEFAULT_GAME_STATE: GameState = {
   clickBoard: () => {},
   pentominoColors: {},
   setPentominoColors: () => {},
+  surface: Surface.R,
+  setSurface: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -48,6 +52,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   const [grid, setGrid] = useState<PlacedPentomino[][]>(parsedConfig.grid);
   const [pentominoColors, setPentominoColors] = useState<Colors>(parsedConfig.colors);
+  const [surface, setSurface] = useState<Surface>(parsedConfig.surface);
 
   const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [toolbarPentomino, setToolbarPentomino] = useState<Pentomino>(PENTOMINOES.None);
@@ -63,6 +68,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       const finalConfig = {
         grid: grid,
         colors: pentominoColors,
+        surface: surface,
         ...config,
       };
       navigate("/" + serializeUrl(finalConfig));
@@ -169,6 +175,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         clickBoard,
         pentominoColors,
         setPentominoColors,
+        surface,
+        setSurface,
       }}
     >
       {children}

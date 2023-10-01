@@ -56,7 +56,7 @@ export interface PaintedCell {
   borderRight: boolean;
 }
 
-export const MAX_NUM_COLORS = 6;
+export const MAX_NUM_COLORS = 12;
 
 export interface Colors {
   [key: string]: number;
@@ -68,9 +68,18 @@ export const DEFAULT_COLORS: Colors = {};
 
 PENTOMINO_NAMES.forEach((p) => (DEFAULT_COLORS[p] = 0));
 
+export enum Surface {
+  R, // rectangle
+  S, // sphere
+  P, // projective plane
+  T, // torus
+  K, // klein bottle
+}
+
 export type UrlConfig = {
   grid: PlacedPentomino[][];
   colors: Colors;
+  surface: Surface;
 };
 
 export function EMPTY_GRID(w: number, h: number): PlacedPentomino[][] {
@@ -84,9 +93,23 @@ export function EMPTY_GRID(w: number, h: number): PlacedPentomino[][] {
 export const DEFAULT_CONFIG: UrlConfig = {
   grid: EMPTY_GRID(8, 8),
   colors: DEFAULT_COLORS,
+  surface: Surface.R,
 };
 
-export const DEFAULT_DISPLAY_COLORS = ["#4C1D95", "#9D174D", "#1E40AF", "#155E75", "#065F46", "#3F6212"];
+export const DEFAULT_DISPLAY_COLORS = [
+  "#4C1D95", // 0
+  "#9D174D",
+  "#1E40AF", // 2
+  "#155E75",
+  "#065F46", // 4
+  "#3F6212",
+  "#ca8a04",
+  "#D97706",
+  "#9a3412",
+  "#854d0e",
+  "#A21CAF",
+  "#3B0764",
+];
 
 export const shuffleArray = <T>(array: T[]): void => {
   for (let i = array.length - 1; i > 0; i--) {

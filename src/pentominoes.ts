@@ -146,9 +146,9 @@ pentominoPrimitives.map((p) => {
     },
   };
   const orientations = expandedPentomino.orientations;
-  range(0, 3).map(() => {
+  range(0, 3).forEach(() => {
     // rotate 3 times
-    range(0, 2).map((i) => {
+    range(0, 2).forEach((i) => {
       // 0 and 1
       const newShape = rotateRight(orientations[i][orientations[i].length - 1].shape);
       orientations[i].push({
