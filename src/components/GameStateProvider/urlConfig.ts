@@ -280,14 +280,15 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
             if (c.match(PENTOMINOES.R.name)) {
               isTerrain = true;
               pentominoPosition = 2; // skip orientation
+              // we'll push the first terrain tile in position 2
             } else {
+              config.pentominoes.push({
+                p: c,
+                r: isTerrain ? "0" : "@", // charCode 64 if it's not going to get updated
+                c: "",
+              });
               pentominoPosition = 1;
             }
-            config.pentominoes.push({
-              p: c,
-              r: isTerrain ? "0" : "@", // charCode 64 if it's not going to get updated
-              c: "",
-            });
             break;
           }
           case 1: {
@@ -329,6 +330,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
       }
     }
   });
+  console.log(config.pentominoes);
   return config;
 }
 
