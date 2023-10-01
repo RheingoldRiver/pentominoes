@@ -34,6 +34,7 @@ function BoardComponent({
   grid.forEach((r, x) =>
     r.forEach((p, y) => {
       if (p.pentomino.name === PENTOMINOES.None.name) return;
+      console.log(p.pentomino);
       const orientation = p.pentomino.orientations[p.reflection][p.rotation];
       orientation.shape.forEach((pr, px) =>
         pr.forEach((val, py) => {

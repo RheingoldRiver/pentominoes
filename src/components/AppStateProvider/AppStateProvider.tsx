@@ -26,8 +26,10 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
   });
   const [displayColors, setDisplayColors] = useState<string[]>(() => {
     const localVal = window.localStorage.getItem("colors");
-    if (typeof localVal === "string") return localVal.split(",");
-    return DEFAULT_DISPLAY_COLORS;
+    if (typeof localVal !== "string") return DEFAULT_DISPLAY_COLORS;
+    const nextColors = [...DEFAULT_DISPLAY_COLORS];
+    localVal.split(",").forEach((c, i) => (nextColors[i] = c));
+    return nextColors;
   });
   const [numVisibleColors, setNumVisibleColors] = useState(() => {
     return Number(window.localStorage.getItem("numColors") ?? 3);
