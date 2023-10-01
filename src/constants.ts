@@ -128,4 +128,4 @@ export interface Action {
   y: number;
 }
 
-export const MAX_DIMENSION_SIZE = 99;
+export const MAX_DIMENSION_SIZE = 60;
