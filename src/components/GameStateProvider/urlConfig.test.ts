@@ -133,9 +133,9 @@ test("you get the right grid with single-digit numbers", () => {
 test("you get the right grid with two-digit  numbers", () => {
   const grid: PlacedPentomino[][] = EMPTY_GRID(10, 6);
   grid[4][6].pentomino = PENTOMINOES["I"];
-  expect(deserializeUrl("S6aI046")).toStrictEqual({
+  expect(deserializeUrl("P6aI046")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
-    surface: Surface.S,
+    surface: Surface.ProjectivePlane,
   });
 });
