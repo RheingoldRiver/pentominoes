@@ -7,10 +7,10 @@ export interface Coordinates {
 }
 
 interface Orientations {
-  [key: number]: Shape[];
+  [key: number]: Orientation[];
 }
 
-interface Shape {
+export interface Orientation {
   center: Coordinates;
   shape: number[][];
 }

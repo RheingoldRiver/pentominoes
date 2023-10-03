@@ -2,7 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { QuestionMarkCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { EMPTY_GRID } from "../../constants";
 import { Coordinates, PENTOMINOES } from "../../pentominoes";
-import { Board } from "../Board/Board";
+import { Grid } from "../Grid/Grid";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 
 interface GridExample {
@@ -138,7 +138,7 @@ export const Information = () => {
           <div className="flex flex-row flex-wrap gap-3 justify-center">
             {exampleGrids.map((grid, i) => (
               <div key={i} className="flex flex-col items-center justify-center">
-                <Board grid={grid} pentominoSize={4} borderColor="black"></Board>
+                <Grid grid={grid} pentominoSize={4} borderColor="black"></Grid>
                 Width: {grid[0].length} Length: {grid.length}
               </div>
             ))}

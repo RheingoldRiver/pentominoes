@@ -40,7 +40,7 @@ const DEFAULT_GAME_STATE: GameState = {
   clickBoard: () => {},
   pentominoColors: {},
   setPentominoColors: () => {},
-  surface: Surface.R,
+  surface: Surface.Rectangle,
   setSurface: () => {},
 };
 
@@ -66,9 +66,9 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
-        grid: grid,
+        grid,
+        surface,
         colors: pentominoColors,
-        surface: surface,
         ...config,
       };
       navigate("/" + serializeUrl(finalConfig));
@@ -76,8 +76,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   );
 
   useEffect(() => {
-    updateUrl.current({ grid: grid, colors: pentominoColors });
-  }, [grid, pentominoColors]);
+    updateUrl.current({ grid, colors: pentominoColors, surface });
+  }, [grid, pentominoColors, surface]);
 
   useEffect(() => {
     window.addEventListener("hashchange", function () {

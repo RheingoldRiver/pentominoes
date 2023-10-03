@@ -9,7 +9,7 @@ test("[legacy urls] a URL is properly decoded when no pentominoes are placed", (
     w: 8,
     pentominoes: [],
     colors: {},
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
 });
 
@@ -19,7 +19,7 @@ test("[legacy urls] a URL is properly decoded with colors but no pentominoes", (
     w: 8,
     pentominoes: [],
     colors: { 1: ["F"] },
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
 });
 
@@ -35,7 +35,7 @@ test("[legacy urls] a URL is properly decoded with colors and pentominoes", () =
       },
     ],
     colors: { 1: ["F"] },
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
   expect(decodeSurfacelessUrl("8_8i044_1F")).toStrictEqual({
     h: 8,
@@ -48,7 +48,7 @@ test("[legacy urls] a URL is properly decoded with colors and pentominoes", () =
       },
     ],
     colors: { 1: ["F"] },
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
 });
 
@@ -64,7 +64,7 @@ test("[legacy urls] a URL is properly decoded, no asymmetry", () => {
       },
     ],
     colors: {},
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
   expect(decodeSurfacelessUrl("8_8i044")).toStrictEqual({
     h: 8,
@@ -77,7 +77,7 @@ test("[legacy urls] a URL is properly decoded, no asymmetry", () => {
       },
     ],
     colors: {},
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
 });
 
@@ -93,7 +93,7 @@ test("[legacy urls] a URL is properly decoded, asymmetry", () => {
       },
     ],
     colors: {},
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
   expect(decodeSurfacelessUrl("6_10i046")).toStrictEqual({
     h: 6,
@@ -106,7 +106,7 @@ test("[legacy urls] a URL is properly decoded, asymmetry", () => {
       },
     ],
     colors: {},
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
 });
 
@@ -116,12 +116,12 @@ test("[legacy urls] you get the right grid, no asymmetry", () => {
   expect(deserializeUrl("8_8I04_4")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
   expect(deserializeUrl("8_8i044")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
 });
 
@@ -131,11 +131,11 @@ test("[legacy urls] you get the right grid, asymmetry", () => {
   expect(deserializeUrl("6_10I04_6")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
   expect(deserializeUrl("6_10i046")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   });
 });

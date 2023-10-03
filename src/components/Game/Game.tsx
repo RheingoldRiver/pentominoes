@@ -1,11 +1,10 @@
-import { Board } from "../Board/Board";
 import { Header } from "../Header/Header";
 import GameToolbar from "../GameToolbar/GameToolbar";
 import { Settings } from "../Settings/Settings";
-import GameStateProvider, { GameStateContext } from "../GameStateProvider/GameStateProvider";
+import GameStateProvider from "../GameStateProvider/GameStateProvider";
 import { Information } from "../Information/Information";
-import { useContext } from "react";
-import AppStateProvider, { AppStateContext } from "../AppStateProvider/AppStateProvider";
+import AppStateProvider from "../AppStateProvider/AppStateProvider";
+import { Board } from "../Board/Board";
 
 export const Game = () => {
   return (
@@ -20,8 +19,6 @@ export const Game = () => {
 };
 
 const GameContent = () => {
-  const { grid, clickBoard } = useContext(GameStateContext);
-  const { pentominoSize } = useContext(AppStateContext);
   return (
     <div
       className="grid py-4 w-full grid-cols-[auto_max-content_auto] "
@@ -35,7 +32,7 @@ const GameContent = () => {
         <Settings></Settings>
       </div>
       <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
-      <Board grid={grid} gridArea="board" pentominoSize={pentominoSize} clickBoard={clickBoard}></Board>
+      <Board gridArea="board"></Board>
     </div>
   );
 };

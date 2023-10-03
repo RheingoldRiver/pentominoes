@@ -12,6 +12,7 @@ import {
   MAX_NUM_COLORS,
   PENTOMINO_NAMES,
   shuffleArray,
+  Surface,
 } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { ColorSettings } from "../ColorSettings/ColorSettings";
@@ -26,13 +27,14 @@ export const Settings = () => {
     numVisibleColors,
     updateNumVisibleColors,
   } = useContext(AppStateContext);
-  const { grid, setGrid, pentominoColors, setPentominoColors } = useContext(GameStateContext);
+  const { grid, setGrid, pentominoColors, setPentominoColors, surface, setSurface } = useContext(GameStateContext);
   const [curPentominoSize, setCurPentominoSize] = useState(pentominoSize);
   const [curHeight, setCurHeight] = useState(grid.length);
   const [curWidth, setCurWidth] = useState(grid[0].length);
   const [curNumColors, setCurNumColors] = useState(numVisibleColors);
   const [curDColors, setCurDColors] = useState(displayColors);
   const [curPColors, setCurPColors] = useState<Colors>({ ...pentominoColors });
+  const [curSurface, setCurSurface] = useState<Surface>(surface);
 
   return (
     <Dialog.Root>
@@ -101,16 +103,32 @@ export const Settings = () => {
               }}
             />
           </fieldset>
-          <div>
+          <div className="ml-4">
             Computed area:{" "}
             <span className={clsx(curHeight * curWidth >= 60 ? "text-green-700" : "text-red-500")}>
               {curWidth * curHeight}
             </span>{" "}
             (min: 60)
           </div>
-          <Dialog.Title className="text-center font-bold text-md mb-2">
-            Pentomino tile colors (click & drag to rearrange)
-          </Dialog.Title>
+          <fieldset className="flex gap-4 items-center mb-4">
+            <label className="text-right" htmlFor="surface">
+              Surface
+            </label>
+            <select
+              id="surface"
+              value={Surface[curSurface]}
+              onChange={(e) => {
+                setCurSurface(Surface[e.target.value as keyof typeof Surface]);
+              }}
+            >
+              <option value="Rectangle">Rectangle</option>
+              <option value="Torus">Torus</option>
+              <option value="ProjectivePlane">Projective Plane</option>
+              <option value="KleinBottle">Klein Bottle</option>
+            </select>
+          </fieldset>
+          <Dialog.Title className="text-center font-bold text-md mb-2">Pentomino tile colors</Dialog.Title>
+          <Dialog.Description className="italic mb-1">Click & drag to rearrange</Dialog.Description>
 
           <fieldset className="flex gap-4 items-center mb-4">
             <label className="text-right" htmlFor="numColors">
@@ -186,6 +204,7 @@ export const Settings = () => {
                     );
                   }
 
+                  setSurface(curSurface);
                   setPentominoColors(curPColors);
                 }}
               >
