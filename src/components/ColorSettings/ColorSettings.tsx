@@ -148,7 +148,7 @@ const ColorSettingsItem = ({
   return (
     <div
       ref={(node) => dragRef(dropRef(node))}
-      className={clsx("p-2 rounded-sm h-min", isHovered ? "bg-yellow-200" : "")}
+      className={clsx("p-2 rounded-sm h-min cursor-grab", isHovered ? "bg-yellow-200" : "")}
     >
       <PentominoDisplay
         pentomino={PENTOMINOES[pentomino]}
