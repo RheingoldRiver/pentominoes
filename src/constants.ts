@@ -69,12 +69,21 @@ export const DEFAULT_COLORS: Colors = {};
 PENTOMINO_NAMES.forEach((p) => (DEFAULT_COLORS[p] = 0));
 
 export enum Surface {
-  R, // rectangle
-  S, // sphere
-  P, // projective plane
-  T, // torus
-  K, // klein bottle
+  Rectangle, // rectangle
+  Torus, // torus
+  ProjectivePlane, // projective plane
+  KleinBottle, // klein bottle
 }
+
+interface SurfaceOrientations {
+  [key: number]: { h: boolean; w: boolean };
+}
+
+export const surfaceOrientations: SurfaceOrientations = {
+  [Surface.Torus]: { h: false, w: false },
+  [Surface.ProjectivePlane]: { h: true, w: true },
+  [Surface.KleinBottle]: { h: false, w: true },
+};
 
 export type UrlConfig = {
   grid: PlacedPentomino[][];
@@ -93,7 +102,7 @@ export function EMPTY_GRID(w: number, h: number): PlacedPentomino[][] {
 export const DEFAULT_CONFIG: UrlConfig = {
   grid: EMPTY_GRID(8, 8),
   colors: DEFAULT_COLORS,
-  surface: Surface.R,
+  surface: Surface.Rectangle,
 };
 
 export const DEFAULT_DISPLAY_COLORS = [

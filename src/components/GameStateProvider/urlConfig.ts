@@ -27,6 +27,20 @@ interface Orientation {
   color: number; // index of the color in an array
 }
 
+const surfaceToLetter = {
+  [Surface.Rectangle]: "R",
+  [Surface.Torus]: "T",
+  [Surface.ProjectivePlane]: "P",
+  [Surface.KleinBottle]: "K",
+};
+
+const letterToSurface = {
+  R: Surface.Rectangle,
+  T: Surface.Torus,
+  P: Surface.ProjectivePlane,
+  K: Surface.KleinBottle,
+};
+
 const LOWERCASE_START_INDEX = 97;
 const UPPERCASE_START_INDEX = 65;
 export const LETTERS_IN_ALPHABET = 26;
@@ -123,7 +137,7 @@ export function serializeUrl({ grid, colors, surface }: UrlConfig): string {
 
   // terrain MUST be last because it has a different scheme from pentominoes
   // and we'll no when to break out of it when we get to an underscore
-  return `${Surface[surface]}${encodeNumber(grid.length)}${encodeNumber(grid[0].length)}${sP.join("")}${sT.join(
+  return `${surfaceToLetter[surface]}${encodeNumber(grid.length)}${encodeNumber(grid[0].length)}${sP.join("")}${sT.join(
     ""
   )}${serializedColors}`;
 }
@@ -225,7 +239,7 @@ export function decodeSurfacelessUrl(s: string): StringifiedUrlConfig {
     w: w,
     pentominoes: pentominoes,
     colors: colors,
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   };
 }
 
@@ -244,7 +258,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
     w: -1,
     pentominoes: [],
     colors: {},
-    surface: Surface.R,
+    surface: Surface.Rectangle,
   };
   let curToken = "";
   let curPos = 0; // ['surface', 'height', 'width', 'terrain', 'pentominoes', 'colors']
@@ -254,7 +268,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
   s.split("").forEach((c) => {
     switch (curPos) {
       case 0: {
-        config.surface = Surface[c as keyof typeof Surface];
+        config.surface = letterToSurface[c as keyof typeof letterToSurface];
         curPos = 1;
         break;
       }
@@ -330,7 +344,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
       }
     }
   });
-  console.log(config.pentominoes);
+  // console.log(config.pentominoes);
   return config;
 }
 
