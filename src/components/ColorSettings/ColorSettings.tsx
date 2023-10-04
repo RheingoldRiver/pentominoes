@@ -96,7 +96,7 @@ const ColorSettingsRow = ({
         ref={dropRef}
         className={clsx(
           "flex flex-row items-center flex-wrap p-2 border-slate-600 border border-solid rounded-md",
-          isHovered ? "bg-emerald-200" : ""
+          isHovered ? "bg-emerald-200 dark:bg-emerald-900" : ""
         )}
       >
         {thisColorPentominoes.map((p) => (
@@ -148,7 +148,7 @@ const ColorSettingsItem = ({
   return (
     <div
       ref={(node) => dragRef(dropRef(node))}
-      className={clsx("p-2 rounded-sm h-min cursor-grab", isHovered ? "bg-yellow-200" : "")}
+      className={clsx("p-2 rounded-sm h-min cursor-grab", isHovered ? "bg-yellow-200 dark:bg-yellow-700" : "")}
     >
       <PentominoDisplay
         pentomino={PENTOMINOES[pentomino]}

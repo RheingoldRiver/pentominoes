@@ -20,7 +20,7 @@ export const Header = ({ ...rest }) => {
   const { displayColors } = useContext(AppStateContext);
 
   return (
-    <div {...rest} className="flex flex-col md:flex-row pb-6">
+    <div {...rest} className={clsx("flex flex-col md:flex-row p-6 rounded-lg mb-3", "bg-slate-100 dark:bg-slate-800")}>
       <div
         className={clsx(
           "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 p-2"
@@ -39,7 +39,12 @@ export const Header = ({ ...rest }) => {
           ></PentominoDisplay>
         ))}
       </div>
-      <div className="ml-20 p-1 border-solid border-black rounded border w-[9em] h-[9em] flex justify-center items-center self-end">
+      <div
+        className={clsx(
+          "ml-20 p-1 border-solid  rounded border w-[9em] h-[9em] flex justify-center items-center self-end",
+          "border-black dark:border-slate-50"
+        )}
+      >
         <PentominoDisplay
           pentomino={currentPentomino}
           color={displayColors[pentominoColors[currentPentomino.name]]}
