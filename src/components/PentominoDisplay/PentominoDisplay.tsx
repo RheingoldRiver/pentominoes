@@ -39,7 +39,7 @@ export const PentominoDisplay = ({
     }
     if (cell !== 0)
       return {
-        class: found === false ? "" : "opacity-30",
+        class: clsx(found === false ? "shadow-[0px_0px_1px_1px] shadow-gray-30" : "opacity-30"),
         style: color,
       };
     return { class: "", style: "" };
