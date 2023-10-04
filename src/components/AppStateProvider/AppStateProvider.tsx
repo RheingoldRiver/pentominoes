@@ -8,6 +8,8 @@ interface AppState {
   updateDisplayColors: (x: string[]) => void;
   numVisibleColors: number;
   updateNumVisibleColors: (x: number) => void;
+  darkMode: boolean;
+  updateDarkMode: (x: boolean) => void;
 }
 
 const DEFAULT_APP_STATE: AppState = {
@@ -17,9 +19,12 @@ const DEFAULT_APP_STATE: AppState = {
   updateDisplayColors: () => {},
   numVisibleColors: 0,
   updateNumVisibleColors: () => {},
+  darkMode: false,
+  updateDarkMode: () => {},
 };
 
 export const AppStateContext = createContext(DEFAULT_APP_STATE);
+
 export default function AppStateProvider({ children }: { children: ReactNode }) {
   const [pentominoSize, setPentominoSize] = useState<number>(() => {
     return Number(window.localStorage.getItem("size") ?? 12);
@@ -31,8 +36,12 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
     localVal.split(",").forEach((c, i) => (nextColors[i] = c));
     return nextColors;
   });
-  const [numVisibleColors, setNumVisibleColors] = useState(() => {
+  const [numVisibleColors, setNumVisibleColors] = useState<number>(() => {
     return Number(window.localStorage.getItem("numColors") ?? 3);
+  });
+
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return (window.localStorage.getItem("dark") || "false") !== "false";
   });
 
   function updatePentominoSize(newSize: number) {
@@ -50,6 +59,11 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
     window.localStorage.setItem("numColors", newNum.toString());
   }
 
+  function updateDarkMode(newIsDark: boolean) {
+    setDarkMode(newIsDark);
+    window.localStorage.setItem("dark", newIsDark.toString());
+  }
+
   return (
     <AppStateContext.Provider
       value={{
@@ -59,6 +73,8 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
         updateDisplayColors,
         numVisibleColors,
         updateNumVisibleColors,
+        darkMode,
+        updateDarkMode,
       }}
     >
       {children}

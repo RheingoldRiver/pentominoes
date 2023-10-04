@@ -33,7 +33,7 @@ export const Cell = ({
     if (cell.pentomino.pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };
     if (hasPentomino === true)
       return { class: "", style: displayColors[pentominoColors[cell.pentomino.pentomino.name]] };
-    return { class: "bg-gray-200", style: "" };
+    return { class: "bg-gray-400 dark:bg-gray-800", style: "" };
   }
   const bg = backgroundColor();
   return (

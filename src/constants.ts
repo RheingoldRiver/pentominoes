@@ -113,7 +113,7 @@ export const DEFAULT_CONFIG: UrlConfig = {
 };
 
 export const DEFAULT_DISPLAY_COLORS = [
-  "#4C1D95", // 0
+  "#6d28d9", // 0
   "#9D174D",
   "#1E40AF", // 2
   "#155E75",
@@ -124,7 +124,7 @@ export const DEFAULT_DISPLAY_COLORS = [
   "#9a3412",
   "#854d0e",
   "#A21CAF",
-  "#3B0764",
+  "#6b21a8",
 ];
 
 export const shuffleArray = <T>(array: T[]): void => {
