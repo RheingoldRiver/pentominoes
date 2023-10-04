@@ -1,6 +1,13 @@
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
-import { EMPTY_PENTOMINO, PaintedCell, PlacedPentomino, Surface } from "../../constants";
+import {
+  EMPTY_PENTOMINO,
+  Orientation,
+  PaintedCell,
+  PlacedPentomino,
+  Surface,
+  surfaceOrientations,
+} from "../../constants";
 
 interface NewCoordinates {
   newX: number;
@@ -30,7 +37,9 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
           if (val === 0) return; // the pentomino isn't taking up this square of its grid, return
           const rawX = x + px - orientation.center.x;
           const rawY = y + py - orientation.center.y;
-          const { newX, newY } = getCoordinatesToPaint(surface, grid.length, grid[0].length, rawX, rawY);
+          const height = grid.length;
+          const width = grid[0].length;
+          const { newX, newY } = getCoordinatesToPaint(surface, height, width, rawX, rawY);
 
           if (checkOutOfBounds(grid, paintedGrid, newX, newY)) return;
 
@@ -40,11 +49,20 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
             cellToPaint.conflict = true;
           }
           cellToPaint.pentomino = p;
-          if (px === 0 || orientation.shape[px - 1][py] === 0) cellToPaint.borderTop = true;
-          if (py === 0 || orientation.shape[px][py - 1] === 0) cellToPaint.borderLeft = true;
-          if (px === orientation.shape.length - 1 || orientation.shape[px + 1][py] === 0) cellToPaint.borderBot = true;
-          if (py === orientation.shape[0].length - 1 || orientation.shape[px][py + 1] === 0)
-            cellToPaint.borderRight = true;
+          const flipX = outOfBounds(rawY, width) && surfaceOrientations[surface].h === Orientation.Nonorientable;
+          const flipY = outOfBounds(rawX, height) && surfaceOrientations[surface].w === Orientation.Nonorientable;
+          if (px === 0 || orientation.shape[px - 1][py] === 0) {
+            cellToPaint[flipX ? "borderBot" : "borderTop"] = true;
+          }
+          if (py === 0 || orientation.shape[px][py - 1] === 0) {
+            cellToPaint[flipY ? "borderRight" : "borderLeft"] = true;
+          }
+          if (px === orientation.shape.length - 1 || orientation.shape[px + 1][py] === 0) {
+            cellToPaint[flipX ? "borderTop" : "borderBot"] = true;
+          }
+          if (py === orientation.shape[0].length - 1 || orientation.shape[px][py + 1] === 0) {
+            cellToPaint[flipY ? "borderLeft" : "borderRight"] = true;
+          }
         })
       );
     })
@@ -67,13 +85,13 @@ export function getCoordinatesToPaint(
       };
     case Surface.KleinBottle:
       return {
-        newX: outOfBounds(rawY, height) ? orient(wrap(rawX, height), height) : wrap(rawX, height),
+        newX: outOfBounds(rawY, width) ? orient(wrap(rawX, height), height) : wrap(rawX, height),
         newY: wrap(rawY, width),
       };
     case Surface.ProjectivePlane:
       return {
-        newX: outOfBounds(rawY, height) ? orient(wrap(rawX, height), height) : wrap(rawX, height),
-        newY: outOfBounds(rawX, width) ? orient(wrap(rawY, width), width) : wrap(rawY, width),
+        newX: outOfBounds(rawY, width) ? orient(wrap(rawX, height), height) : wrap(rawX, height),
+        newY: outOfBounds(rawX, height) ? orient(wrap(rawY, width), width) : wrap(rawY, width),
       };
     case Surface.Torus:
       return {

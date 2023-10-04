@@ -9,7 +9,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
-import { surfaceOrientations } from "../../constants";
+import { Orientation, surfaceOrientations } from "../../constants";
 
 export const Board = ({ gridArea }: { gridArea: string }) => {
   const { grid, surface, clickBoard } = useContext(GameStateContext);
@@ -23,14 +23,14 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
       }}
     >
       <div className="flex flex-row justify-center h-6" style={{ gridArea: "topOrientation" }}>
-        {surfaceOrientations[surface] ? <ChevronRightIcon width={20} /> : ""}
+        {surfaceOrientations[surface].w !== Orientation.None ? <ChevronRightIcon width={20} /> : ""}
       </div>
       <div className="flex flex-col justify-center w-6" style={{ gridArea: "leftOrientation" }}>
-        {surfaceOrientations[surface] ? <ChevronDoubleDownIcon width={20} /> : ""}
+        {surfaceOrientations[surface].h !== Orientation.None ? <ChevronDoubleDownIcon width={20} /> : ""}
       </div>
       <div className="flex flex-col justify-center w-6" style={{ gridArea: "rightOrientation" }}>
         {surfaceOrientations[surface] ? (
-          surfaceOrientations[surface].w === true ? (
+          surfaceOrientations[surface].h === Orientation.Nonorientable ? (
             <ChevronDoubleUpIcon width={20} />
           ) : (
             <ChevronDoubleDownIcon width={20} />
@@ -41,7 +41,7 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
       </div>
       <div className="flex flex-row justify-center h-6" style={{ gridArea: "botOrientation" }}>
         {surfaceOrientations[surface] ? (
-          surfaceOrientations[surface].h === true ? (
+          surfaceOrientations[surface].w === Orientation.Orientable ? (
             <ChevronLeftIcon width={20} />
           ) : (
             <ChevronRightIcon width={20} />

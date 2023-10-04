@@ -75,14 +75,21 @@ export enum Surface {
   KleinBottle, // klein bottle
 }
 
+export enum Orientation {
+  Orientable,
+  Nonorientable,
+  None,
+}
+
 interface SurfaceOrientations {
-  [key: number]: { h: boolean; w: boolean };
+  [key: number]: { h: Orientation; w: Orientation };
 }
 
 export const surfaceOrientations: SurfaceOrientations = {
-  [Surface.Torus]: { h: false, w: false },
-  [Surface.ProjectivePlane]: { h: true, w: true },
-  [Surface.KleinBottle]: { h: false, w: true },
+  [Surface.Rectangle]: { w: Orientation.None, h: Orientation.None },
+  [Surface.Torus]: { w: Orientation.Orientable, h: Orientation.Orientable },
+  [Surface.ProjectivePlane]: { w: Orientation.Nonorientable, h: Orientation.Nonorientable },
+  [Surface.KleinBottle]: { w: Orientation.Orientable, h: Orientation.Nonorientable },
 };
 
 export type UrlConfig = {
