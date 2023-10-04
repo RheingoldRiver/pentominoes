@@ -29,7 +29,7 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
         {surfaceOrientations[surface].h !== Orientation.None ? <ChevronDoubleDownIcon width={20} /> : ""}
       </div>
       <div className="flex flex-col justify-center w-6" style={{ gridArea: "rightOrientation" }}>
-        {surfaceOrientations[surface] ? (
+        {surfaceOrientations[surface].h !== Orientation.None ? (
           surfaceOrientations[surface].h === Orientation.Nonorientable ? (
             <ChevronDoubleUpIcon width={20} />
           ) : (
@@ -40,8 +40,8 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
         )}
       </div>
       <div className="flex flex-row justify-center h-6" style={{ gridArea: "botOrientation" }}>
-        {surfaceOrientations[surface] ? (
-          surfaceOrientations[surface].w === Orientation.Orientable ? (
+        {surfaceOrientations[surface].w !== Orientation.None ? (
+          surfaceOrientations[surface].w === Orientation.Nonorientable ? (
             <ChevronLeftIcon width={20} />
           ) : (
             <ChevronRightIcon width={20} />
