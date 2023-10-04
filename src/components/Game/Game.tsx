@@ -24,26 +24,26 @@ const GameContent = () => {
   //   console.log(darkMode);
 
   return (
-    <div className={darkMode ? "dark" : ""}>
-      <div className={clsx("min-h-screen bg-gray-50 dark:bg-gray-950 dark:text-gray-50")}>
+    <div
+      className={clsx("min-h-screen bg-gray-50 self-dark:bg-gray-950 self-dark:text-gray-50", darkMode ? "dark" : "")}
+    >
+      <div
+        className="grid py-4 w-full grid-cols-[auto_max-content_auto] "
+        style={{
+          gridTemplateAreas: `". header settings"". gameToolbar ." ". board ." "footer footer footer"`,
+        }}
+      >
+        <Header style={{ gridArea: "header" }}></Header>
         <div
-          className="grid py-4 w-full grid-cols-[auto_max-content_auto] "
-          style={{
-            gridTemplateAreas: `". header settings"". gameToolbar ." ". board ." "footer footer footer"`,
-          }}
+          className="flex flex-row items-start justify-end w-full h-full pr-2 gap-1"
+          style={{ gridArea: "settings" }}
         >
-          <Header style={{ gridArea: "header" }}></Header>
-          <div
-            className="flex flex-row items-start justify-end w-full h-full pr-2 gap-1"
-            style={{ gridArea: "settings" }}
-          >
-            <DarkModeButton />
-            <Information></Information>
-            <Settings></Settings>
-          </div>
-          <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
-          <Board gridArea="board"></Board>
+          <DarkModeButton />
+          <Information></Information>
+          <Settings></Settings>
         </div>
+        <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
+        <Board gridArea="board"></Board>
       </div>
     </div>
   );
