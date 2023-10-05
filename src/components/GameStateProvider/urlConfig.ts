@@ -324,7 +324,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
           }
           case 1: {
             if (c === "0") {
-              pentominoPos = 3;
+              pentominoPos = 4;
               break;
             }
             terrainCount = decodeNumber(c);
@@ -443,6 +443,7 @@ function decodeColor(color: string | number, p: string, legacy: boolean): number
 export function deserializeUrl(s: string): UrlConfig {
   const legacy = !!s[0].match(/[0-9]/);
   const config = legacy === true ? decodeSurfacelessUrl(s) : decodeUrl(s);
+  // console.log(config.pentominoes);
   const ret = {
     grid: range(config.h).map((x) => range(config.w).map((y) => EMPTY_PENTOMINO(x, y))),
     // pentominoes that aren't placed
