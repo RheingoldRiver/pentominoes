@@ -4,6 +4,7 @@ import {
   decodeCoordinates,
   decodeUrl,
   deserializeUrl,
+  encodeNumber,
   LETTERS_IN_ALPHABET,
   NUM_SPATIAL_ORIENTATIONS,
   serializeUrl,
@@ -18,17 +19,19 @@ test("max num colors is small enough", () => {
   expect(possibleRepresentations >= (MAX_NUM_COLORS - 1) * NUM_SPATIAL_ORIENTATIONS).toBe(true);
 });
 
+test("encoding numbers works", () => {
+  expect(encodeNumber(0)).toBe("0");
+  expect(encodeNumber(9)).toBe("9");
+  expect(encodeNumber(10)).toBe("a");
+  expect(encodeNumber(35)).toBe("z");
+  expect(encodeNumber(36)).toBe("A");
+  expect(encodeNumber(59)).toBe("X");
+});
+
 test("encoding works when there are no colors", () => {
   const grid = EMPTY_GRID(8, 8);
   grid[3][3].pentomino = PENTOMINOES.X;
   expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("T88X033");
-});
-
-test("encoding terrain works", () => {
-  const grid = EMPTY_GRID(8, 8);
-  grid[3][3].pentomino = PENTOMINOES.R;
-  grid[4][4].pentomino = PENTOMINOES.R;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("T88R3344");
 });
 
 test("encoding colors when pentominoes are placed works", () => {

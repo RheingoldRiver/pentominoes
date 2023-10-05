@@ -10,6 +10,13 @@ export interface StringifiedPlacedPentomino {
   c: string; // coordinates
 }
 
+export interface StringifiedPlacedPentominoXY {
+  p: string;
+  r: string;
+  x: number | string;
+  y: number | string;
+}
+
 export interface SerializedColors {
   [key: number]: string[];
 }
@@ -40,6 +47,30 @@ const letterToSurface = {
   T: Surface.Torus,
   P: Surface.ProjectivePlane,
   K: Surface.KleinBottle,
+};
+
+enum TerrainDirection {
+  none,
+  h,
+  w,
+}
+
+interface TerrainDirections {
+  [key: string]: TerrainDirection;
+}
+
+const terrainDirections: TerrainDirections = {
+  Y: TerrainDirection.w,
+  Z: TerrainDirection.h,
+};
+
+interface TerrainToLetter {
+  [key: number]: string;
+}
+
+const directionToLetter: TerrainToLetter = {
+  [TerrainDirection.w]: "Y",
+  [TerrainDirection.h]: "Z",
 };
 
 const LOWERCASE_START_INDEX = 97;
@@ -77,7 +108,7 @@ export function encodeNumber(n: number): string {
     return String.fromCharCode(n - NUM_SINGLE_DIGIT_NUMBERS + LOWERCASE_START_INDEX);
   }
   if (n < NUM_SINGLE_DIGIT_NUMBERS + LETTERS_IN_ALPHABET * 2) {
-    return String.fromCharCode(n - NUM_SINGLE_DIGIT_NUMBERS + UPPERCASE_START_INDEX);
+    return String.fromCharCode(n - NUM_SINGLE_DIGIT_NUMBERS - LETTERS_IN_ALPHABET + UPPERCASE_START_INDEX);
   }
   return "@";
 }
@@ -111,16 +142,60 @@ export function serializeUnusedColors(colors: Colors, grid: PlacedPentomino[][])
       }, "_");
 }
 
+interface CompressedTerrain {
+  [key: string]: (string | number)[];
+}
+
+function terrainDictToString(dict: CompressedTerrain, direction: TerrainDirection): string {
+  const length0: string[] = [];
+  const lengthGT0: string[] = [];
+  Object.entries(dict).forEach(([d, arr]) => {
+    if (arr.length > 1) {
+      lengthGT0.push(`${encodeNumber(arr.length - 1)}${d}${arr.join("")}`);
+    } else {
+      length0.push(`${d}${arr.join("")}`);
+    }
+  });
+  return `${PENTOMINOES.R.name}${directionToLetter[direction]}${lengthGT0.join("")}${
+    length0.length > 0 ? "0" : ""
+  }${length0.join("")}`;
+}
+
+export function serializeTerrain(placedTerrain: StringifiedPlacedPentominoXY[]) {
+  if (placedTerrain.length === 0) return "";
+  const widthDict: CompressedTerrain = {};
+  const heightDict: CompressedTerrain = {};
+  placedTerrain.forEach((t) => {
+    if (widthDict[t.y] === undefined) widthDict[t.y] = [];
+    if (heightDict[t.x] === undefined) heightDict[t.x] = [];
+    widthDict[t.y].push(t.x);
+    heightDict[t.x].push(t.y);
+  });
+  const widthString = terrainDictToString(widthDict, TerrainDirection.w);
+  const heightString = terrainDictToString(heightDict, TerrainDirection.h);
+  const regularArray = placedTerrain.map((p) => `${p.x}${p.y}`);
+  const regularString = `${PENTOMINOES.R.name}${regularArray.join("")}`;
+  switch (Math.min(regularString.length, widthString.length, heightString.length)) {
+    case regularString.length:
+      return regularString;
+    case widthString.length:
+      return widthString;
+    case heightString.length:
+      return heightString;
+  }
+}
+
 export function serializeUrl({ grid, colors, surface }: UrlConfig): string {
   const placedPentominoes: StringifiedPlacedPentomino[] = [];
-  const placedTerrain: StringifiedPlacedPentomino[] = [];
+  const placedTerrain: StringifiedPlacedPentominoXY[] = [];
   grid.forEach((row, x) =>
     row.forEach((p, y) => {
       if (p.pentomino.name === PENTOMINOES.R.name) {
         placedTerrain.push({
           p: PENTOMINOES.R.name,
           r: "0",
-          c: `${encodeNumber(x)}${encodeNumber(y)}`,
+          x: encodeNumber(x),
+          y: encodeNumber(y),
         });
       } else if (p.pentomino.name !== PENTOMINOES.None.name)
         placedPentominoes.push({
@@ -131,16 +206,14 @@ export function serializeUrl({ grid, colors, surface }: UrlConfig): string {
     })
   );
   const sP = placedPentominoes.map((p) => `${p.p}${p.r}${p.c}`);
-  const sT = placedTerrain.map((p) => `${p.c}`);
-  if (sT.length > 0) sT[0] = `${PENTOMINOES.R.name}${sT[0]}`;
 
   const serializedColors = serializeUnusedColors(colors, grid);
 
   // terrain MUST be last because it has a different scheme from pentominoes
   // and we'll no when to break out of it when we get to an underscore
-  return `${surfaceToLetter[surface]}${encodeNumber(grid.length)}${encodeNumber(grid[0].length)}${sP.join("")}${sT.join(
+  return `${surfaceToLetter[surface]}${encodeNumber(grid.length)}${encodeNumber(grid[0].length)}${sP.join(
     ""
-  )}${serializedColors}`;
+  )}${serializeTerrain(placedTerrain)}${serializedColors}`;
 }
 
 export function decodeNumber(d: string): number {
@@ -162,9 +235,13 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
   };
   let curToken = "";
   let curPos = 0; // ['surface', 'height', 'width', 'terrain', 'pentominoes', 'colors']
-  let pentominoPosition = 0; // ['name', 'r', 'c']
+
+  // pentominoes: ['name', 'r', 'x', 'y']
+  // terrain: ['terrain direction', 'count', 'cross coordinate', 'coordinate', 'x', 'y']
+  let pentominoPos = 0;
   let curColor = -1;
-  let isTerrain = false;
+  let terrainCount = 0;
+  let terrainDir = TerrainDirection.none;
   s.split("").forEach((c) => {
     switch (curPos) {
       case 0: {
@@ -183,57 +260,112 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
         break;
       }
       case 3: {
+        // pentominoes
         if (c.match("_")) {
-          // no matter what section we're in, terrain or pentominoes
-          curPos = 4;
+          // terrain could not exist, so this might come here
+          curPos = 5;
           break;
         }
-        switch (pentominoPosition) {
+        switch (pentominoPos) {
           case 0: {
             // name of pentomino
             if (c.match(PENTOMINOES.R.name)) {
-              isTerrain = true;
-              pentominoPosition = 2; // skip orientation
-              // we'll push the first terrain tile in position 2
+              curPos = 4;
             } else {
               config.pentominoes.push({
                 p: c,
-                r: isTerrain ? "0" : "@", // charCode 64 if it's not going to get updated
+                r: "@", // charCode 64
                 c: "",
               });
-              pentominoPosition = 1;
+              pentominoPos = 1;
             }
             break;
           }
           case 1: {
             // orientation
             config.pentominoes[config.pentominoes.length - 1].r = c;
-            pentominoPosition = 2;
+            pentominoPos = 2;
             break;
           }
           case 2: {
-            if (isTerrain) {
-              config.pentominoes.push({
-                p: PENTOMINOES.R.name,
-                r: isTerrain ? "0" : "@", // charCode 64 if it's not going to get updated
-                c: "",
-              });
-            }
             curToken = decodeNumber(c).toString();
-            pentominoPosition = 3;
+            pentominoPos = 3;
             break;
           }
           case 3: {
             // hook into the original support of decoding coordinates that split on `_`
             // this way we have the same types when decoding legacy formats & also current formats
             config.pentominoes[config.pentominoes.length - 1].c = `${curToken}_${decodeNumber(c)}`;
-            pentominoPosition = isTerrain ? 2 : 0;
+            pentominoPos = 0;
             break;
           }
         }
         break;
       }
       case 4: {
+        // terrain
+        if (c.match("_")) {
+          curPos = 5;
+          break;
+        }
+        switch (pentominoPos) {
+          case 0: {
+            // is it a Y or Z?
+            if (terrainDirections[c] !== undefined) {
+              terrainDir = terrainDirections[c];
+              pentominoPos = 1;
+            } else {
+              curToken = decodeNumber(c).toString();
+              pentominoPos = 5;
+            }
+            break;
+          }
+          case 1: {
+            if (curToken === "0") {
+              pentominoPos = 3;
+              break;
+            }
+            terrainCount = decodeNumber(c);
+            pentominoPos = 2;
+            break;
+          }
+          case 2: {
+            // cross coordinate
+            curToken = c;
+            pentominoPos = 3;
+            break;
+          }
+          case 3: {
+            config.pentominoes.push({
+              p: PENTOMINOES.R.name,
+              r: "0",
+              c:
+                terrainDir === TerrainDirection.h ? `${curToken}_${decodeNumber(c)}` : `${decodeNumber(c)}_${curToken}`,
+            });
+            if (terrainCount === 0) pentominoPos = 1;
+            terrainCount -= 1;
+            break;
+          }
+          case 4: {
+            curToken = decodeNumber(c).toString();
+            pentominoPos = 5;
+            break;
+          }
+          case 5: {
+            // hook into the original support of decoding coordinates that split on `_`
+            // this way we have the same types when decoding legacy formats & also current formats
+            config.pentominoes.push({
+              p: PENTOMINOES.R.name,
+              r: "0",
+              c: `${curToken}_${decodeNumber(c)}`,
+            });
+            pentominoPos = 4;
+            break;
+          }
+        }
+        break;
+      }
+      case 5: {
         if (c.match(/[0-9a-b]/)) {
           curColor = decodeNumber(c);
         } else {

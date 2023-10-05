@@ -7,7 +7,7 @@ export const DarkModeButton = () => {
   const ChangeIcon = darkMode === true ? SunIcon : MoonIcon;
   return (
     <ChangeIcon
-      className=" cursor-pointer"
+      className="cursor-pointer"
       width={25}
       onClick={() => {
         updateDarkMode(!darkMode);

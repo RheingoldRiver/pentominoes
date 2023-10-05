@@ -61,7 +61,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [currentRotation, setCurrentRotation] = useState<number>(0); // 0, 1, 2, 3
 
   const [actionHistory, setActionHistory] = useState<Action[]>([]);
-
   const navigate = useNavigate();
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
