@@ -51,8 +51,8 @@ const letterToSurface = {
 
 enum TerrainDirection {
   none,
-  h,
-  w,
+  height,
+  width,
 }
 
 interface TerrainDirections {
@@ -60,8 +60,8 @@ interface TerrainDirections {
 }
 
 const terrainDirections: TerrainDirections = {
-  Y: TerrainDirection.w,
-  Z: TerrainDirection.h,
+  Y: TerrainDirection.width,
+  Z: TerrainDirection.height,
 };
 
 interface TerrainToLetter {
@@ -69,8 +69,8 @@ interface TerrainToLetter {
 }
 
 const directionToLetter: TerrainToLetter = {
-  [TerrainDirection.w]: "Y",
-  [TerrainDirection.h]: "Z",
+  [TerrainDirection.width]: "Y",
+  [TerrainDirection.height]: "Z",
 };
 
 const LOWERCASE_START_INDEX = 97;
@@ -171,8 +171,8 @@ export function serializeTerrain(placedTerrain: StringifiedPlacedPentominoXY[]) 
     widthDict[t.y].push(t.x);
     heightDict[t.x].push(t.y);
   });
-  const widthString = terrainDictToString(widthDict, TerrainDirection.w);
-  const heightString = terrainDictToString(heightDict, TerrainDirection.h);
+  const widthString = terrainDictToString(widthDict, TerrainDirection.width);
+  const heightString = terrainDictToString(heightDict, TerrainDirection.height);
   const regularArray = placedTerrain.map((p) => `${p.x}${p.y}`);
   const regularString = `${PENTOMINOES.R.name}${regularArray.join("")}`;
   switch (Math.min(regularString.length, widthString.length, heightString.length)) {
@@ -340,7 +340,9 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
               p: PENTOMINOES.R.name,
               r: "0",
               c:
-                terrainDir === TerrainDirection.h ? `${curToken}_${decodeNumber(c)}` : `${decodeNumber(c)}_${curToken}`,
+                terrainDir === TerrainDirection.height
+                  ? `${curToken}_${decodeNumber(c)}`
+                  : `${decodeNumber(c)}_${curToken}`,
             });
             if (terrainCount === 0) pentominoPos = 1;
             terrainCount -= 1;
