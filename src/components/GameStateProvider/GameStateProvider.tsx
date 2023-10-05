@@ -62,6 +62,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   const [actionHistory, setActionHistory] = useState<Action[]>([]);
   const navigate = useNavigate();
+
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
