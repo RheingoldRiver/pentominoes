@@ -234,7 +234,9 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
     surface: Surface.Rectangle,
   };
   let curToken = "";
-  let curPos = 0; // ['surface', 'height', 'width', 'terrain', 'pentominoes', 'colors']
+
+  // ['surface', 'height', 'width', 'pentominoes', 'terrain', 'colors']
+  let curPos = 0;
 
   // pentominoes: ['name', 'r', 'x', 'y']
   // terrain: ['terrain direction', 'count', 'cross coordinate', 'coordinate', 'x', 'y']
@@ -271,14 +273,14 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
             // name of pentomino
             if (c.match(PENTOMINOES.R.name)) {
               curPos = 4;
-            } else {
-              config.pentominoes.push({
-                p: c,
-                r: "@", // charCode 64
-                c: "",
-              });
-              pentominoPos = 1;
+              break;
             }
+            config.pentominoes.push({
+              p: c,
+              r: "@", // charCode 64
+              c: "",
+            });
+            pentominoPos = 1;
             break;
           }
           case 1: {
@@ -321,7 +323,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
             break;
           }
           case 1: {
-            if (curToken === "0") {
+            if (c === "0") {
               pentominoPos = 3;
               break;
             }
@@ -349,11 +351,14 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
             break;
           }
           case 4: {
+            // x
             curToken = decodeNumber(c).toString();
             pentominoPos = 5;
             break;
           }
           case 5: {
+            // y
+
             // hook into the original support of decoding coordinates that split on `_`
             // this way we have the same types when decoding legacy formats & also current formats
             config.pentominoes.push({

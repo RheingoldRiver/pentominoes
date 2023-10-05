@@ -63,7 +63,7 @@ test("decoding terrain (no direction) works", () => {
 });
 
 test("decoding terrain (width) works", () => {
-  expect(decodeUrl("T88RZ1001")).toStrictEqual({
+  expect(decodeUrl("T88RZ10011551")).toStrictEqual({
     h: 8,
     w: 8,
     pentominoes: [
@@ -77,6 +77,52 @@ test("decoding terrain (width) works", () => {
         r: "0",
         c: "0_1",
       },
+      {
+        p: "R",
+        r: "0",
+        c: "5_5",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "5_1",
+      },
+    ],
+    colors: {},
+    surface: Surface.Torus,
+  });
+});
+
+test("decoding terrain (width) works when there are also pentominoes", () => {
+  expect(decodeUrl("T88P055RZ10011551")).toStrictEqual({
+    h: 8,
+    w: 8,
+    pentominoes: [
+      {
+        p: "P",
+        r: "0",
+        c: "5_5",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "0_0",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "0_1",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "5_5",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "5_1",
+      },
     ],
     colors: {},
     surface: Surface.Torus,
@@ -84,7 +130,7 @@ test("decoding terrain (width) works", () => {
 });
 
 test("decoding terrain (height) works", () => {
-  expect(decodeUrl("T88RY1001")).toStrictEqual({
+  expect(decodeUrl(`${"T88"}${"RY"}${"1001"}${"1551"}`)).toStrictEqual({
     h: 8,
     w: 8,
     pentominoes: [
@@ -97,6 +143,52 @@ test("decoding terrain (height) works", () => {
         p: "R",
         r: "0",
         c: "1_0",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "5_5",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "1_5",
+      },
+    ],
+    colors: {},
+    surface: Surface.Torus,
+  });
+});
+
+test("decoding terrain (height) works when there are also pentominoes", () => {
+  expect(decodeUrl("T88P055RY10011551")).toStrictEqual({
+    h: 8,
+    w: 8,
+    pentominoes: [
+      {
+        p: "P",
+        r: "0",
+        c: "5_5",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "0_0",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "1_0",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "5_5",
+      },
+      {
+        p: "R",
+        r: "0",
+        c: "1_5",
       },
     ],
     colors: {},
