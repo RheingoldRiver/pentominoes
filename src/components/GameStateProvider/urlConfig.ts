@@ -343,8 +343,8 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
               r: "0",
               c:
                 terrainDir === TerrainDirection.height
-                  ? `${curToken}_${decodeNumber(c)}`
-                  : `${decodeNumber(c)}_${curToken}`,
+                  ? `${decodeNumber(curToken)}_${decodeNumber(c)}`
+                  : `${decodeNumber(c)}_${decodeNumber(curToken)}`,
             });
             if (terrainCount === 0) pentominoPos = 1;
             terrainCount -= 1;
