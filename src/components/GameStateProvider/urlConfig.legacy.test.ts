@@ -1,6 +1,7 @@
 import { DEFAULT_COLORS, EMPTY_GRID, PlacedPentomino, Surface } from "./../../constants";
 import { expect, test } from "vitest";
-import { decodeSurfacelessUrl, deserializeUrl } from "./urlConfig";
+import { deserializeUrl } from "./urlConfig";
+import { decodeSurfacelessUrl } from "./urlConfigLegacy";
 import { PENTOMINOES } from "../../pentominoes";
 
 test("[legacy urls] a URL is properly decoded when no pentominoes are placed", () => {
