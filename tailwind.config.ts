@@ -4,10 +4,6 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [
-    function ({ addVariant }) {
-      addVariant("self-dark", ".dark&");
-    },
-  ],
+  plugins: [],
   darkMode: "class",
 };

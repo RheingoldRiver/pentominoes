@@ -41,7 +41,7 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
   });
 
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return (window.localStorage.getItem("dark") || "false") !== "false";
+    return (window.localStorage.getItem("theme") || "light") !== "light";
   });
 
   function updatePentominoSize(newSize: number) {
@@ -60,8 +60,13 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
   }
 
   function updateDarkMode(newIsDark: boolean) {
+    if (newIsDark === true) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
     setDarkMode(newIsDark);
-    window.localStorage.setItem("dark", newIsDark.toString());
+    window.localStorage.setItem("theme", newIsDark ? "dark" : "light");
   }
 
   return (

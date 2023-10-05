@@ -3,9 +3,8 @@ import { Header } from "../Header/Header";
 import GameToolbar from "../GameToolbar/GameToolbar";
 import { Settings } from "../Settings/Settings";
 import { Information } from "../Information/Information";
-import AppStateProvider, { AppStateContext } from "../AppStateProvider/AppStateProvider";
+import AppStateProvider from "../AppStateProvider/AppStateProvider";
 import { Board } from "../Board/Board";
-import { useContext } from "react";
 import clsx from "clsx";
 import { DarkModeButton } from "../DarkModeButton/DarkModeButton";
 
@@ -20,13 +19,8 @@ export const Game = () => {
 };
 
 const GameContent = () => {
-  const { darkMode } = useContext(AppStateContext);
-  //   console.log(darkMode);
-
   return (
-    <div
-      className={clsx("min-h-screen bg-gray-50 self-dark:bg-gray-950 self-dark:text-gray-50", darkMode ? "dark" : "")}
-    >
+    <div className={clsx("min-h-screen bg-gray-50 dark:bg-gray-950 dark:text-gray-50")}>
       <div
         className="grid py-4 w-full grid-cols-[auto_max-content_auto] "
         style={{
