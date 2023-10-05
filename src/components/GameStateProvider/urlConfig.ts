@@ -464,7 +464,7 @@ export function deserializeUrl(s: string): UrlConfig {
       x: x,
       y: y,
     };
-    ret.colors[p.p.toUpperCase()] = decodeColor(r.color, p.p, legacy);
+    if (p.p.toUpperCase() !== PENTOMINOES.R.name) ret.colors[p.p.toUpperCase()] = decodeColor(r.color, p.p, legacy);
   });
   return ret;
 }
