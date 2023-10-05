@@ -25,7 +25,7 @@ test("a color is encoded properly", () => {
 test("we're serializing unused colors correctly", () => {
   const grid = EMPTY_GRID(8, 8);
   const colors = { ...DEFAULT_COLORS };
-  colors["P"] = 6;
   colors["W"] = 1;
+  colors["P"] = 6;
   expect(serializeUnusedColors(colors, grid)).toBe("_0p1W");
 });
