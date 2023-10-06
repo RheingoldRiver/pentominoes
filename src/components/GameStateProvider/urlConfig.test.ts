@@ -5,7 +5,7 @@ import {
   decodeUrl,
   deserializeUrl,
   encodeNumber,
-  LETTERS_IN_ALPHABET,
+  NUM_LETTERS_IN_ALPHABET,
   NUM_SPATIAL_ORIENTATIONS,
   serializeUrl,
 } from "./urlConfig";
@@ -15,7 +15,7 @@ test("max num colors is small enough", () => {
   const POSSIBLE_CASES = 2; // uppercase & lowercase
   const PENTOMINO_NAME_CASES = POSSIBLE_CASES;
   const ORIENTATION_CASES = POSSIBLE_CASES;
-  const possibleRepresentations = LETTERS_IN_ALPHABET * ORIENTATION_CASES * PENTOMINO_NAME_CASES;
+  const possibleRepresentations = NUM_LETTERS_IN_ALPHABET * ORIENTATION_CASES * PENTOMINO_NAME_CASES;
   expect(possibleRepresentations >= (MAX_NUM_COLORS - 1) * NUM_SPATIAL_ORIENTATIONS).toBe(true);
 });
 

@@ -75,8 +75,8 @@ const directionToLetter: TerrainToLetter = {
 
 const LOWERCASE_START_INDEX = 97;
 const UPPERCASE_START_INDEX = 65;
-export const LETTERS_IN_ALPHABET = 26;
-const CHAR_GAP_SIZE = LOWERCASE_START_INDEX - LETTERS_IN_ALPHABET - UPPERCASE_START_INDEX;
+export const NUM_LETTERS_IN_ALPHABET = 26;
+const CHAR_GAP_SIZE = LOWERCASE_START_INDEX - NUM_LETTERS_IN_ALPHABET - UPPERCASE_START_INDEX;
 const NUM_SINGLE_DIGIT_NUMBERS = 10;
 
 export const HALF_NUM_COLORS = MAX_NUM_COLORS / 2;
@@ -96,7 +96,7 @@ export function encodeOrientation(rotation: number, reflection: number, color: n
   if (color === 0 || color === undefined) return r.toString();
 
   const n = NUM_SPATIAL_ORIENTATIONS * (color - 1) + UPPERCASE_START_INDEX + r;
-  if (n < UPPERCASE_START_INDEX + LETTERS_IN_ALPHABET) return String.fromCharCode(n);
+  if (n < UPPERCASE_START_INDEX + NUM_LETTERS_IN_ALPHABET) return String.fromCharCode(n);
 
   // use a lowercase letter
   return String.fromCharCode(n + CHAR_GAP_SIZE);
@@ -104,11 +104,11 @@ export function encodeOrientation(rotation: number, reflection: number, color: n
 
 export function encodeNumber(n: number): string {
   if (n < NUM_SINGLE_DIGIT_NUMBERS) return n.toString();
-  if (n < NUM_SINGLE_DIGIT_NUMBERS + LETTERS_IN_ALPHABET) {
+  if (n < NUM_SINGLE_DIGIT_NUMBERS + NUM_LETTERS_IN_ALPHABET) {
     return String.fromCharCode(n - NUM_SINGLE_DIGIT_NUMBERS + LOWERCASE_START_INDEX);
   }
-  if (n < NUM_SINGLE_DIGIT_NUMBERS + LETTERS_IN_ALPHABET * 2) {
-    return String.fromCharCode(n - NUM_SINGLE_DIGIT_NUMBERS - LETTERS_IN_ALPHABET + UPPERCASE_START_INDEX);
+  if (n < NUM_SINGLE_DIGIT_NUMBERS + NUM_LETTERS_IN_ALPHABET * 2) {
+    return String.fromCharCode(n - NUM_SINGLE_DIGIT_NUMBERS - NUM_LETTERS_IN_ALPHABET + UPPERCASE_START_INDEX);
   }
   return "@";
 }
@@ -219,7 +219,8 @@ export function serializeUrl({ grid, colors, surface }: UrlConfig): string {
 export function decodeNumber(d: string): number {
   if (d.match(/[0-9]/)) return toNumber(d);
   if (d.match(/[a-z]/)) return NUM_SINGLE_DIGIT_NUMBERS + d.charCodeAt(0) - LOWERCASE_START_INDEX;
-  if (d.match(/[A-Z]/)) return NUM_SINGLE_DIGIT_NUMBERS + LETTERS_IN_ALPHABET + d.charCodeAt(0) - UPPERCASE_START_INDEX;
+  if (d.match(/[A-Z]/))
+    return NUM_SINGLE_DIGIT_NUMBERS + NUM_LETTERS_IN_ALPHABET + d.charCodeAt(0) - UPPERCASE_START_INDEX;
   // error
   return -1;
 }
