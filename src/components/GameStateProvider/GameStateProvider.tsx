@@ -63,8 +63,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [actionHistory, setActionHistory] = useState<Action[]>([]);
   const navigate = useNavigate();
 
-  const prevHash = useRef(window.location.hash);
-
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
@@ -74,11 +72,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         ...config,
       };
       const newHash = serializeUrl(finalConfig);
-      console.log("New Hash:", newHash);
-      console.log("Previous Hash:", prevHash.current);
-      if (newHash === prevHash.current) return;
+      if (`#/${newHash}` === window.location.hash) return;
       navigate("/" + newHash);
-      prevHash.current = newHash; // Update the previous hash
     }, 250)
   );
 
@@ -88,7 +83,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   useEffect(() => {
     window.addEventListener("hashchange", function () {
-      if (window.location.hash === prevHash.current) return;
       window.location.reload();
     });
   });
