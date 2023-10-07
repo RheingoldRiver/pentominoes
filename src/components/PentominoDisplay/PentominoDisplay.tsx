@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { PENTOMINO_DIMENSIONS, PENTOMINO_SIZES } from "../../constants";
 import { Pentomino, PENTOMINOES } from "../../pentominoes";
-import { MouseEvent, useContext } from "react";
+import { useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { DotFilledIcon } from "@radix-ui/react-icons";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
@@ -11,18 +11,19 @@ export const PentominoDisplay = ({
   color,
   rotation = 0,
   reflection = 0,
-  onClick,
   checkGrid = true,
   size = 5,
+  showCenter = true,
+  ...rest
 }: {
   pentomino: Pentomino;
   color?: string;
   rotation?: number;
   reflection?: number;
-  onClick?: (event: MouseEvent<HTMLDivElement>) => void;
   checkGrid?: boolean;
   size?: number;
-}) => {
+  showCenter?: boolean;
+} & React.HTMLAttributes<HTMLSpanElement>) => {
   const { grid } = useContext(GameStateContext);
   const { displayColors } = useContext(AppStateContext);
   if (color === undefined) color = displayColors[0];
@@ -46,13 +47,9 @@ export const PentominoDisplay = ({
   }
 
   return (
-    <div
-      className={clsx(
-        "grid grid-flow-row w-fit h-fit",
-        PENTOMINO_DIMENSIONS[p.shape[0].length],
-        onClick === undefined ? "" : "cursor-pointer"
-      )}
-      onClick={onClick}
+    <span
+      {...rest}
+      className={clsx("grid grid-flow-row w-fit h-fit display-block", PENTOMINO_DIMENSIONS[p.shape[0].length])}
     >
       {p.shape.map((row, x) =>
         row.map((cell, y) => {
@@ -67,11 +64,11 @@ export const PentominoDisplay = ({
                 backgroundColor: bg.style,
               }}
             >
-              {x === p.center.x && y === p.center.y && <DotFilledIcon />}
+              {x === p.center.x && y === p.center.y && showCenter && <DotFilledIcon />}
             </div>
           );
         })
       )}
-    </div>
+    </span>
   );
 };
