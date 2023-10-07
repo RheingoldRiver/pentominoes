@@ -26,8 +26,8 @@ const pentominoesTitle: TypographyPentomino[] = [
   {
     pentomino: "N",
     reflection: 0,
-    cssRotation: 25,
-    width: "w-10",
+    cssRotation: 180 + 25,
+    width: "w-6 md:w-10",
   },
   {
     pentomino: "T",
@@ -38,13 +38,13 @@ const pentominoesTitle: TypographyPentomino[] = [
     pentomino: "P",
     reflection: 1,
     cssRotation: 315,
-    width: "w-12",
+    width: "w-7 md:w-12",
   },
   {
     pentomino: "W",
     reflection: 0,
     cssRotation: 135,
-    width: "w-10",
+    width: "w-6 md:w-10",
   },
   {
     pentomino: "I",
@@ -54,14 +54,14 @@ const pentominoesTitle: TypographyPentomino[] = [
   {
     pentomino: "N",
     reflection: 0,
-    cssRotation: 25,
-    width: "w-10",
+    cssRotation: 180 + 25,
+    width: "w-6 md:w-10",
   },
   {
     pentomino: "P",
     reflection: 1,
     cssRotation: 315,
-    width: "w-12",
+    width: "w-7 md:w-12",
   },
   {
     pentomino: "W",
@@ -80,7 +80,7 @@ export const Wordmark = ({ gridArea }: { gridArea: string }) => {
   const { displayColors } = useContext(AppStateContext);
 
   return (
-    <div className={clsx("ml-16 flex flex-row gap-2 items-center mb-2")} style={{ gridArea }}>
+    <div className={clsx("ml-16 flex flex-row gap-1 items-center mb-2")} style={{ gridArea }}>
       {pentominoesTitle.map((p) => (
         <div
           className={clsx(p.width, "flex items-center justify-center")}
