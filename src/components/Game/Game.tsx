@@ -31,9 +31,9 @@ const GameContent = () => {
       <Wordmark gridArea="wordmark" />
       <Header style={{ gridArea: "header" }}></Header>
       <div className="flex flex-row items-start justify-end w-full h-full pr-2 gap-1" style={{ gridArea: "settings" }}>
+        <Settings></Settings>
         <DarkModeButton />
         <Information></Information>
-        <Settings></Settings>
       </div>
       <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
       <Board gridArea="board"></Board>
