@@ -36,6 +36,9 @@ export const Header = ({ ...rest }) => {
               setCurrentRotation(0);
               setCurrentReflection(0);
             }}
+            style={{
+              cursor: "pointer",
+            }}
           ></PentominoDisplay>
         ))}
       </div>

@@ -5,8 +5,9 @@ import { Settings } from "../Settings/Settings";
 import { Information } from "../Information/Information";
 import AppStateProvider from "../AppStateProvider/AppStateProvider";
 import { Board } from "../Board/Board";
-import clsx from "clsx";
 import { DarkModeButton } from "../DarkModeButton/DarkModeButton";
+import clsx from "clsx";
+import { Wordmark } from "../Wordmark/Wordmark";
 
 export const Game = () => {
   return (
@@ -20,25 +21,22 @@ export const Game = () => {
 
 const GameContent = () => {
   return (
-    <div className={clsx("min-h-screen bg-gray-50 dark:bg-gray-950 dark:text-gray-50")}>
-      <div
-        className="grid py-4 w-full grid-cols-[auto_max-content_auto] "
-        style={{
-          gridTemplateAreas: `". header settings"". gameToolbar ." ". board ." "footer footer footer"`,
-        }}
-      >
-        <Header style={{ gridArea: "header" }}></Header>
-        <div
-          className="flex flex-row items-start justify-end w-full h-full pr-2 gap-1"
-          style={{ gridArea: "settings" }}
-        >
-          <DarkModeButton />
-          <Information></Information>
-          <Settings></Settings>
-        </div>
-        <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
-        <Board gridArea="board"></Board>
+    <div
+      className={clsx(
+        "min-h-screen grid py-4 w-full grid-areas-game 2xl:grid-areas-game2xl",
+        "bg-gray-50 dark:bg-gray-950 dark:text-gray-50",
+        "grid-rows-game 2xl:grid-rows-game2xl grid-cols-game"
+      )}
+    >
+      <Wordmark gridArea="wordmark" />
+      <Header style={{ gridArea: "header" }}></Header>
+      <div className="flex flex-row items-start justify-end w-full h-full pr-2 gap-1" style={{ gridArea: "settings" }}>
+        <DarkModeButton />
+        <Information></Information>
+        <Settings></Settings>
       </div>
+      <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
+      <Board gridArea="board"></Board>
     </div>
   );
 };
