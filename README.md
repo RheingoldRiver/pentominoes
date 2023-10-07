@@ -1,8 +1,9 @@
 [Play online](https://pentominoes.river.me)
 
-![image](https://github.com/RheingoldRiver/pentominoes/assets/18037011/1e1aba9b-2b29-45de-8fde-15dbc3ef7ef6)
+![image](https://github.com/RheingoldRiver/pentominoes/assets/18037011/9c33aaf6-21c9-468b-9119-5fd9f6eb1f60)
 
-![image](https://github.com/RheingoldRiver/pentominoes/assets/18037011/a97f51dd-5c5e-488a-b2bc-cc370fbf83bb)
+![image](https://github.com/RheingoldRiver/pentominoes/assets/18037011/65fb307f-71a3-4ac8-8fdc-ede694d4b6b2)
+
 
 
 ## Development
