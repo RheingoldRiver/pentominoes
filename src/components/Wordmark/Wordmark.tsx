@@ -74,12 +74,7 @@ export const Wordmark = ({ gridArea }: { gridArea: string }) => {
   return (
     <div className={clsx("ml-16 flex flex-row gap-1 items-center mb-2")} style={{ gridArea }}>
       {pentominoesTitle.map((p) => (
-        <div
-          className={clsx(p.class, "flex items-center justify-center")}
-          style={{
-            transform: `rotate(${p.cssRotation}deg)`,
-          }}
-        >
+        <div className={clsx(p.class, "flex items-center justify-center")}>
           <PentominoDisplay
             pentomino={PENTOMINOES[p.pentomino]}
             color={displayColors[pentominoColors[p.pentomino]]}
