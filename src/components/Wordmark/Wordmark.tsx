@@ -11,70 +11,62 @@ interface TypographyPentomino {
   class?: string;
 }
 
-const pentominoesTitle: TypographyPentomino[] = [
-  {
+interface PentominoLetters {
+  [key: string]: TypographyPentomino;
+}
+const pentominoLetters: PentominoLetters = {
+  P: {
     pentomino: "P",
     reflection: 0,
   },
-  {
+  E: {
     pentomino: "W",
     reflection: 0,
-    class: "rotate-45",
+    class: "rotate-45 scale-[80%] ml-[-0.25rem] mr-[-0.5rem]",
   },
-  {
+  N: {
     pentomino: "N",
     reflection: 0,
     class: "w-6 md:w-10 rotate-[205deg]",
   },
-  {
+  T: {
     pentomino: "T",
     reflection: 0,
   },
-  {
+  O: {
     pentomino: "P",
     reflection: 1,
     class: "w-7 md:w-12 rotate-[315deg]",
   },
-  {
+  M: {
     pentomino: "W",
     reflection: 0,
-    class: "w-6 md:w-10 rotate-[135deg]",
+    class: "w-6 md:w-10 rotate-[135deg] translate-y-[20%]",
   },
-  {
+  I: {
     pentomino: "I",
     reflection: 0,
     class: "scale-75",
   },
-  {
-    pentomino: "N",
-    reflection: 0,
-    class: "w-6 md:w-10 rotate-[205deg]",
-  },
-  {
-    pentomino: "P",
-    reflection: 1,
-    class: "w-7 md:w-12 rotate-[315deg]",
-  },
-  {
-    pentomino: "W",
-    reflection: 0,
-    class: "rotate-45",
-  },
-  {
+  S: {
     pentomino: "Z",
     reflection: 1,
-    class: "rotate-[-35deg]",
+    class: "rotate-[-35deg] scale-90 ml-[-0.5rem]",
   },
-];
+};
+
+const pentominoesTitle: TypographyPentomino[] = "PENTOMINOES"
+  .split("")
+  .map((l) => pentominoLetters[l as keyof typeof pentominoLetters]);
 
 export const Wordmark = ({ gridArea }: { gridArea: string }) => {
   const { pentominoColors } = useContext(GameStateContext);
   const { displayColors } = useContext(AppStateContext);
 
   return (
-    <div className={clsx("ml-16 flex flex-row gap-1 items-center mb-2")} style={{ gridArea }}>
-      {pentominoesTitle.map((p) => (
-        <div className={clsx(p.class, "flex items-center justify-center")}>
+    <div className={clsx("ml-16 flex flex-row gap-2 items-center mb-2")} style={{ gridArea }}>
+      {pentominoesTitle.map((p, i) => (
+        <div key={i} className={clsx(p.class, "flex items-center justify-center")}>
           <PentominoDisplay
             pentomino={PENTOMINOES[p.pentomino]}
             color={displayColors[pentominoColors[p.pentomino]]}
