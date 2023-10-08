@@ -8,70 +8,62 @@ import clsx from "clsx";
 interface TypographyPentomino {
   pentomino: string;
   reflection: number;
-  cssRotation: number;
-  width?: string;
+  class?: string;
 }
 
 const pentominoesTitle: TypographyPentomino[] = [
   {
     pentomino: "P",
     reflection: 0,
-    cssRotation: 0,
   },
   {
     pentomino: "W",
     reflection: 0,
-    cssRotation: 45,
+    class: "rotate-45",
   },
   {
     pentomino: "N",
     reflection: 0,
-    cssRotation: 180 + 25,
-    width: "w-6 md:w-10",
+    class: "w-6 md:w-10 rotate-[205deg]",
   },
   {
     pentomino: "T",
     reflection: 0,
-    cssRotation: 0,
   },
   {
     pentomino: "P",
     reflection: 1,
-    cssRotation: 315,
-    width: "w-7 md:w-12",
+    class: "w-7 md:w-12 rotate-[315deg]",
   },
   {
     pentomino: "W",
     reflection: 0,
-    cssRotation: 135,
-    width: "w-6 md:w-10",
+    class: "w-6 md:w-10 rotate-[135deg]",
   },
   {
     pentomino: "I",
     reflection: 0,
-    cssRotation: 0,
+    class: "scale-75",
   },
   {
     pentomino: "N",
     reflection: 0,
-    cssRotation: 180 + 25,
-    width: "w-6 md:w-10",
+    class: "w-6 md:w-10 rotate-[205deg]",
   },
   {
     pentomino: "P",
     reflection: 1,
-    cssRotation: 315,
-    width: "w-7 md:w-12",
+    class: "w-7 md:w-12 rotate-[315deg]",
   },
   {
     pentomino: "W",
     reflection: 0,
-    cssRotation: 45,
+    class: "rotate-45",
   },
   {
     pentomino: "Z",
     reflection: 1,
-    cssRotation: -35,
+    class: "rotate-[-35deg]",
   },
 ];
 
@@ -83,7 +75,7 @@ export const Wordmark = ({ gridArea }: { gridArea: string }) => {
     <div className={clsx("ml-16 flex flex-row gap-1 items-center mb-2")} style={{ gridArea }}>
       {pentominoesTitle.map((p) => (
         <div
-          className={clsx(p.width, "flex items-center justify-center")}
+          className={clsx(p.class, "flex items-center justify-center")}
           style={{
             transform: `rotate(${p.cssRotation}deg)`,
           }}
