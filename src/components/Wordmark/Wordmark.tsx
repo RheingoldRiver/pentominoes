@@ -19,6 +19,7 @@ const pentominoLetters: PentominoLetters = {
   P: {
     pentomino: "P",
     reflection: 0,
+    class: "rotate-[1deg]",
   },
   E: {
     pentomino: "W",
@@ -28,11 +29,12 @@ const pentominoLetters: PentominoLetters = {
   N: {
     pentomino: "N",
     reflection: 0,
-    class: "w-6 md:w-10 rotate-[205deg]",
+    class: "w-6 md:w-10 rotate-[220deg]",
   },
   T: {
     pentomino: "T",
     reflection: 0,
+    class: "rotate-[1deg]",
   },
   O: {
     pentomino: "P",
@@ -48,7 +50,7 @@ const pentominoLetters: PentominoLetters = {
   I: {
     pentomino: "I",
     reflection: 0,
-    class: "scale-75",
+    class: "scale-75 rotate-[1deg]",
   },
   S: {
     pentomino: "Z",
