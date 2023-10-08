@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { PENTOMINO_DIMENSIONS, PENTOMINO_SIZES } from "../../constants";
-import { Pentomino, PENTOMINOES } from "../../pentominoes";
+import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { DotFilledIcon } from "@radix-ui/react-icons";
@@ -14,6 +14,7 @@ export const PentominoDisplay = ({
   checkGrid = true,
   size = 5,
   showCenter = true,
+  removeEdges = [],
   ...rest
 }: {
   pentomino: Pentomino;
@@ -23,12 +24,13 @@ export const PentominoDisplay = ({
   checkGrid?: boolean;
   size?: number;
   showCenter?: boolean;
+  removeEdges?: Coordinates[];
 } & React.HTMLAttributes<HTMLSpanElement>) => {
   const { grid } = useContext(GameStateContext);
   const { displayColors } = useContext(AppStateContext);
   if (color === undefined) color = displayColors[0];
   const p = pentomino.orientations[reflection][rotation];
-  function bgColor(cell: number) {
+  function bgColor(cell: number, coordinates: Coordinates) {
     if (pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };
     let found = false;
     if (checkGrid) {
@@ -38,11 +40,20 @@ export const PentominoDisplay = ({
         })
       );
     }
-    if (cell !== 0)
+    let showShadow = true;
+    removeEdges.forEach((c) => {
+      if (c.x === coordinates.x && c.y === coordinates.y) {
+        showShadow = false;
+      }
+    });
+    if (cell !== 0) {
+      const shadow = showShadow ? "shadow-[0px_0px_1px_1px] shadow-gray-30" : "";
+      const showColor = found === false ? "" : "opacity-30";
       return {
-        class: clsx(found === false ? "shadow-[0px_0px_1px_1px] shadow-gray-30" : "opacity-30"),
+        class: clsx(`${shadow} ${showColor}`),
         style: color,
       };
+    }
     return { class: "", style: "" };
   }
 
@@ -53,7 +64,7 @@ export const PentominoDisplay = ({
     >
       {p.shape.map((row, x) =>
         row.map((cell, y) => {
-          const bg = bgColor(cell);
+          const bg = bgColor(cell, { x, y });
           return (
             <div
               key={`${pentomino.name}_${x}_${y}`}

@@ -2,13 +2,14 @@ import { useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
-import { PENTOMINOES } from "../../pentominoes";
+import { Coordinates, PENTOMINOES } from "../../pentominoes";
 import clsx from "clsx";
 
 interface TypographyPentomino {
   pentomino: string;
   reflection: number;
   class?: string;
+  removeEdges?: Coordinates[];
 }
 
 interface PentominoLetters {
@@ -37,6 +38,7 @@ const pentominoLetters: PentominoLetters = {
     pentomino: "P",
     reflection: 1,
     class: "w-7 md:w-12 rotate-[315deg]",
+    removeEdges: [{ x: 0, y: 0 }],
   },
   M: {
     pentomino: "W",
@@ -74,6 +76,7 @@ export const Wordmark = ({ gridArea }: { gridArea: string }) => {
             checkGrid={false}
             size={2}
             showCenter={false}
+            removeEdges={p.removeEdges}
           />
         </div>
       ))}
