@@ -41,8 +41,8 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
             [Orientation.None]: "",
             [Orientation.Orientable]: <ChevronDoubleUpIcon width={20} />,
             [Orientation.Nonorientable]: <ChevronDoubleDownIcon width={20} />,
-            [Orientation.ConsecutiveNonorientable]: <ChevronUpIcon width={20} />,
-            [Orientation.ConsecutiveOrientable]: <ChevronDownIcon width={20} />,
+            [Orientation.ConsecutiveNonorientable]: <ChevronDownIcon width={20} />,
+            [Orientation.ConsecutiveOrientable]: <ChevronUpIcon width={20} />,
           }[surface.orientation.h]
         }
       </div>
@@ -52,8 +52,8 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
             [Orientation.None]: "",
             [Orientation.Orientable]: <ChevronRightIcon width={20} />,
             [Orientation.Nonorientable]: <ChevronLeftIcon width={20} />,
-            [Orientation.ConsecutiveNonorientable]: <ChevronDoubleRightIcon width={20} />,
-            [Orientation.ConsecutiveOrientable]: <ChevronDoubleLeftIcon width={20} />,
+            [Orientation.ConsecutiveNonorientable]: <ChevronDoubleLeftIcon width={20} />,
+            [Orientation.ConsecutiveOrientable]: <ChevronDoubleRightIcon width={20} />,
           }[surface.orientation.w]
         }
       </div>
