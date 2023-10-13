@@ -5,7 +5,7 @@ import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 
-const debug = true;
+const debug = false;
 
 export const Cell = ({
   cell,
