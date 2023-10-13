@@ -47,13 +47,17 @@ export function EMPTY_PENTOMINO(x: number, y: number): PlacedPentomino {
   };
 }
 
-export interface PaintedCell {
-  pentomino: PlacedPentomino;
-  conflict: boolean;
+export interface Borders {
   borderTop: boolean;
   borderLeft: boolean;
   borderBot: boolean;
   borderRight: boolean;
+}
+
+export interface PaintedCell {
+  pentomino: PlacedPentomino;
+  conflict: boolean;
+  borders: Borders;
 }
 
 export const MAX_NUM_COLORS = 12;
@@ -107,7 +111,7 @@ export const SURFACES: Surfaces = {
   },
   Sphere: {
     name: "Sphere",
-    consecutive: false,
+    consecutive: true,
     key: "S",
     orientation: { w: Orientation.ConsecutiveOrientable, h: Orientation.ConsecutiveOrientable },
   },

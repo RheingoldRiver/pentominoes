@@ -1,6 +1,7 @@
+import { Borders, PaintedCell } from "./../../constants";
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
-import { EMPTY_PENTOMINO, Orientation, PaintedCell, PlacedPentomino, SURFACES, Surface } from "../../constants";
+import { EMPTY_PENTOMINO, Orientation, PlacedPentomino, SURFACES, Surface } from "../../constants";
 
 interface NewCoordinates {
   newX: number;
@@ -13,10 +14,12 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
       return {
         pentomino: EMPTY_PENTOMINO(x, y),
         conflict: false,
-        borderTop: false,
-        borderLeft: false,
-        borderBot: false,
-        borderRight: false,
+        borders: {
+          borderTop: false,
+          borderLeft: false,
+          borderBot: false,
+          borderRight: false,
+        },
       };
     })
   );
@@ -44,24 +47,53 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
           cellToPaint.pentomino = p;
           const flipX = outOfBounds(rawY, width) && surface.orientation.h === Orientation.Nonorientable;
           const flipY = outOfBounds(rawX, height) && surface.orientation.w === Orientation.Nonorientable;
-          // const transpose = outOfBounds(rawY, height) || outOfBounds(rawX, width) &&
+          const transposeX = outOfBounds(rawX, width) && surface.consecutive;
+          const transposeY = outOfBounds(rawY, height) && surface.consecutive;
+
           if (px === 0 || orientation.shape[px - 1][py] === 0) {
-            cellToPaint[flipX ? "borderBot" : "borderTop"] = true;
+            cellToPaint.borders[border("borderTop", flipX, transposeX, transposeY)] = true;
           }
           if (py === 0 || orientation.shape[px][py - 1] === 0) {
-            cellToPaint[flipY ? "borderRight" : "borderLeft"] = true;
+            cellToPaint.borders[border("borderLeft", flipY, transposeX, transposeY)] = true;
           }
           if (px === orientation.shape.length - 1 || orientation.shape[px + 1][py] === 0) {
-            cellToPaint[flipX ? "borderTop" : "borderBot"] = true;
+            cellToPaint.borders[border("borderBot", flipX, transposeX, transposeY)] = true;
           }
           if (py === orientation.shape[0].length - 1 || orientation.shape[px][py + 1] === 0) {
-            cellToPaint[flipY ? "borderLeft" : "borderRight"] = true;
+            cellToPaint.borders[border("borderRight", flipY, transposeX, transposeY)] = true;
           }
         })
       );
     })
   );
   return paintedGrid;
+}
+const flipMap: { [key: string]: string } = {
+  borderRight: "borderLeft",
+  borderLeft: "borderRight",
+  borderTop: "borderBot",
+  borderBot: "borderTop",
+};
+
+const transposeMapX: { [key: string]: string } = {
+  borderRight: "borderTop",
+  borderBot: "borderRight",
+  borderTop: "borderLeft",
+  borderLeft: "borderBot",
+};
+
+const transposeMapY: { [key: string]: string } = {
+  borderRight: "borderBot",
+  borderBot: "borderLeft",
+  borderTop: "borderRight",
+  borderLeft: "borderTop",
+};
+
+function border(val: string, flip: boolean, transposeX: boolean, transposeY: boolean): keyof Borders {
+  if (flip) val = flipMap[val];
+  if (transposeX) val = transposeMapX[val];
+  if (transposeY) val = transposeMapY[val];
+  return val as keyof Borders;
 }
 
 export function getCoordinatesToPaint(

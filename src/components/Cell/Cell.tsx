@@ -5,7 +5,7 @@ import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 
-const debug = false;
+const debug = true;
 
 export const Cell = ({
   cell,
@@ -42,10 +42,10 @@ export const Cell = ({
     <div
       className={clsx(onClick === undefined ? "" : "cursor-pointer", PENTOMINO_SIZES[pentominoSize], bg.class)}
       style={{
-        borderTop: borderStyle(cell.borderTop),
-        borderLeft: borderStyle(cell.borderLeft),
-        borderBottom: borderStyle(cell.borderBot),
-        borderRight: borderStyle(cell.borderRight),
+        borderTop: borderStyle(cell.borders.borderTop),
+        borderLeft: borderStyle(cell.borders.borderLeft),
+        borderBottom: borderStyle(cell.borders.borderBot),
+        borderRight: borderStyle(cell.borders.borderRight),
         backgroundColor: bg.style,
       }}
       onClick={() => {
