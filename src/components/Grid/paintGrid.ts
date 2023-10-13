@@ -1,13 +1,6 @@
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
-import {
-  EMPTY_PENTOMINO,
-  Orientation,
-  PaintedCell,
-  PlacedPentomino,
-  Surface,
-  surfaceOrientations,
-} from "../../constants";
+import { EMPTY_PENTOMINO, Orientation, PaintedCell, PlacedPentomino, SURFACES, Surface } from "../../constants";
 
 interface NewCoordinates {
   newX: number;
@@ -49,8 +42,9 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
             cellToPaint.conflict = true;
           }
           cellToPaint.pentomino = p;
-          const flipX = outOfBounds(rawY, width) && surfaceOrientations[surface].h === Orientation.Nonorientable;
-          const flipY = outOfBounds(rawX, height) && surfaceOrientations[surface].w === Orientation.Nonorientable;
+          const flipX = outOfBounds(rawY, width) && surface.orientation.h === Orientation.Nonorientable;
+          const flipY = outOfBounds(rawX, height) && surface.orientation.w === Orientation.Nonorientable;
+          // const transpose = outOfBounds(rawY, height) || outOfBounds(rawX, width) &&
           if (px === 0 || orientation.shape[px - 1][py] === 0) {
             cellToPaint[flipX ? "borderBot" : "borderTop"] = true;
           }
@@ -78,42 +72,43 @@ export function getCoordinatesToPaint(
   rawY: number
 ): NewCoordinates {
   switch (surface) {
-    case Surface.Rectangle:
+    case SURFACES.Rectangle:
       return {
         newX: rawX,
         newY: rawY,
       };
-    case Surface.Cylinder:
+    case SURFACES.Cylinder:
       return {
         newX: wrap(rawX, width),
         newY: rawY,
       };
-    case Surface.Mobius:
+    case SURFACES.Mobius:
       return {
         newX: nonorientableWrap(rawX, height, rawY, width),
         newY: rawY,
       };
-    case Surface.KleinBottle:
+    case SURFACES.KleinBottle:
       return {
         newX: nonorientableWrap(rawX, height, rawY, width),
         newY: wrap(rawY, width),
       };
-    case Surface.ProjectivePlane:
+    case SURFACES.ProjectivePlane:
       return {
         newX: nonorientableWrap(rawX, height, rawY, width),
         newY: nonorientableWrap(rawY, width, rawX, height),
       };
-    case Surface.Torus:
+    case SURFACES.Torus:
       return {
         newX: wrap(rawX, width),
         newY: wrap(rawY, width),
       };
-    case Surface.Sphere:
+    case SURFACES.Sphere:
       return {
         newX: consecutiveOrientableWrap(rawX, height, rawY),
         newY: consecutiveOrientableWrap(rawY, width, rawX),
       };
   }
+  return { newX: rawX, newY: rawY };
 }
 
 export function consecutiveOrientableWrap(coord: number, dim: number, oppositeCoord: number) {

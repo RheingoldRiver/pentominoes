@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Surface } from "../../constants";
+import { SURFACES } from "../../constants";
 import { consecutiveOrientableWrap, getCoordinatesToPaint, orient, wrap } from "./paintGrid";
 
 test("a nonorientable coordinate is moved properly", () => {
@@ -16,21 +16,21 @@ test("a coordinate wraps properly", () => {
 });
 
 test("orientable coordinates wrap properly", () => {
-  expect(getCoordinatesToPaint(Surface.Torus, 8, 8, 8, 5)).toStrictEqual({ newX: 0, newY: 5 });
-  expect(getCoordinatesToPaint(Surface.Torus, 8, 8, -1, 5)).toStrictEqual({ newX: 7, newY: 5 });
-  expect(getCoordinatesToPaint(Surface.Torus, 8, 8, 5, 8)).toStrictEqual({ newX: 5, newY: 0 });
-  expect(getCoordinatesToPaint(Surface.Torus, 8, 8, 5, -1)).toStrictEqual({ newX: 5, newY: 7 });
-  expect(getCoordinatesToPaint(Surface.Torus, 8, 8, 8, 8)).toStrictEqual({ newX: 0, newY: 0 });
-  expect(getCoordinatesToPaint(Surface.Torus, 8, 8, -1, -1)).toStrictEqual({ newX: 7, newY: 7 });
+  expect(getCoordinatesToPaint(SURFACES.Torus, 8, 8, 8, 5)).toStrictEqual({ newX: 0, newY: 5 });
+  expect(getCoordinatesToPaint(SURFACES.Torus, 8, 8, -1, 5)).toStrictEqual({ newX: 7, newY: 5 });
+  expect(getCoordinatesToPaint(SURFACES.Torus, 8, 8, 5, 8)).toStrictEqual({ newX: 5, newY: 0 });
+  expect(getCoordinatesToPaint(SURFACES.Torus, 8, 8, 5, -1)).toStrictEqual({ newX: 5, newY: 7 });
+  expect(getCoordinatesToPaint(SURFACES.Torus, 8, 8, 8, 8)).toStrictEqual({ newX: 0, newY: 0 });
+  expect(getCoordinatesToPaint(SURFACES.Torus, 8, 8, -1, -1)).toStrictEqual({ newX: 7, newY: 7 });
 });
 
 test("nonorientable x coordinate wraps properly", () => {
-  expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, 8, 5)).toStrictEqual({ newX: 0, newY: 2 });
-  expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, -1, 5)).toStrictEqual({ newX: 7, newY: 2 });
-  expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, 8, 7)).toStrictEqual({ newX: 0, newY: 0 });
-  expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, -1, 0)).toStrictEqual({ newX: 7, newY: 7 });
-  expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, 8, 7)).toStrictEqual({ newX: 0, newY: 0 });
-  expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, -1, 0)).toStrictEqual({ newX: 7, newY: 7 });
+  expect(getCoordinatesToPaint(SURFACES.ProjectivePlane, 8, 8, 8, 5)).toStrictEqual({ newX: 0, newY: 2 });
+  expect(getCoordinatesToPaint(SURFACES.ProjectivePlane, 8, 8, -1, 5)).toStrictEqual({ newX: 7, newY: 2 });
+  expect(getCoordinatesToPaint(SURFACES.ProjectivePlane, 8, 8, 8, 7)).toStrictEqual({ newX: 0, newY: 0 });
+  expect(getCoordinatesToPaint(SURFACES.ProjectivePlane, 8, 8, -1, 0)).toStrictEqual({ newX: 7, newY: 7 });
+  expect(getCoordinatesToPaint(SURFACES.ProjectivePlane, 8, 8, 8, 7)).toStrictEqual({ newX: 0, newY: 0 });
+  expect(getCoordinatesToPaint(SURFACES.ProjectivePlane, 8, 8, -1, 0)).toStrictEqual({ newX: 7, newY: 7 });
 });
 
 test("a sphere maps correctly", () => {

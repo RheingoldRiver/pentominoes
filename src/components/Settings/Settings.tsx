@@ -13,6 +13,7 @@ import {
   PENTOMINO_NAMES,
   shuffleArray,
   Surface,
+  SURFACES,
 } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { ColorSettings } from "../ColorSettings/ColorSettings";
@@ -111,9 +112,9 @@ export const Settings = () => {
         <select
           className="bg-white dark:bg-slate-950"
           id="surface"
-          value={Surface[curSurface]}
+          value={curSurface.name}
           onChange={(e) => {
-            setCurSurface(Surface[e.target.value as keyof typeof Surface]);
+            setCurSurface(SURFACES[e.target.value as keyof typeof SURFACES]);
           }}
         >
           <option value="Rectangle">Rectangle</option>
@@ -125,8 +126,8 @@ export const Settings = () => {
           <option value="KleinBottle">Klein Bottle</option>
         </select>
       </fieldset>
-      {curSurface === Surface.Sphere && curWidth !== curHeight && (
-        <ErrorText>{Surface[curSurface]} requires equal width & height</ErrorText>
+      {curSurface === SURFACES.Sphere && curWidth !== curHeight && (
+        <ErrorText>{curSurface.name} requires equal width & height</ErrorText>
       )}
       <Dialog.Title className="text-center font-bold text-md mb-2">Pentomino tile colors</Dialog.Title>
       <Dialog.Description className="italic mb-1">Click & drag to rearrange</Dialog.Description>

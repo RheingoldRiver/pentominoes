@@ -68,16 +68,6 @@ export const DEFAULT_COLORS: Colors = {};
 
 PENTOMINO_NAMES.forEach((p) => (DEFAULT_COLORS[p] = 0));
 
-export enum Surface {
-  Rectangle,
-  Torus,
-  ProjectivePlane,
-  KleinBottle,
-  Sphere,
-  Mobius,
-  Cylinder,
-}
-
 export enum Orientation {
   Orientable,
   Nonorientable,
@@ -86,19 +76,70 @@ export enum Orientation {
   None,
 }
 
-interface SurfaceOrientations {
-  [key: number]: { h: Orientation; w: Orientation };
+interface SurfaceOrientation {
+  h: Orientation;
+  w: Orientation;
 }
 
-export const surfaceOrientations: SurfaceOrientations = {
-  [Surface.Rectangle]: { w: Orientation.None, h: Orientation.None },
-  [Surface.Cylinder]: {w: Orientation.None, h: Orientation.Orientable},
-  [Surface.Sphere]: {w: Orientation.ConsecutiveOrientable, h: Orientation.ConsecutiveNonorientable },
-  [Surface.Torus]: { w: Orientation.Orientable, h: Orientation.Orientable },
-  [Surface.Mobius]: {w: Orientation.None, h: Orientation.Nonorientable},
-  [Surface.ProjectivePlane]: { w: Orientation.Nonorientable, h: Orientation.Nonorientable },
-  [Surface.KleinBottle]: { w: Orientation.Orientable, h: Orientation.Nonorientable },
+export interface Surface {
+  name: string;
+  consecutive: boolean;
+  key: string;
+  orientation: SurfaceOrientation;
+}
+
+interface Surfaces {
+  [key: string]: Surface;
+}
+
+export const SURFACES: Surfaces = {
+  Rectangle: {
+    name: "Rectangle",
+    consecutive: false,
+    key: "R",
+    orientation: { w: Orientation.None, h: Orientation.None },
+  },
+  Cylinder: {
+    name: "Cylinder",
+    consecutive: false,
+    key: "C",
+    orientation: { w: Orientation.None, h: Orientation.Orientable },
+  },
+  Sphere: {
+    name: "Sphere",
+    consecutive: false,
+    key: "S",
+    orientation: { w: Orientation.ConsecutiveOrientable, h: Orientation.ConsecutiveOrientable },
+  },
+  Torus: {
+    name: "Torus",
+    consecutive: false,
+    key: "T",
+    orientation: { w: Orientation.Orientable, h: Orientation.Orientable },
+  },
+  Mobius: {
+    name: "Mobius",
+    consecutive: false,
+    key: "M",
+    orientation: { w: Orientation.None, h: Orientation.Nonorientable },
+  },
+  ProjectivePlane: {
+    name: "ProjectivePlane",
+    consecutive: false,
+    key: "P",
+    orientation: { w: Orientation.Nonorientable, h: Orientation.Nonorientable },
+  },
+  KleinBottle: {
+    name: "KleinBottle",
+    consecutive: false,
+    key: "K",
+    orientation: { w: Orientation.Orientable, h: Orientation.Nonorientable },
+  },
 };
+
+export const letterToSurface: { [key: string]: Surface } = {};
+
+Object.values(SURFACES).forEach((s) => (letterToSurface[s.key] = s));
 
 export type UrlConfig = {
   grid: PlacedPentomino[][];
@@ -117,7 +158,7 @@ export function EMPTY_GRID(w: number, h: number): PlacedPentomino[][] {
 export const DEFAULT_CONFIG: UrlConfig = {
   grid: EMPTY_GRID(8, 8),
   colors: DEFAULT_COLORS,
-  surface: Surface.Rectangle,
+  surface: SURFACES.Rectangle,
 };
 
 export const DEFAULT_DISPLAY_COLORS = [

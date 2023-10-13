@@ -1,7 +1,7 @@
 import { StringifiedUrlConfig, StringifiedPlacedPentomino, SerializedColors } from "./urlConfig";
 
 import { toNumber } from "lodash";
-import { Surface } from "../../constants";
+import { SURFACES } from "../../constants";
 
 export function colorStartUnderscore(curToken: string, expectTwoXDigits: boolean) {
   // only used in v2 URLs
@@ -96,6 +96,6 @@ export function decodeSurfacelessUrl(s: string): StringifiedUrlConfig {
     w: w,
     pentominoes: pentominoes,
     colors: colors,
-    surface: Surface.Rectangle,
+    surface: SURFACES.Rectangle,
   };
 }

@@ -12,7 +12,7 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
-import { Orientation, surfaceOrientations } from "../../constants";
+import { Orientation } from "../../constants";
 import { ChevronDoubleUpIcon } from "@heroicons/react/20/solid";
 
 export const Board = ({ gridArea }: { gridArea: string }) => {
@@ -30,10 +30,10 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
       }}
     >
       <div className="flex flex-row justify-center items-center h-8" style={{ gridArea: "topOrientation" }}>
-        {surfaceOrientations[surface].w !== Orientation.None ? <ChevronRightIcon width={20} /> : ""}
+        {surface.orientation.w !== Orientation.None ? <ChevronRightIcon width={20} /> : ""}
       </div>
       <div className="flex flex-col justify-center items-center w-8" style={{ gridArea: "leftOrientation" }}>
-        {surfaceOrientations[surface].h !== Orientation.None ? <ChevronDoubleUpIcon width={20} /> : ""}
+        {surface.orientation.h !== Orientation.None ? <ChevronDoubleUpIcon width={20} /> : ""}
       </div>
       <div className="flex flex-col justify-center items-center w-8" style={{ gridArea: "rightOrientation" }}>
         {
@@ -43,7 +43,7 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
             [Orientation.Nonorientable]: <ChevronDoubleDownIcon width={20} />,
             [Orientation.ConsecutiveNonorientable]: <ChevronUpIcon width={20} />,
             [Orientation.ConsecutiveOrientable]: <ChevronDownIcon width={20} />,
-          }[surfaceOrientations[surface].h]
+          }[surface.orientation.h]
         }
       </div>
       <div className="flex flex-row justify-center items-center h-8" style={{ gridArea: "botOrientation" }}>
@@ -52,9 +52,9 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
             [Orientation.None]: "",
             [Orientation.Orientable]: <ChevronRightIcon width={20} />,
             [Orientation.Nonorientable]: <ChevronLeftIcon width={20} />,
-            [Orientation.ConsecutiveNonorientable]: <ChevronDoubleLeftIcon width={20} />,
-            [Orientation.ConsecutiveOrientable]: <ChevronDoubleRightIcon width={20} />,
-          }[surfaceOrientations[surface].w]
+            [Orientation.ConsecutiveNonorientable]: <ChevronDoubleRightIcon width={20} />,
+            [Orientation.ConsecutiveOrientable]: <ChevronDoubleLeftIcon width={20} />,
+          }[surface.orientation.w]
         }
       </div>
       <Grid

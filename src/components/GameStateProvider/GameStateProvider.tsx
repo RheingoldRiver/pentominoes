@@ -1,6 +1,15 @@
 import { cloneDeep, debounce } from "lodash";
 import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
-import { Action, Colors, DEFAULT_CONFIG, PaintedCell, PlacedPentomino, Surface, UrlConfig } from "../../constants";
+import {
+  Action,
+  Colors,
+  DEFAULT_CONFIG,
+  PaintedCell,
+  PlacedPentomino,
+  SURFACES,
+  Surface,
+  UrlConfig,
+} from "../../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { deserializeUrl, serializeUrl } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
@@ -40,7 +49,7 @@ const DEFAULT_GAME_STATE: GameState = {
   clickBoard: () => {},
   pentominoColors: {},
   setPentominoColors: () => {},
-  surface: Surface.Rectangle,
+  surface: SURFACES.Rectangle,
   setSurface: () => {},
 };
 
