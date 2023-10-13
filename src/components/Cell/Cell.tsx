@@ -5,6 +5,8 @@ import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 
+const debug = true;
+
 export const Cell = ({
   cell,
   x = 0,
@@ -49,6 +51,8 @@ export const Cell = ({
       onClick={() => {
         if (onClick !== undefined) onClick(x, y, hasPentomino, cell);
       }}
-    ></div>
+    >
+      {debug && `(${x}, ${y})`}
+    </div>
   );
 };

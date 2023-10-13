@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { Surface } from "../../constants";
-import { getCoordinatesToPaint, orient, wrap } from "./paintGrid";
+import { consecutiveOrientableWrap, getCoordinatesToPaint, orient, wrap } from "./paintGrid";
 
 test("a nonorientable coordinate is moved properly", () => {
   expect(orient(5, 8)).toBe(2);
@@ -31,4 +31,8 @@ test("nonorientable x coordinate wraps properly", () => {
   expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, -1, 0)).toStrictEqual({ newX: 7, newY: 7 });
   expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, 8, 7)).toStrictEqual({ newX: 0, newY: 0 });
   expect(getCoordinatesToPaint(Surface.ProjectivePlane, 8, 8, -1, 0)).toStrictEqual({ newX: 7, newY: 7 });
+});
+
+test("a sphere maps correctly", () => {
+  expect(consecutiveOrientableWrap(-1, 8, 1)).toBe(6);
 });

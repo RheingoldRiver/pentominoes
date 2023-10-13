@@ -40,6 +40,9 @@ const surfaceToLetter = {
   [Surface.Torus]: "T",
   [Surface.ProjectivePlane]: "P",
   [Surface.KleinBottle]: "K",
+  [Surface.Cylinder]: "C",
+  [Surface.Mobius]: "M",
+  [Surface.Sphere]: "S",
 };
 
 const letterToSurface = {
@@ -47,6 +50,9 @@ const letterToSurface = {
   T: Surface.Torus,
   P: Surface.ProjectivePlane,
   K: Surface.KleinBottle,
+  C: Surface.Cylinder,
+  M: Surface.Mobius,
+  S: Surface.Sphere,
 };
 
 enum TerrainDirection {

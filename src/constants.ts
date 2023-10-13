@@ -69,15 +69,20 @@ export const DEFAULT_COLORS: Colors = {};
 PENTOMINO_NAMES.forEach((p) => (DEFAULT_COLORS[p] = 0));
 
 export enum Surface {
-  Rectangle, // rectangle
-  Torus, // torus
-  ProjectivePlane, // projective plane
-  KleinBottle, // klein bottle
+  Rectangle,
+  Torus,
+  ProjectivePlane,
+  KleinBottle,
+  Sphere,
+  Mobius,
+  Cylinder,
 }
 
 export enum Orientation {
   Orientable,
   Nonorientable,
+  ConsecutiveOrientable,
+  ConsecutiveNonorientable,
   None,
 }
 
@@ -87,7 +92,10 @@ interface SurfaceOrientations {
 
 export const surfaceOrientations: SurfaceOrientations = {
   [Surface.Rectangle]: { w: Orientation.None, h: Orientation.None },
+  [Surface.Cylinder]: {w: Orientation.None, h: Orientation.Orientable},
+  [Surface.Sphere]: {w: Orientation.ConsecutiveOrientable, h: Orientation.ConsecutiveNonorientable },
   [Surface.Torus]: { w: Orientation.Orientable, h: Orientation.Orientable },
+  [Surface.Mobius]: {w: Orientation.None, h: Orientation.Nonorientable},
   [Surface.ProjectivePlane]: { w: Orientation.Nonorientable, h: Orientation.Nonorientable },
   [Surface.KleinBottle]: { w: Orientation.Orientable, h: Orientation.Nonorientable },
 };

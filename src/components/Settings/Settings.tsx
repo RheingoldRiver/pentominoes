@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { range, toNumber } from "lodash";
-import { useContext, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   Colors,
@@ -117,11 +117,17 @@ export const Settings = () => {
           }}
         >
           <option value="Rectangle">Rectangle</option>
+          <option value="Cylinder">Cylinder</option>
+          <option value="Sphere">Sphere</option>
           <option value="Torus">Torus</option>
+          <option value="Mobius">Mobius Band</option>
           <option value="ProjectivePlane">Projective Plane</option>
           <option value="KleinBottle">Klein Bottle</option>
         </select>
       </fieldset>
+      {curSurface === Surface.Sphere && curWidth !== curHeight && (
+        <ErrorText>{Surface[curSurface]} requires equal width & height</ErrorText>
+      )}
       <Dialog.Title className="text-center font-bold text-md mb-2">Pentomino tile colors</Dialog.Title>
       <Dialog.Description className="italic mb-1">Click & drag to rearrange</Dialog.Description>
 
@@ -177,7 +183,7 @@ export const Settings = () => {
         </Button>
       </div>
       {(curWidth !== grid[0].length || curHeight !== grid.length) && (
-        <div className="text-red-500">Saving will clear your current board!</div>
+        <ErrorText>Saving will clear your current board!</ErrorText>
       )}
       <div className="mt-6 flex justify-end">
         <Dialog.Close asChild>
@@ -206,4 +212,8 @@ export const Settings = () => {
       </div>
     </Modal>
   );
+};
+
+const ErrorText = ({ children }: { children: ReactNode }) => {
+  return <div className="text-red-500">{children}</div>;
 };

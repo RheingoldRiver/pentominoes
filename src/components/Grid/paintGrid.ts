@@ -83,22 +83,51 @@ export function getCoordinatesToPaint(
         newX: rawX,
         newY: rawY,
       };
+    case Surface.Cylinder:
+      return {
+        newX: wrap(rawX, width),
+        newY: rawY,
+      };
+    case Surface.Mobius:
+      return {
+        newX: nonorientableWrap(rawX, height, rawY, width),
+        newY: rawY,
+      };
     case Surface.KleinBottle:
       return {
-        newX: outOfBounds(rawY, width) ? orient(wrap(rawX, height), height) : wrap(rawX, height),
+        newX: nonorientableWrap(rawX, height, rawY, width),
         newY: wrap(rawY, width),
       };
     case Surface.ProjectivePlane:
       return {
-        newX: outOfBounds(rawY, width) ? orient(wrap(rawX, height), height) : wrap(rawX, height),
-        newY: outOfBounds(rawX, height) ? orient(wrap(rawY, width), width) : wrap(rawY, width),
+        newX: nonorientableWrap(rawX, height, rawY, width),
+        newY: nonorientableWrap(rawY, width, rawX, height),
       };
     case Surface.Torus:
       return {
         newX: wrap(rawX, width),
         newY: wrap(rawY, width),
       };
+    case Surface.Sphere:
+      return {
+        newX: consecutiveOrientableWrap(rawX, height, rawY),
+        newY: consecutiveOrientableWrap(rawY, width, rawX),
+      };
   }
+}
+
+export function consecutiveOrientableWrap(coord: number, dim: number, oppositeCoord: number) {
+  if (outOfBounds(coord, dim)) {
+    return dim - 1 - wrap(oppositeCoord, dim);
+  }
+  if (outOfBounds(oppositeCoord, dim)) {
+    return wrap(oppositeCoord, dim);
+  }
+  return coord;
+}
+
+export function nonorientableWrap(coord: number, dim: number, oppositeCoord: number, oppositeDim: number) {
+  return outOfBounds(oppositeCoord, oppositeDim) ? orient(wrap(coord, dim), dim) : wrap(coord, dim);
 }
 
 export function outOfBounds(coord: number, dim: number): boolean {
