@@ -32,6 +32,7 @@ interface GameState {
   setPentominoColors: Dispatch<SetStateAction<Colors>>;
   surface: Surface;
   setSurface: Dispatch<SetStateAction<Surface>>;
+  clearGrid: (preserveTerrain: boolean) => void;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -51,6 +52,7 @@ const DEFAULT_GAME_STATE: GameState = {
   setPentominoColors: () => {},
   surface: SURFACES.Rectangle,
   setSurface: () => {},
+  clearGrid: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -101,9 +103,11 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     const lastAction = nextActionHistory.pop();
     if (lastAction === undefined) return;
     const nextGrid = cloneDeep(grid);
-    nextGrid[lastAction.x][lastAction.y].pentomino = PENTOMINOES[lastAction.prevName];
-    nextGrid[lastAction.x][lastAction.y].rotation = lastAction.prevRotation;
-    nextGrid[lastAction.x][lastAction.y].reflection = lastAction.prevReflection;
+    lastAction.pentominoes.forEach((p) => {
+      nextGrid[p.x][p.y].pentomino = PENTOMINOES[p.prevName];
+      nextGrid[p.x][p.y].rotation = p.prevRotation;
+      nextGrid[p.x][p.y].reflection = p.prevReflection;
+    });
     setGrid(nextGrid);
     setActionHistory(nextActionHistory);
   });
@@ -112,12 +116,16 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     const nextActionHistory = [
       ...actionHistory,
       {
-        // grid not nextGrid
-        prevName: grid[x][y].pentomino.name,
-        prevRotation: grid[x][y].rotation,
-        prevReflection: grid[x][y].reflection,
-        x: x,
-        y: y,
+        pentominoes: [
+          {
+            // grid not nextGrid
+            prevName: grid[x][y].pentomino.name,
+            prevRotation: grid[x][y].rotation,
+            prevReflection: grid[x][y].reflection,
+            x: x,
+            y: y,
+          },
+        ],
       },
     ];
 
@@ -157,6 +165,31 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setGrid(newGrid);
   }
 
+  function clearGrid(preserveTerrain: boolean) {
+    const nextAction: Action = { pentominoes: [] };
+    const nextGrid = grid.map((row, x) =>
+      row.map((c, y) => {
+        if (
+          !(c.pentomino.name === PENTOMINOES.None.name || (preserveTerrain && c.pentomino.name === PENTOMINOES.R.name))
+        ) {
+          nextAction.pentominoes.push({
+            prevName: c.pentomino.name,
+            prevReflection: c.reflection,
+            prevRotation: c.rotation,
+            x,
+            y,
+          });
+        }
+        return {
+          ...c,
+          pentomino: preserveTerrain && c.pentomino.name === PENTOMINOES.R.name ? PENTOMINOES.R : PENTOMINOES.None,
+        };
+      })
+    );
+    setActionHistory([...actionHistory, nextAction]);
+    setGrid(nextGrid);
+  }
+
   function clickBoard(x: number, y: number, hasPentomino: boolean, cell: PaintedCell) {
     setCurrentGridCoords({ x: x, y: y }); // I think I don't need this
     if (hasPentomino === false) {
@@ -188,6 +221,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setPentominoColors,
         surface,
         setSurface,
+        clearGrid,
       }}
     >
       {children}

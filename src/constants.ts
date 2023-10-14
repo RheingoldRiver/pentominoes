@@ -189,12 +189,16 @@ export const shuffleArray = <T>(array: T[]): void => {
   }
 };
 
-export interface Action {
+interface ActionPentomino {
   prevName: string;
   prevRotation: number;
   prevReflection: number;
   x: number;
   y: number;
+}
+
+export interface Action {
+  pentominoes: ActionPentomino[];
 }
 
 export const MAX_DIMENSION_SIZE = 60;

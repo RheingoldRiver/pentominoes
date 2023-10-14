@@ -117,13 +117,17 @@ export const Settings = () => {
             setCurSurface(SURFACES[e.target.value as keyof typeof SURFACES]);
           }}
         >
-          <option value="Rectangle">Rectangle</option>
-          <option value="Cylinder">Cylinder</option>
-          <option value="Sphere">Sphere</option>
-          <option value="Torus">Torus</option>
-          <option value="Mobius">Mobius Band</option>
-          <option value="ProjectivePlane">Projective Plane</option>
-          <option value="KleinBottle">Klein Bottle</option>
+          <optgroup label="Orientable">
+            <option value="Rectangle">Rectangle</option>
+            <option value="Cylinder">Cylinder</option>
+            <option value="Sphere">Sphere</option>
+            <option value="Torus">Torus</option>
+          </optgroup>
+          <optgroup label="Nonorientable">
+            <option value="Mobius">Mobius Band</option>
+            <option value="ProjectivePlane">Projective Plane</option>
+            <option value="KleinBottle">Klein Bottle</option>
+          </optgroup>
         </select>
       </fieldset>
       {curSurface === SURFACES.Sphere && curWidth !== curHeight && (
