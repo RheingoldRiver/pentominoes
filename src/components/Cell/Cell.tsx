@@ -32,10 +32,11 @@ export const Cell = ({
   }
   function backgroundColor() {
     if (cell.conflict === true && hasPentomino === true) return { class: "bg-red-700", style: "" };
-    if (cell.pentomino.pentomino.name === PENTOMINOES.R.name) return { class: "bg-gray-600", style: "" };
+    if (cell.pentomino.pentomino.name === PENTOMINOES.R.name)
+      return { class: "bg-gray-500 dark:bg-gray-600", style: "" };
     if (hasPentomino === true)
       return { class: "", style: displayColors[pentominoColors[cell.pentomino.pentomino.name]] };
-    return { class: "bg-gray-400 dark:bg-gray-800", style: "" };
+    return { class: "bg-gray-300 dark:bg-gray-800", style: "" };
   }
   const bg = backgroundColor();
   return (

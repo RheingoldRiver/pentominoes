@@ -20,7 +20,14 @@ export const Header = ({ ...rest }) => {
   const { displayColors } = useContext(AppStateContext);
 
   return (
-    <div {...rest} className={clsx("flex flex-col md:flex-row p-6 rounded-lg mb-3", "bg-slate-100 dark:bg-slate-800")}>
+    <div
+      {...rest}
+      className={clsx(
+        "flex flex-col md:flex-row p-4 rounded-lg mb-3",
+        "bg-slate-100 dark:bg-slate-800",
+        "shadow-md shadow-slate-300 dark:shadow-none"
+      )}
+    >
       <div
         className={clsx(
           "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 p-2"
@@ -44,7 +51,7 @@ export const Header = ({ ...rest }) => {
       </div>
       <div
         className={clsx(
-          "ml-20 p-1 border-solid  rounded border w-[9em] h-[9em] flex justify-center items-center self-end",
+          "lg:ml-6 xl:ml-16 p-1 border-solid  rounded border w-[8em] h-[8em] flex justify-center items-center self-end",
           "border-black dark:border-slate-50"
         )}
       >

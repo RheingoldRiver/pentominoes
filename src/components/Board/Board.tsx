@@ -21,8 +21,9 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
   return (
     <div
       className={clsx(
-        "grid w-fit grid-cols-[min-content_auto_min-content]",
-        "bg-slate-100 dark:bg-slate-800 rounded-lg"
+        "grid w-fit grid-cols-[min-content_auto_min-content] mb-2",
+        "bg-slate-100 dark:bg-slate-800 rounded-lg",
+        "shadow-lg shadow-slate-300 dark:shadow-none"
       )}
       style={{
         gridTemplateAreas: `"topOrientation topOrientation topOrientation" "leftOrientation grid rightOrientation" ". botOrientation ."`,
