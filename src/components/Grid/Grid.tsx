@@ -1,4 +1,4 @@
-import { PaintedCell, PlacedPentomino, Surface } from "../../constants";
+import { PaintedCell, PlacedPentomino, SURFACES, Surface } from "../../constants";
 import { Cell } from "../Cell/Cell";
 import clsx from "clsx";
 import { memo } from "react";
@@ -9,7 +9,7 @@ function GridComponent({
   pentominoSize,
   gridArea,
   borderColor = "white",
-  surface = Surface.Rectangle,
+  surface = SURFACES.Rectangle,
   clickBoard,
 }: {
   grid: PlacedPentomino[][];

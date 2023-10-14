@@ -1,4 +1,4 @@
-import { DEFAULT_COLORS, EMPTY_GRID, MAX_NUM_COLORS, PlacedPentomino, Surface } from "./../../constants";
+import { DEFAULT_COLORS, EMPTY_GRID, MAX_NUM_COLORS, PlacedPentomino, SURFACES } from "./../../constants";
 import { expect, test } from "vitest";
 import {
   decodeCoordinates,
@@ -31,7 +31,7 @@ test("encoding numbers works", () => {
 test("encoding works when there are no colors", () => {
   const grid = EMPTY_GRID(8, 8);
   grid[3][3].pentomino = PENTOMINOES.X;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("T88X033");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: SURFACES.Torus })).toBe("T88X033");
 });
 
 test("encoding colors when pentominoes are placed works", () => {
@@ -39,13 +39,13 @@ test("encoding colors when pentominoes are placed works", () => {
   grid[3][3].pentomino = PENTOMINOES.X;
   const colors = { ...DEFAULT_COLORS };
   colors.X = 1;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("T88X033");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: SURFACES.Torus })).toBe("T88X033");
 });
 
 test("lowercase is correctly added to the URL", () => {
   const grid = EMPTY_GRID(20, 20);
   grid[14][14].pentomino = PENTOMINOES.X;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("TkkX0ee");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: SURFACES.Torus })).toBe("TkkX0ee");
 });
 
 test("decoding an orientation works", () => {
@@ -61,7 +61,7 @@ test("a URL is properly decoded when no pentominoes are placed", () => {
     w: 8,
     pentominoes: [],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -71,7 +71,7 @@ test("a URL is properly decoded with colors but no pentominoes", () => {
     w: 8,
     pentominoes: [],
     colors: { 1: ["F"] },
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -87,7 +87,7 @@ test("a URL is properly decoded with colors and pentominoes", () => {
       },
     ],
     colors: { 1: ["F"] },
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -103,7 +103,7 @@ test("a URL is properly decoded, no asymmetry", () => {
       },
     ],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -119,7 +119,7 @@ test("a URL is properly decoded with a 2-digit dimension", () => {
       },
     ],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -129,7 +129,7 @@ test("you get the right grid with single-digit numbers", () => {
   expect(deserializeUrl("K88I044")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
-    surface: Surface.KleinBottle,
+    surface: SURFACES.KleinBottle,
   });
 });
 
@@ -139,6 +139,6 @@ test("you get the right grid with two-digit  numbers", () => {
   expect(deserializeUrl("P6aI046")).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
-    surface: Surface.ProjectivePlane,
+    surface: SURFACES.ProjectivePlane,
   });
 });

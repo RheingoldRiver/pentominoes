@@ -1,4 +1,12 @@
-import { Colors, DEFAULT_COLORS, MAX_NUM_COLORS, PlacedPentomino, Surface } from "./../../constants";
+import {
+  Colors,
+  DEFAULT_COLORS,
+  letterToSurface,
+  MAX_NUM_COLORS,
+  PlacedPentomino,
+  Surface,
+  SURFACES,
+} from "./../../constants";
 import { isEmpty, range, toNumber } from "lodash";
 import { EMPTY_PENTOMINO, UrlConfig } from "../../constants";
 import { Coordinates, PENTOMINOES } from "../../pentominoes";
@@ -34,20 +42,6 @@ interface Orientation {
   reflection: number;
   color: number; // index of the color in an array
 }
-
-const surfaceToLetter = {
-  [Surface.Rectangle]: "R",
-  [Surface.Torus]: "T",
-  [Surface.ProjectivePlane]: "P",
-  [Surface.KleinBottle]: "K",
-};
-
-const letterToSurface = {
-  R: Surface.Rectangle,
-  T: Surface.Torus,
-  P: Surface.ProjectivePlane,
-  K: Surface.KleinBottle,
-};
 
 enum TerrainDirection {
   none,
@@ -211,9 +205,9 @@ export function serializeUrl({ grid, colors, surface }: UrlConfig): string {
 
   // terrain MUST be last because it has a different scheme from pentominoes
   // and we'll no when to break out of it when we get to an underscore
-  return `${surfaceToLetter[surface]}${encodeNumber(grid.length)}${encodeNumber(grid[0].length)}${sP.join(
-    ""
-  )}${serializeTerrain(placedTerrain)}${serializedColors}`;
+  return `${surface.key}${encodeNumber(grid.length)}${encodeNumber(grid[0].length)}${sP.join("")}${serializeTerrain(
+    placedTerrain
+  )}${serializedColors}`;
 }
 
 export function decodeNumber(d: string): number {
@@ -232,7 +226,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
     w: -1,
     pentominoes: [],
     colors: {},
-    surface: Surface.Rectangle,
+    surface: SURFACES.Rectangle,
   };
   let curToken = "";
 
@@ -248,7 +242,7 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
   s.split("").forEach((c) => {
     switch (curPos) {
       case 0: {
-        config.surface = letterToSurface[c as keyof typeof letterToSurface];
+        config.surface = letterToSurface[c];
         curPos = 1;
         break;
       }

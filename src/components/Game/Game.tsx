@@ -1,6 +1,6 @@
 import GameStateProvider from "../GameStateProvider/GameStateProvider";
 import { Header } from "../Header/Header";
-import GameToolbar from "../GameToolbar/GameToolbar";
+import TopToolbar from "../TopToolbar/TopToolbar";
 import { Settings } from "../Settings/Settings";
 import { Information } from "../Information/Information";
 import AppStateProvider from "../AppStateProvider/AppStateProvider";
@@ -8,6 +8,7 @@ import { Board } from "../Board/Board";
 import { DarkModeButton } from "../DarkModeButton/DarkModeButton";
 import clsx from "clsx";
 import { Wordmark } from "../Wordmark/Wordmark";
+import BottomToolbar from "../BottomToolbar/BottomToolbar";
 
 export const Game = () => {
   return (
@@ -35,8 +36,9 @@ const GameContent = () => {
         <DarkModeButton />
         <Information></Information>
       </div>
-      <GameToolbar style={{ gridArea: "gameToolbar" }}></GameToolbar>
+      <TopToolbar style={{ gridArea: "gameToolbar" }}></TopToolbar>
       <Board gridArea="board"></Board>
+      <BottomToolbar style={{ gridArea: "botToolbar" }} />
     </div>
   );
 };

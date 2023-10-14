@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { range, toNumber } from "lodash";
-import { useContext, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   Colors,
@@ -13,6 +13,7 @@ import {
   PENTOMINO_NAMES,
   shuffleArray,
   Surface,
+  SURFACES,
 } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { ColorSettings } from "../ColorSettings/ColorSettings";
@@ -111,17 +112,27 @@ export const Settings = () => {
         <select
           className="bg-white dark:bg-slate-950"
           id="surface"
-          value={Surface[curSurface]}
+          value={curSurface.name}
           onChange={(e) => {
-            setCurSurface(Surface[e.target.value as keyof typeof Surface]);
+            setCurSurface(SURFACES[e.target.value as keyof typeof SURFACES]);
           }}
         >
-          <option value="Rectangle">Rectangle</option>
-          <option value="Torus">Torus</option>
-          <option value="ProjectivePlane">Projective Plane</option>
-          <option value="KleinBottle">Klein Bottle</option>
+          <optgroup label="Orientable">
+            <option value="Rectangle">Rectangle</option>
+            <option value="Cylinder">Cylinder</option>
+            <option value="Sphere">Sphere</option>
+            <option value="Torus">Torus</option>
+          </optgroup>
+          <optgroup label="Nonorientable">
+            <option value="Mobius">Mobius Band</option>
+            <option value="ProjectivePlane">Projective Plane</option>
+            <option value="KleinBottle">Klein Bottle</option>
+          </optgroup>
         </select>
       </fieldset>
+      {curSurface === SURFACES.Sphere && curWidth !== curHeight && (
+        <ErrorText>{curSurface.name} requires equal width & height</ErrorText>
+      )}
       <Dialog.Title className="text-center font-bold text-md mb-2">Pentomino tile colors</Dialog.Title>
       <Dialog.Description className="italic mb-1">Click & drag to rearrange</Dialog.Description>
 
@@ -177,7 +188,7 @@ export const Settings = () => {
         </Button>
       </div>
       {(curWidth !== grid[0].length || curHeight !== grid.length) && (
-        <div className="text-red-500">Saving will clear your current board!</div>
+        <ErrorText>Saving will clear your current board!</ErrorText>
       )}
       <div className="mt-6 flex justify-end">
         <Dialog.Close asChild>
@@ -206,4 +217,8 @@ export const Settings = () => {
       </div>
     </Modal>
   );
+};
+
+const ErrorText = ({ children }: { children: ReactNode }) => {
+  return <div className="text-red-500">{children}</div>;
 };

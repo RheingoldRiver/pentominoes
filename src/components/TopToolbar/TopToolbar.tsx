@@ -3,7 +3,7 @@ import * as Toolbar from "@radix-ui/react-toolbar";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { ToolbarButton } from "../Button/Button";
 
-const GameToolbar = ({ ...rest }) => {
+const TopToolbar = ({ ...rest }) => {
   const { currentRotation, setCurrentRotation, currentReflection, setCurrentReflection } = useContext(GameStateContext);
   return (
     <Toolbar.Root {...rest} className="space-x-3 mb-2 w-full flex justify-start" aria-label="Game controls">
@@ -49,4 +49,4 @@ const GameToolbar = ({ ...rest }) => {
   );
 };
 
-export default GameToolbar;
+export default TopToolbar;

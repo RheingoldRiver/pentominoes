@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { StringifiedPlacedPentomino, decodeUrl, serializeUrl } from "./urlConfig";
-import { DEFAULT_COLORS, EMPTY_GRID, Surface } from "../../constants";
+import { DEFAULT_COLORS, EMPTY_GRID, SURFACES } from "../../constants";
 import { PENTOMINOES } from "../../pentominoes";
 import { range } from "lodash";
 
@@ -16,7 +16,7 @@ test("normal encoding terrain works", () => {
   const grid = EMPTY_GRID(8, 8);
   grid[3][3].pentomino = PENTOMINOES.R;
   grid[4][4].pentomino = PENTOMINOES.R;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("T88R3344");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: SURFACES.Torus })).toBe("T88R3344");
 });
 
 test("width encoding terrain works", () => {
@@ -25,7 +25,7 @@ test("width encoding terrain works", () => {
   grid[3][4].pentomino = PENTOMINOES.R;
   grid[3][5].pentomino = PENTOMINOES.R;
   grid[3][6].pentomino = PENTOMINOES.R;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("T88RZ333456");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: SURFACES.Torus })).toBe("T88RZ333456");
 });
 
 test("height encoding terrain works", () => {
@@ -34,7 +34,7 @@ test("height encoding terrain works", () => {
   grid[4][3].pentomino = PENTOMINOES.R;
   grid[5][3].pentomino = PENTOMINOES.R;
   grid[6][3].pentomino = PENTOMINOES.R;
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe("T88RY333456");
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: SURFACES.Torus })).toBe("T88RY333456");
 });
 
 test("terrain properly strips 0 when needed (Z)", () => {
@@ -44,7 +44,7 @@ test("terrain properly strips 0 when needed (Z)", () => {
     grid[0][y].pentomino = PENTOMINOES.R;
     grid[1][y].pentomino = PENTOMINOES.R;
   });
-  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: Surface.Torus })).toBe(
+  expect(serializeUrl({ grid, colors: DEFAULT_COLORS, surface: SURFACES.Torus })).toBe(
     `${"T88"}${"RZ"}${"300123"}${"310123"}${"044556677"}`
   );
 });
@@ -73,7 +73,7 @@ test("decoding terrain (no direction) works", () => {
     w: 8,
     pentominoes: [decodedTerrain("0_0"), decodedTerrain("0_1")],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -104,7 +104,7 @@ test("decoding terrain (width) works", () => {
       },
     ],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -140,7 +140,7 @@ test("decoding terrain (width) works when there are also pentominoes", () => {
       },
     ],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -171,7 +171,7 @@ test("decoding terrain (height) works", () => {
       },
     ],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
 
@@ -207,6 +207,6 @@ test("decoding terrain (height) works when there are also pentominoes", () => {
       },
     ],
     colors: {},
-    surface: Surface.Torus,
+    surface: SURFACES.Torus,
   });
 });
