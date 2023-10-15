@@ -11,7 +11,6 @@ function useHotkey(modifierKey: string | undefined, letterKey: string, action: (
       } else if (modifierKey === "Alt" && e.altKey) {
         doAction = true;
       } else if (modifierKey === "Shift") {
-        console.log("modifier key?");
         doAction = true;
       }
       if (!doAction) return;

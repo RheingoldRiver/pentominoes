@@ -80,6 +80,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [actionHistory, setActionHistory] = useState<Action[]>([]);
   const navigate = useNavigate();
 
+  const [showKeyboardHints, setShowKeyboardHints] = useState<boolean>(false);
+
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
@@ -137,39 +139,13 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   function updateCurrentPentomino(p: Pentomino) {
     setCurrentPentomino(p);
-    setToolbarPentomino(p);
+    // updating current pentomino when you press a hotkey is handled separately
+    // so we won't ever call this in the same render as we pressed a hotkey for the first time
+    if (showKeyboardHints) setToolbarPentomino(p);
     resetOrientation();
   }
-
-  useHotkey(undefined, "A", rotateLeft);
-  useHotkey(undefined, "D", rotateRight);
-  useHotkey(undefined, "S", reflectX);
-  useHotkey(undefined, "W", reflectY);
-
-  function updateToolbarPentomino(increment: number) {
-    const curIndex = ALL_PENTOMINO_NAMES.indexOf(toolbarPentomino.name);
-    const nextPentomino =
-      toolbarPentomino.name === PENTOMINOES.None.name
-        ? PENTOMINOES.R
-        : PENTOMINOES[
-            ALL_PENTOMINO_NAMES[(curIndex + increment + ALL_PENTOMINO_NAMES.length) % ALL_PENTOMINO_NAMES.length]
-          ];
-    setToolbarPentomino(nextPentomino);
-    setCurrentPentomino(nextPentomino);
-    resetOrientation();
-  }
-
-  useHotkey(undefined, "E", () => {
-    console.log("not shift");
-    updateToolbarPentomino(1);
-  });
-
-  useHotkey(undefined, "Q", () => {
-    updateToolbarPentomino(-1);
-  });
 
   function updateGridCoords(dim: keyof Coordinates, dir: number) {
-    console.log(currentGridCoords);
     if (currentGridCoords.x === -1 && currentGridCoords.y === -1) {
       setCurrentGridCoords({ x: 0, y: 0 });
       return;
@@ -179,36 +155,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     newCoords[dim] = (currentGridCoords[dim] + dir + length) % length;
     setCurrentGridCoords(newCoords);
   }
-
-  useHotkey(undefined, "ArrowLeft", () => {
-    updateGridCoords("y", -1);
-  });
-
-  useHotkey(undefined, "ArrowUp", () => {
-    updateGridCoords("x", -1);
-  });
-
-  useHotkey(undefined, "ArrowRight", () => {
-    updateGridCoords("y", 1);
-  });
-
-  useHotkey(undefined, "ArrowDown", () => {
-    updateGridCoords("x", 1);
-  });
-
-  useHotkey("Control", "Z", () => {
-    const nextActionHistory = [...actionHistory];
-    const lastAction = nextActionHistory.pop();
-    if (lastAction === undefined) return;
-    const nextGrid = cloneDeep(grid);
-    lastAction.pentominoes.forEach((p) => {
-      nextGrid[p.x][p.y].pentomino = PENTOMINOES[p.prevName];
-      nextGrid[p.x][p.y].rotation = p.prevRotation;
-      nextGrid[p.x][p.y].reflection = p.prevReflection;
-    });
-    setGrid(nextGrid);
-    setActionHistory(nextActionHistory);
-  });
 
   function recordActionHistory(x: number, y: number) {
     const nextActionHistory = [
@@ -287,7 +233,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   }
 
   function clickBoard(x: number, y: number) {
-    setCurrentGridCoords({ x: x, y: y });
+    if (showKeyboardHints) setCurrentGridCoords({ x: x, y: y });
     const cell = paintedGrid[x][y];
     if (cell.pentomino.pentomino.name === PENTOMINOES.None.name) {
       drawPentomino(x, y);
@@ -299,6 +245,72 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       setCurrentReflection(cell.pentomino.reflection);
     }
   }
+
+  useHotkey("Control", "Z", () => {
+    const nextActionHistory = [...actionHistory];
+    const lastAction = nextActionHistory.pop();
+    if (lastAction === undefined) return;
+    const nextGrid = cloneDeep(grid);
+    lastAction.pentominoes.forEach((p) => {
+      nextGrid[p.x][p.y].pentomino = PENTOMINOES[p.prevName];
+      nextGrid[p.x][p.y].rotation = p.prevRotation;
+      nextGrid[p.x][p.y].reflection = p.prevReflection;
+    });
+    setGrid(nextGrid);
+    setActionHistory(nextActionHistory);
+  });
+
+  useHotkey(undefined, "ArrowLeft", () => {
+    setShowKeyboardHints(true);
+    updateGridCoords("y", -1);
+  });
+
+  useHotkey(undefined, "ArrowUp", () => {
+    setShowKeyboardHints(true);
+    updateGridCoords("x", -1);
+  });
+
+  useHotkey(undefined, "ArrowRight", () => {
+    setShowKeyboardHints(true);
+    updateGridCoords("y", 1);
+  });
+
+  useHotkey(undefined, "ArrowDown", () => {
+    setShowKeyboardHints(true);
+    updateGridCoords("x", 1);
+  });
+
+  useHotkey(undefined, "A", rotateLeft);
+  useHotkey(undefined, "D", rotateRight);
+  useHotkey(undefined, "S", reflectX);
+  useHotkey(undefined, "W", reflectY);
+
+  function updateToolbarPentomino(increment: number) {
+    const curIndex = ALL_PENTOMINO_NAMES.indexOf(toolbarPentomino.name);
+    const nextPentomino =
+      toolbarPentomino.name === PENTOMINOES.None.name
+        ? PENTOMINOES.R
+        : PENTOMINOES[
+            ALL_PENTOMINO_NAMES[(curIndex + increment + ALL_PENTOMINO_NAMES.length) % ALL_PENTOMINO_NAMES.length]
+          ];
+    setToolbarPentomino(nextPentomino);
+    setCurrentPentomino(nextPentomino);
+    resetOrientation();
+  }
+
+  useHotkey(undefined, "E", () => {
+    setShowKeyboardHints(true);
+    updateToolbarPentomino(1);
+  });
+
+  useHotkey(undefined, "Q", () => {
+    setShowKeyboardHints(true);
+    updateToolbarPentomino(-1);
+  });
+
+  useHotkey(undefined, "Enter", () => {
+    clickBoard(currentGridCoords.x, currentGridCoords.y);
+  });
 
   return (
     <GameStateContext.Provider
