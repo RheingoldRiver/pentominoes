@@ -37,6 +37,8 @@ interface GameState {
   surface: Surface;
   setSurface: Dispatch<SetStateAction<Surface>>;
   clearGrid: (preserveTerrain: boolean) => void;
+  showKeyboardIndicators: boolean;
+  setShowKeyboardIndicators: Dispatch<SetStateAction<boolean>>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -59,6 +61,8 @@ const DEFAULT_GAME_STATE: GameState = {
   surface: SURFACES.Rectangle,
   setSurface: () => {},
   clearGrid: () => {},
+  showKeyboardIndicators: false,
+  setShowKeyboardIndicators: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -80,7 +84,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [actionHistory, setActionHistory] = useState<Action[]>([]);
   const navigate = useNavigate();
 
-  const [showKeyboardHints, setShowKeyboardHints] = useState<boolean>(false);
+  const [showKeyboardIndicators, setShowKeyboardIndicators] = useState<boolean>(false);
 
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
@@ -141,7 +145,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setCurrentPentomino(p);
     // updating current pentomino when you press a hotkey is handled separately
     // so we won't ever call this in the same render as we pressed a hotkey for the first time
-    if (showKeyboardHints) setToolbarPentomino(p);
+    setToolbarPentomino(p);
     resetOrientation();
   }
 
@@ -233,7 +237,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   }
 
   function clickBoard(x: number, y: number) {
-    if (showKeyboardHints) setCurrentGridCoords({ x: x, y: y });
+    setCurrentGridCoords({ x: x, y: y });
     const cell = paintedGrid[x][y];
     if (cell.pentomino.pentomino.name === PENTOMINOES.None.name) {
       drawPentomino(x, y);
@@ -261,22 +265,22 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   });
 
   useHotkey(undefined, "ArrowLeft", () => {
-    setShowKeyboardHints(true);
+    setShowKeyboardIndicators(true);
     updateGridCoords("y", -1);
   });
 
   useHotkey(undefined, "ArrowUp", () => {
-    setShowKeyboardHints(true);
+    setShowKeyboardIndicators(true);
     updateGridCoords("x", -1);
   });
 
   useHotkey(undefined, "ArrowRight", () => {
-    setShowKeyboardHints(true);
+    setShowKeyboardIndicators(true);
     updateGridCoords("y", 1);
   });
 
   useHotkey(undefined, "ArrowDown", () => {
-    setShowKeyboardHints(true);
+    setShowKeyboardIndicators(true);
     updateGridCoords("x", 1);
   });
 
@@ -299,12 +303,12 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   }
 
   useHotkey(undefined, "E", () => {
-    setShowKeyboardHints(true);
+    setShowKeyboardIndicators(true);
     updateToolbarPentomino(1);
   });
 
   useHotkey(undefined, "Q", () => {
-    setShowKeyboardHints(true);
+    setShowKeyboardIndicators(true);
     updateToolbarPentomino(-1);
   });
 
@@ -334,6 +338,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         surface,
         setSurface,
         clearGrid,
+        showKeyboardIndicators,
+        setShowKeyboardIndicators,
       }}
     >
       {children}

@@ -1,12 +1,15 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { EMPTY_GRID } from "../../constants";
+import { EMPTY_GRID, SURFACES } from "../../constants";
 import { Coordinates, PENTOMINOES } from "../../pentominoes";
 import { Grid } from "../Grid/Grid";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 import { Modal } from "../Modal/Modal";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
+import clsx from "clsx";
+import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { getPaintedBoard } from "../GameStateProvider/paintGrid";
 
 interface GridExample {
   w: number;
@@ -128,12 +131,71 @@ export const Information = () => {
         use one piece twice - this is a single-player puzzle game, so the rules are whatever you make them to be!
       </p>
       <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
-      You can use <code>Ctrl+Z</code> to undo your last grid-modifying action (adding or removing a piece).
+      <KeyboardKeyInfo>
+        <KeyboardKey>Ctrl</KeyboardKey> + <KeyboardKey>Z</KeyboardKey>
+        <span>=</span>Undo last action that modified the grid
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>W</KeyboardKey>
+        <span>=</span>Reflect current pentomino along the y-axis
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>S</KeyboardKey>
+        <span>=</span>Reflect current pentomino along the x-axis
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>A</KeyboardKey>
+        <span>=</span>Rotate current pentomino counter-clockwise
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>D</KeyboardKey>
+        <span>=</span>Rotate current pentomino clockwise
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>Q</KeyboardKey>
+        <span>=</span>Select previous pentomino
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>E</KeyboardKey>
+        <span>=</span>Select next pentomino
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>
+          <ArrowUpIcon width={15} className="my-1" />
+        </KeyboardKey>
+        <span>=</span>Move selected grid cell up
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>
+          <ArrowRightIcon width={15} className="my-1" />
+        </KeyboardKey>
+        <span>=</span>Move selected grid cell to the right
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>
+          <ArrowDownIcon width={15} className="my-1" />
+        </KeyboardKey>
+        <span>=</span>Move selected grid cell down
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>
+          <ArrowLeftIcon width={15} className="my-1" />
+        </KeyboardKey>
+        <span>=</span> Move selected grid cell to the left
+      </KeyboardKeyInfo>
+      <KeyboardKeyInfo>
+        <KeyboardKey>Enter</KeyboardKey>
+        <span>=</span>Add/remove pentomino from board at selected grid location
+      </KeyboardKeyInfo>
       <Dialog.Title className="text-center font-bold text-md mb-2">Suggested Puzzles</Dialog.Title>
       <div className="flex flex-row flex-wrap gap-3 justify-center">
         {exampleGrids.map((grid, i) => (
           <div key={i} className="flex flex-col items-center justify-center">
-            <Grid grid={grid} pentominoSize={4} borderColor={darkMode ? "#F3F4F6" : "black"}></Grid>
+            <Grid
+              paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle)}
+              pentominoSize={4}
+              borderColor={darkMode ? "#F3F4F6" : "black"}
+            ></Grid>
             Width: {grid[0].length} Length: {grid.length}
           </div>
         ))}
@@ -147,5 +209,23 @@ const InformationPentominoDisplay = ({ p }: { p: string }) => {
     <div className="inline-block align-middle">
       <PentominoDisplay pentomino={PENTOMINOES[p]} size={2} checkGrid={false}></PentominoDisplay>
     </div>
+  );
+};
+
+const KeyboardKeyInfo = ({ children }: { children: ReactNode }) => {
+  return <p className="mb-2 flex flex-row items-center gap-2">{children}</p>;
+};
+
+const KeyboardKey = ({ children }: { children: ReactNode }) => {
+  return (
+    <span
+      className={clsx(
+        "px-1 border border-black dark:border-white rounded",
+        " min-w-[1.5rem] text-center",
+        "inline-block"
+      )}
+    >
+      {children}
+    </span>
   );
 };

@@ -1,23 +1,21 @@
-import { PlacedPentomino, Surface } from "../../constants";
+import { PaintedCell } from "../../constants";
 import { Cell } from "../Cell/Cell";
 import clsx from "clsx";
-import { memo, useContext } from "react";
-import { GameStateContext } from "../GameStateProvider/GameStateProvider";
+import { memo } from "react";
 
 function GridComponent({
+  paintedGrid,
   pentominoSize,
   gridArea,
   borderColor = "white",
-  clickBoard,
+  board = false,
 }: {
-  grid: PlacedPentomino[][];
+  paintedGrid: PaintedCell[][];
   pentominoSize: number;
   gridArea?: string;
   borderColor?: string;
-  surface?: Surface;
-  clickBoard?: (x: number, y: number) => void;
+  board?: boolean;
 }) {
-  const { paintedGrid } = useContext(GameStateContext);
   return (
     <div
       className={clsx("grid grid-flow-row w-fit h-fit")}
@@ -36,7 +34,7 @@ function GridComponent({
             y={y}
             pentominoSize={pentominoSize}
             borderColor={borderColor}
-            onClick={clickBoard}
+            board={board}
           ></Cell>
         ))
       )}

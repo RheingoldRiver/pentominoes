@@ -14,6 +14,7 @@ export const Header = ({ ...rest }) => {
     currentReflection,
     pentominoColors,
     toolbarPentomino,
+    showKeyboardIndicators,
   } = useContext(GameStateContext);
 
   const { displayColors } = useContext(AppStateContext);
@@ -36,7 +37,7 @@ export const Header = ({ ...rest }) => {
           <div
             key={l}
             className={clsx(
-              toolbarPentomino.name === l ? "border-b border-b-px border-b-slate-300" : "",
+              toolbarPentomino.name === l && showKeyboardIndicators ? "border-b border-b-px border-b-slate-300" : "",
               "py-3 rounded-sm"
             )}
           >

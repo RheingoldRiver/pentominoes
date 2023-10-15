@@ -14,17 +14,17 @@ export const Cell = ({
   y = 0,
   pentominoSize,
   borderColor,
-  onClick,
+  board = false,
 }: {
   cell: PaintedCell;
   x: number;
   y: number;
   pentominoSize: number;
   borderColor: string;
-  onClick?: (x: number, y: number) => void;
+  board?: boolean;
 }) => {
   const { displayColors } = useContext(AppStateContext);
-  const { pentominoColors, currentGridCoords } = useContext(GameStateContext);
+  const { pentominoColors, currentGridCoords, clickBoard, showKeyboardIndicators } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
   function borderStyle(b: boolean) {
     if (b === true) return "2px solid #C4B5FD";
@@ -43,7 +43,7 @@ export const Cell = ({
   return (
     <div
       className={clsx(
-        onClick === undefined ? "" : "cursor-pointer",
+        board ? "cursor-pointer" : "",
         PENTOMINO_SIZES[pentominoSize],
         bg.class,
         "flex justify-center align-center",
@@ -57,11 +57,11 @@ export const Cell = ({
         backgroundColor: bg.style,
       }}
       onClick={() => {
-        if (onClick !== undefined) onClick(x, y);
+        if (board) clickBoard(x, y);
       }}
     >
       {debug && `(${x}, ${y})`}
-      {currentGridCoords.x === x && currentGridCoords.y === y && (
+      {currentGridCoords.x === x && currentGridCoords.y === y && showKeyboardIndicators && (
         <PlusIcon width={15} className="stroke-gray-800 dark:stroke-gray-200 stroke-2 drop-shadow-lgIcon" />
       )}
     </div>

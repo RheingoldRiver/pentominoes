@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { range, toNumber } from "lodash";
-import { ReactNode, useContext, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   Colors,
@@ -30,7 +30,16 @@ export const Settings = () => {
     numVisibleColors,
     updateNumVisibleColors,
   } = useContext(AppStateContext);
-  const { grid, setGrid, pentominoColors, setPentominoColors, surface, setSurface } = useContext(GameStateContext);
+  const {
+    grid,
+    setGrid,
+    pentominoColors,
+    setPentominoColors,
+    surface,
+    setSurface,
+    showKeyboardIndicators,
+    setShowKeyboardIndicators,
+  } = useContext(GameStateContext);
   const [curPentominoSize, setCurPentominoSize] = useState(pentominoSize);
   const [curHeight, setCurHeight] = useState(grid.length);
   const [curWidth, setCurWidth] = useState(grid[0].length);
@@ -38,6 +47,12 @@ export const Settings = () => {
   const [curDColors, setCurDColors] = useState(displayColors);
   const [curPColors, setCurPColors] = useState<Colors>({ ...pentominoColors });
   const [curSurface, setCurSurface] = useState<Surface>(surface);
+  const [curShowIndicators, setCurShowIndicators] = useState<boolean>(showKeyboardIndicators);
+
+  useEffect(() => {
+    // this can be modified outside of settings
+    setCurShowIndicators(showKeyboardIndicators);
+  }, [showKeyboardIndicators]);
 
   return (
     <Modal button={<Cog8ToothIcon className="h-6 w-6" />}>
@@ -133,6 +148,21 @@ export const Settings = () => {
       {curSurface === SURFACES.Sphere && curWidth !== curHeight && (
         <ErrorText>{curSurface.name} requires equal width & height</ErrorText>
       )}
+      <Dialog.Title className="text-center font-bold text-md mb-2">Hotkey preferences</Dialog.Title>
+      <fieldset className="flex gap-4 items-center mb-4">
+        <label className="text-right" htmlFor="showIndicators">
+          Show hotkey indicators
+        </label>
+        <input
+          className="bg-white dark:bg-slate-950"
+          type="checkbox"
+          id="showIndicators"
+          checked={curShowIndicators}
+          onChange={(e) => {
+            setCurShowIndicators(e.target.checked);
+          }}
+        />
+      </fieldset>
       <Dialog.Title className="text-center font-bold text-md mb-2">Pentomino tile colors</Dialog.Title>
       <Dialog.Description className="italic mb-1">Click & drag to rearrange</Dialog.Description>
 
@@ -209,6 +239,7 @@ export const Settings = () => {
 
               setSurface(curSurface);
               setPentominoColors(curPColors);
+              setShowKeyboardIndicators(curShowIndicators);
             }}
           >
             Save changes
