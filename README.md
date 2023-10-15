@@ -4,8 +4,6 @@
 
 ![image](https://github.com/RheingoldRiver/pentominoes/assets/18037011/65fb307f-71a3-4ac8-8fdc-ede694d4b6b2)
 
-
-
 ## Development
 
 To run locally:
