@@ -1,31 +1,27 @@
-import { PaintedCell, PlacedPentomino, SURFACES, Surface } from "../../constants";
+import { PaintedCell } from "../../constants";
 import { Cell } from "../Cell/Cell";
 import clsx from "clsx";
 import { memo } from "react";
-import { getPaintedBoard } from "./paintGrid";
 
 function GridComponent({
-  grid,
+  paintedGrid,
   pentominoSize,
   gridArea,
   borderColor = "white",
-  surface = SURFACES.Rectangle,
-  clickBoard,
+  board = false,
 }: {
-  grid: PlacedPentomino[][];
+  paintedGrid: PaintedCell[][];
   pentominoSize: number;
   gridArea?: string;
   borderColor?: string;
-  surface?: Surface;
-  clickBoard?: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
+  board?: boolean;
 }) {
-  const paintedGrid = getPaintedBoard(grid, surface);
   return (
     <div
       className={clsx("grid grid-flow-row w-fit h-fit")}
       style={{
-        gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
-        gridTemplateColumns: `repeat(${grid[0].length}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${paintedGrid.length}, minmax(0, 1fr))`,
+        gridTemplateColumns: `repeat(${paintedGrid[0].length}, minmax(0, 1fr))`,
         gridArea,
       }}
     >
@@ -38,7 +34,7 @@ function GridComponent({
             y={y}
             pentominoSize={pentominoSize}
             borderColor={borderColor}
-            onClick={clickBoard}
+            board={board}
           ></Cell>
         ))
       )}

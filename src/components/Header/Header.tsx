@@ -3,18 +3,18 @@ import { useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
-import { PENTOMINO_NAMES } from "../../constants";
+import { ALL_PENTOMINO_NAMES } from "../../constants";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 
 export const Header = ({ ...rest }) => {
   const {
     currentPentomino,
-    setCurrentPentomino,
+    updateCurrentPentomino,
     currentRotation,
-    setCurrentRotation,
     currentReflection,
-    setCurrentReflection,
     pentominoColors,
+    toolbarPentomino,
+    showKeyboardIndicators,
   } = useContext(GameStateContext);
 
   const { displayColors } = useContext(AppStateContext);
@@ -30,23 +30,28 @@ export const Header = ({ ...rest }) => {
     >
       <div
         className={clsx(
-          "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 p-2"
+          "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 px-2"
         )}
       >
-        {["R"].concat(PENTOMINO_NAMES).map((l) => (
-          <PentominoDisplay
+        {ALL_PENTOMINO_NAMES.map((l) => (
+          <div
             key={l}
-            pentomino={PENTOMINOES[l]}
-            color={displayColors[pentominoColors[l]]}
-            onClick={() => {
-              setCurrentPentomino(PENTOMINOES[l]);
-              setCurrentRotation(0);
-              setCurrentReflection(0);
-            }}
-            style={{
-              cursor: "pointer",
-            }}
-          ></PentominoDisplay>
+            className={clsx(
+              toolbarPentomino.name === l && showKeyboardIndicators ? "border-b border-b-px border-b-slate-300" : "",
+              "py-3 rounded-sm"
+            )}
+          >
+            <PentominoDisplay
+              pentomino={PENTOMINOES[l]}
+              color={displayColors[pentominoColors[l]]}
+              onClick={() => {
+                updateCurrentPentomino(PENTOMINOES[l]);
+              }}
+              style={{
+                cursor: "pointer",
+              }}
+            ></PentominoDisplay>
+          </div>
         ))}
       </div>
       <div

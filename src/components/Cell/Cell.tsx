@@ -4,6 +4,7 @@ import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 const debug = false;
 
@@ -13,17 +14,17 @@ export const Cell = ({
   y = 0,
   pentominoSize,
   borderColor,
-  onClick,
+  board = false,
 }: {
   cell: PaintedCell;
   x: number;
   y: number;
   pentominoSize: number;
   borderColor: string;
-  onClick?: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
+  board?: boolean;
 }) => {
   const { displayColors } = useContext(AppStateContext);
-  const { pentominoColors } = useContext(GameStateContext);
+  const { pentominoColors, currentGridCoords, clickBoard, showKeyboardIndicators } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
   function borderStyle(b: boolean) {
     if (b === true) return "2px solid #C4B5FD";
@@ -41,7 +42,13 @@ export const Cell = ({
   const bg = backgroundColor();
   return (
     <div
-      className={clsx(onClick === undefined ? "" : "cursor-pointer", PENTOMINO_SIZES[pentominoSize], bg.class)}
+      className={clsx(
+        board ? "cursor-pointer" : "",
+        PENTOMINO_SIZES[pentominoSize],
+        bg.class,
+        "flex justify-center align-center",
+        "text-black dark:text-white"
+      )}
       style={{
         borderTop: borderStyle(cell.borders.borderTop),
         borderLeft: borderStyle(cell.borders.borderLeft),
@@ -50,10 +57,13 @@ export const Cell = ({
         backgroundColor: bg.style,
       }}
       onClick={() => {
-        if (onClick !== undefined) onClick(x, y, hasPentomino, cell);
+        if (board) clickBoard(x, y);
       }}
     >
       {debug && `(${x}, ${y})`}
+      {currentGridCoords.x === x && currentGridCoords.y === y && showKeyboardIndicators && (
+        <PlusIcon width={15} className="stroke-gray-800 dark:stroke-gray-200 stroke-2 drop-shadow-lgIcon" />
+      )}
     </div>
   );
 };
