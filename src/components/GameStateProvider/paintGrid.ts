@@ -1,4 +1,4 @@
-import { Borders, PaintedCell } from "./../../constants";
+import { Borders, PaintedCell } from "../../constants";
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
 import { EMPTY_PENTOMINO, Orientation, PlacedPentomino, SURFACES, Surface } from "../../constants";

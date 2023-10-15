@@ -34,13 +34,13 @@ export const Header = ({ ...rest }) => {
       >
         {ALL_PENTOMINO_NAMES.map((l) => (
           <div
+            key={l}
             className={clsx(
               toolbarPentomino.name === l ? "border-b border-b-px border-b-slate-300" : "",
               "py-3 rounded-sm"
             )}
           >
             <PentominoDisplay
-              key={l}
               pentomino={PENTOMINOES[l]}
               color={displayColors[pentominoColors[l]]}
               onClick={() => {

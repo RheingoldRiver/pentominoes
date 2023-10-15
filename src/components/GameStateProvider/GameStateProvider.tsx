@@ -1,5 +1,5 @@
 import { cloneDeep, debounce } from "lodash";
-import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect } from "react";
+import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect, useMemo } from "react";
 import {
   ALL_PENTOMINO_NAMES,
   Action,
@@ -15,10 +15,12 @@ import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { deserializeUrl, serializeUrl } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
 import useHotkey from "../../hooks/use-hotkey";
+import { getPaintedBoard } from "./paintGrid";
 
 interface GameState {
   grid: PlacedPentomino[][];
   setGrid: Dispatch<SetStateAction<PlacedPentomino[][]>>;
+  paintedGrid: PaintedCell[][];
   currentPentomino: Pentomino;
   toolbarPentomino: Pentomino;
   currentGridCoords: Coordinates;
@@ -29,7 +31,7 @@ interface GameState {
   reflectX: () => void;
   reflectY: () => void;
   updateCurrentPentomino: (p: Pentomino) => void;
-  clickBoard: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
+  clickBoard: (x: number, y: number) => void;
   pentominoColors: Colors;
   setPentominoColors: Dispatch<SetStateAction<Colors>>;
   surface: Surface;
@@ -40,6 +42,7 @@ interface GameState {
 const DEFAULT_GAME_STATE: GameState = {
   grid: [],
   setGrid: () => {},
+  paintedGrid: [],
   currentPentomino: PENTOMINOES.None,
   toolbarPentomino: PENTOMINOES.None,
   currentGridCoords: { x: 0, y: 0 },
@@ -100,6 +103,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       window.location.reload();
     });
   });
+
+  const paintedGrid = useMemo(() => {
+    return getPaintedBoard(grid, surface);
+  }, [grid, surface]);
 
   function rotateLeft() {
     setCurrentRotation((4 + currentRotation - 1) % 4);
@@ -279,9 +286,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setGrid(nextGrid);
   }
 
-  function clickBoard(x: number, y: number, hasPentomino: boolean, cell: PaintedCell) {
+  function clickBoard(x: number, y: number) {
     setCurrentGridCoords({ x: x, y: y });
-    if (hasPentomino === false) {
+    const cell = paintedGrid[x][y];
+    if (cell.pentomino.pentomino.name === PENTOMINOES.None.name) {
       drawPentomino(x, y);
     } else {
       setCurrentPentomino(cell.pentomino.pentomino);
@@ -297,6 +305,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       value={{
         grid,
         setGrid,
+        paintedGrid,
         currentPentomino,
         toolbarPentomino,
         currentGridCoords,

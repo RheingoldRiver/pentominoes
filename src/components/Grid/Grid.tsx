@@ -1,15 +1,13 @@
-import { PaintedCell, PlacedPentomino, SURFACES, Surface } from "../../constants";
+import { PlacedPentomino, Surface } from "../../constants";
 import { Cell } from "../Cell/Cell";
 import clsx from "clsx";
-import { memo } from "react";
-import { getPaintedBoard } from "./paintGrid";
+import { memo, useContext } from "react";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 
 function GridComponent({
-  grid,
   pentominoSize,
   gridArea,
   borderColor = "white",
-  surface = SURFACES.Rectangle,
   clickBoard,
 }: {
   grid: PlacedPentomino[][];
@@ -17,15 +15,15 @@ function GridComponent({
   gridArea?: string;
   borderColor?: string;
   surface?: Surface;
-  clickBoard?: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
+  clickBoard?: (x: number, y: number) => void;
 }) {
-  const paintedGrid = getPaintedBoard(grid, surface);
+  const { paintedGrid } = useContext(GameStateContext);
   return (
     <div
       className={clsx("grid grid-flow-row w-fit h-fit")}
       style={{
-        gridTemplateRows: `repeat(${grid.length}, minmax(0, 1fr))`,
-        gridTemplateColumns: `repeat(${grid[0].length}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${paintedGrid.length}, minmax(0, 1fr))`,
+        gridTemplateColumns: `repeat(${paintedGrid[0].length}, minmax(0, 1fr))`,
         gridArea,
       }}
     >

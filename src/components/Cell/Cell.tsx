@@ -21,7 +21,7 @@ export const Cell = ({
   y: number;
   pentominoSize: number;
   borderColor: string;
-  onClick?: (x: number, y: number, hasPentomino: boolean, cell: PaintedCell) => void;
+  onClick?: (x: number, y: number) => void;
 }) => {
   const { displayColors } = useContext(AppStateContext);
   const { pentominoColors, currentGridCoords } = useContext(GameStateContext);
@@ -57,7 +57,7 @@ export const Cell = ({
         backgroundColor: bg.style,
       }}
       onClick={() => {
-        if (onClick !== undefined) onClick(x, y, hasPentomino, cell);
+        if (onClick !== undefined) onClick(x, y);
       }}
     >
       {debug && `(${x}, ${y})`}
