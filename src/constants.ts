@@ -68,6 +68,8 @@ export interface Colors {
 
 export const PENTOMINO_NAMES = ["F", "I", "L", "P", "N", "T", "U", "V", "W", "X", "Y", "Z"];
 
+export const ALL_PENTOMINO_NAMES = ["R", ...PENTOMINO_NAMES];
+
 export const DEFAULT_COLORS: Colors = {};
 
 PENTOMINO_NAMES.forEach((p) => (DEFAULT_COLORS[p] = 0));

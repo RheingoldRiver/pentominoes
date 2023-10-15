@@ -29,6 +29,11 @@ export default {
         game: "max-content max-content max-content max-content max-content max-content auto",
         game2xl: "max-content max-content max-content max-content max-content auto",
       },
+      dropShadow: {
+        smIcon: "0 0 1px rgba(214, 211, 209)",
+        mdIcon: ["0 0 2px rgb(214, 211, 209)", "0 0 1px rgb(214, 211, 209)"],
+        lgIcon: ["0 0 4px rgb(214, 211, 209)", "0 0 2px rgb(214, 211, 209)"],
+      },
     },
   },
   plugins: [require("@savvywombat/tailwindcss-grid-areas")],
