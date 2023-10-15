@@ -137,11 +137,11 @@ export const Information = () => {
       </KeyboardKeyInfo>
       <KeyboardKeyInfo>
         <KeyboardKey>W</KeyboardKey>
-        <span>=</span>Reflect current pentomino along the y-axis
+        <span>=</span>Reflect current pentomino along the y-axis (horizontally)
       </KeyboardKeyInfo>
       <KeyboardKeyInfo>
         <KeyboardKey>S</KeyboardKey>
-        <span>=</span>Reflect current pentomino along the x-axis
+        <span>=</span>Reflect current pentomino along the x-axis (vertically)
       </KeyboardKeyInfo>
       <KeyboardKeyInfo>
         <KeyboardKey>A</KeyboardKey>
@@ -163,25 +163,25 @@ export const Information = () => {
         <KeyboardKey>
           <ArrowUpIcon width={15} className="my-1" />
         </KeyboardKey>
-        <span>=</span>Move selected grid cell up
+        <span>=</span>Move grid cursor up
       </KeyboardKeyInfo>
       <KeyboardKeyInfo>
         <KeyboardKey>
           <ArrowRightIcon width={15} className="my-1" />
         </KeyboardKey>
-        <span>=</span>Move selected grid cell to the right
+        <span>=</span>Move grid cursor to the right
       </KeyboardKeyInfo>
       <KeyboardKeyInfo>
         <KeyboardKey>
           <ArrowDownIcon width={15} className="my-1" />
         </KeyboardKey>
-        <span>=</span>Move selected grid cell down
+        <span>=</span>Move grid cursor down
       </KeyboardKeyInfo>
       <KeyboardKeyInfo>
         <KeyboardKey>
           <ArrowLeftIcon width={15} className="my-1" />
         </KeyboardKey>
-        <span>=</span> Move selected grid cell to the left
+        <span>=</span> Move grid cursor to the left
       </KeyboardKeyInfo>
       <KeyboardKeyInfo>
         <KeyboardKey>Enter</KeyboardKey>
