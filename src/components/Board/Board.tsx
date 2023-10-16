@@ -1,6 +1,6 @@
 import { Grid } from "../Grid/Grid";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
-import { useContext } from "react";
+import { RefObject, forwardRef, useContext } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import clsx from "clsx";
 import {
@@ -12,14 +12,15 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
-import { Orientation } from "../../constants";
+import { Orientation, SURFACES } from "../../constants";
 import { ChevronDoubleUpIcon } from "@heroicons/react/20/solid";
 
-export const Board = ({ gridArea }: { gridArea: string }) => {
+export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
   const { paintedGrid, surface } = useContext(GameStateContext);
   const { pentominoSize, darkMode } = useContext(AppStateContext);
   return (
     <div
+      ref={surface.name !== SURFACES.Rectangle.name ? (ref as RefObject<HTMLDivElement>) : undefined}
       className={clsx(
         "grid w-fit grid-cols-[min-content_auto_min-content] mb-2",
         "bg-slate-100 dark:bg-slate-800 rounded-lg",
@@ -64,7 +65,8 @@ export const Board = ({ gridArea }: { gridArea: string }) => {
         borderColor={darkMode ? "#F3F4F6" : "white"}
         pentominoSize={pentominoSize}
         board={true}
+        ref={ref}
       ></Grid>
     </div>
   );
-};
+});

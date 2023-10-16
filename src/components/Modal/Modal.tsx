@@ -13,7 +13,7 @@ export const Modal = ({ children, button }: { children: ReactNode; button: React
         <Dialog.Overlay className={clsx("bg-gray-900 opacity-40 dark:opacity-80 fixed inset-0")} />
         <Dialog.Content
           className={clsx(
-            "bg-gray-400 dark:bg-gray-800 dark:text-gray-50",
+            "bg-gray-300 dark:bg-gray-800 dark:text-gray-50",
             "rounded-lg p-8 shadow-md shadow-gray-500 dark:shadow-none",
             "fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]",
             "max-h-[90vh] overflow-y-auto w-[min(90vw,_48rem)]"

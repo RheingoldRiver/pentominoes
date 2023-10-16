@@ -10,6 +10,8 @@ interface AppState {
   updateNumVisibleColors: (x: number) => void;
   darkMode: boolean;
   updateDarkMode: (x: boolean) => void;
+  copyImage: boolean;
+  updateCopyImage: (x: boolean) => void;
 }
 
 const DEFAULT_APP_STATE: AppState = {
@@ -21,6 +23,8 @@ const DEFAULT_APP_STATE: AppState = {
   updateNumVisibleColors: () => {},
   darkMode: false,
   updateDarkMode: () => {},
+  copyImage: false,
+  updateCopyImage: () => {},
 };
 
 export const AppStateContext = createContext(DEFAULT_APP_STATE);
@@ -40,6 +44,9 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
     return Number(window.localStorage.getItem("numColors") ?? 3);
   });
 
+  const [copyImage, setCopyImage] = useState<boolean>(() => {
+    return (window.localStorage.getItem("copy") || "false") === "true";
+  });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return (window.localStorage.getItem("theme") || "light") !== "light";
   });
@@ -57,6 +64,11 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
   function updateNumVisibleColors(newNum: number) {
     setNumVisibleColors(newNum);
     window.localStorage.setItem("numColors", newNum.toString());
+  }
+
+  function updateCopyImage(newVal: boolean) {
+    setCopyImage(newVal);
+    window.localStorage.setItem("copy", newVal.toString());
   }
 
   function updateDarkMode(newIsDark: boolean) {
@@ -80,6 +92,8 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
         updateNumVisibleColors,
         darkMode,
         updateDarkMode,
+        copyImage,
+        updateCopyImage,
       }}
     >
       {children}

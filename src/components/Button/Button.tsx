@@ -4,15 +4,16 @@ import { ReactNode } from "react";
 
 export const ToolbarButton = ({
   children,
-  ...rest
+  ...props
 }: { children: ReactNode } & Toolbar.ToolbarButtonProps & React.RefAttributes<HTMLButtonElement>) => {
   return (
     <Toolbar.Button
+      {...props}
       className={clsx(
         "cursor-pointer p-2 rounded mb-2",
-        "shadow-sm shadow-zinc-900 dark:shadow-none dark:border dark:border-zinc-500"
+        "shadow-sm shadow-zinc-900 dark:shadow-none dark:border dark:border-zinc-500",
+        props.className
       )}
-      {...rest}
     >
       {children}
     </Toolbar.Button>
