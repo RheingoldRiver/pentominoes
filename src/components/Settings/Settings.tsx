@@ -29,6 +29,8 @@ export const Settings = () => {
     updateDisplayColors,
     numVisibleColors,
     updateNumVisibleColors,
+    copyImage,
+    updateCopyImage,
   } = useContext(AppStateContext);
   const {
     grid,
@@ -48,6 +50,7 @@ export const Settings = () => {
   const [curPColors, setCurPColors] = useState<Colors>({ ...pentominoColors });
   const [curSurface, setCurSurface] = useState<Surface>(surface);
   const [curShowIndicators, setCurShowIndicators] = useState<boolean>(showKeyboardIndicators);
+  const [curCopyImage, setCurCopyImage] = useState<boolean>(copyImage);
 
   useEffect(() => {
     // this can be modified outside of settings
@@ -165,7 +168,6 @@ export const Settings = () => {
       </fieldset>
       <Dialog.Title className="text-center font-bold text-md mb-2">Pentomino tile colors</Dialog.Title>
       <Dialog.Description className="italic mb-1">Click & drag to rearrange</Dialog.Description>
-
       <fieldset className="flex gap-4 items-center mb-4">
         <label className="text-right" htmlFor="numColors">
           Number of colors
@@ -217,9 +219,30 @@ export const Settings = () => {
           Randomize Distribution
         </Button>
       </div>
+      <Dialog.Title className="text-center font-bold text-md mb-2">Other</Dialog.Title>
+      <fieldset className="flex gap-4 items-center mb-4">
+        <label className="text-right" htmlFor="copyImage">
+          Copy screenshots (instead of downloading)
+        </label>
+        <input
+          className="bg-white dark:bg-slate-950"
+          type="checkbox"
+          id="copyImage"
+          checked={curCopyImage}
+          onChange={(e) => {
+            setCurCopyImage(e.target.checked);
+          }}
+        />
+      </fieldset>
+      {curCopyImage && typeof ClipboardItem === "undefined" && (
+        <ErrorText>
+          Please enable <code>dom.events.asyncClipboard.clipboardItem</code> in <code>about:config</code> in Firefox to
+          enable copying screenshots
+        </ErrorText>
+      )}
       {(curWidth !== grid[0].length || curHeight !== grid.length) && (
         <ErrorText>Saving will clear your current board!</ErrorText>
-      )}
+      )}{" "}
       <div className="mt-6 flex justify-end">
         <Dialog.Close asChild>
           <Button
@@ -240,6 +263,7 @@ export const Settings = () => {
               setSurface(curSurface);
               setPentominoColors(curPColors);
               setShowKeyboardIndicators(curShowIndicators);
+              updateCopyImage(curCopyImage);
             }}
           >
             Save changes

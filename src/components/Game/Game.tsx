@@ -9,6 +9,7 @@ import { DarkModeButton } from "../DarkModeButton/DarkModeButton";
 import clsx from "clsx";
 import { Wordmark } from "../Wordmark/Wordmark";
 import BottomToolbar from "../BottomToolbar/BottomToolbar";
+import { useRef } from "react";
 
 export const Game = () => {
   return (
@@ -21,6 +22,7 @@ export const Game = () => {
 };
 
 const GameContent = () => {
+  const screenshotRef = useRef();
   return (
     <div
       className={clsx(
@@ -37,8 +39,8 @@ const GameContent = () => {
         <Information></Information>
       </div>
       <TopToolbar style={{ gridArea: "gameToolbar" }}></TopToolbar>
-      <Board gridArea="board"></Board>
-      <BottomToolbar style={{ gridArea: "botToolbar" }} />
+      <Board gridArea="board" ref={screenshotRef}></Board>
+      <BottomToolbar style={{ gridArea: "botToolbar" }} ref={screenshotRef} />
     </div>
   );
 };
