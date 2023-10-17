@@ -111,13 +111,13 @@ export function getCoordinatesToPaint(
       };
     case SURFACES.Cylinder:
       return {
-        newX: wrap(rawX, width),
-        newY: rawY,
+        newX: rawX,
+        newY: wrap(rawY, width),
       };
     case SURFACES.Mobius:
       return {
-        newX: nonorientableWrap(rawX, height, rawY, width),
-        newY: rawY,
+        newX: outOfBounds(rawX, height) ? rawX : nonorientableWrap(rawX, height, rawY, width),
+        newY: wrap(rawY, width),
       };
     case SURFACES.KleinBottle:
       return {
