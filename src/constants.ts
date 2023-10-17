@@ -109,7 +109,7 @@ export const SURFACES: Surfaces = {
     name: "Cylinder",
     consecutive: false,
     key: "C",
-    orientation: { w: Orientation.None, h: Orientation.Orientable },
+    orientation: { w: Orientation.Orientable, h: Orientation.None },
   },
   Sphere: {
     name: "Sphere",
@@ -127,7 +127,7 @@ export const SURFACES: Surfaces = {
     name: "Mobius",
     consecutive: false,
     key: "M",
-    orientation: { w: Orientation.None, h: Orientation.Nonorientable },
+    orientation: { w: Orientation.Nonorientable, h: Orientation.None },
   },
   ProjectivePlane: {
     name: "ProjectivePlane",
