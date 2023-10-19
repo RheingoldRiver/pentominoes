@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { range } from "lodash";
-import { Dispatch, SetStateAction } from "react";
 import { useDrag, useDrop } from "react-dnd/dist/hooks";
 import { Colors } from "../../constants";
 import { PENTOMINOES } from "../../pentominoes";
@@ -9,17 +8,17 @@ import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 const PENTOMINO_COLOR_DRAGGABLE_TYPE = "pcolor";
 
 export const ColorSettings = ({
-  curDColors,
-  setCurDColors,
-  curPColors,
-  setCurPColors,
-  curNumColors,
+  displayColors,
+  updateDisplayColors,
+  pentominoColors,
+  updatePentominoColors,
+  numColors,
 }: {
-  curDColors: string[];
-  setCurDColors: Dispatch<SetStateAction<string[]>>;
-  curPColors: Colors;
-  setCurPColors: Dispatch<SetStateAction<Colors>>;
-  curNumColors: number;
+  displayColors: string[];
+  updateDisplayColors: (newColors: string[]) => void;
+  pentominoColors: Colors;
+  updatePentominoColors: (newColors: Colors) => void;
+  numColors: number;
 }) => {
   return (
     <div
@@ -28,14 +27,14 @@ export const ColorSettings = ({
         gridTemplateColumns: "auto 24em",
       }}
     >
-      {range(curNumColors).map((x) => (
+      {range(numColors).map((x) => (
         <ColorSettingsRow
           key={`settings-color-${x}`}
           x={x}
-          curDColors={curDColors}
-          setCurDColors={setCurDColors}
-          curPColors={curPColors}
-          setCurPColors={setCurPColors}
+          displayColors={displayColors}
+          updateDisplayColors={updateDisplayColors}
+          pentominoColors={pentominoColors}
+          updatePentominoColors={updatePentominoColors}
         ></ColorSettingsRow>
       ))}
     </div>
@@ -44,18 +43,18 @@ export const ColorSettings = ({
 
 const ColorSettingsRow = ({
   x,
-  curDColors,
-  setCurDColors,
-  curPColors,
-  setCurPColors,
+  displayColors,
+  updateDisplayColors,
+  pentominoColors,
+  updatePentominoColors,
 }: {
   x: number;
-  curDColors: string[];
-  setCurDColors: Dispatch<SetStateAction<string[]>>;
-  curPColors: Colors;
-  setCurPColors: Dispatch<SetStateAction<Colors>>;
+  displayColors: string[];
+  updateDisplayColors: (newColors: string[]) => void;
+  pentominoColors: Colors;
+  updatePentominoColors: (newColors: Colors) => void;
 }) => {
-  const thisColorPentominoes = Object.entries(curPColors).reduce((acc: string[], [p, c]) => {
+  const thisColorPentominoes = Object.entries(pentominoColors).reduce((acc: string[], [p, c]) => {
     if (c === x) return [...acc, p];
     return acc;
   }, []);
@@ -65,13 +64,13 @@ const ColorSettingsRow = ({
       accept: PENTOMINO_COLOR_DRAGGABLE_TYPE,
       drop: ({ draggingPentomino }: { draggingPentomino: string }, monitor) => {
         if (monitor.didDrop()) return;
-        setCurPColors({ ...curPColors, [draggingPentomino]: x });
+        updatePentominoColors({ ...pentominoColors, [draggingPentomino]: x });
       },
       collect: (monitor) => ({
         isHovered: !!monitor.isOver({ shallow: true }),
       }),
     }),
-    [curPColors]
+    [pentominoColors]
   );
 
   return (
@@ -83,12 +82,12 @@ const ColorSettingsRow = ({
         <input
           type="color"
           id={`colorNum${x}`}
-          value={curDColors[x]}
+          value={displayColors[x]}
           pattern="[0-9]*"
           onChange={(e) => {
-            const nextColors = [...curDColors];
+            const nextColors = [...displayColors];
             nextColors[x] = e.target.value;
-            setCurDColors(nextColors);
+            updateDisplayColors(nextColors);
           }}
         />
       </fieldset>
@@ -103,10 +102,10 @@ const ColorSettingsRow = ({
           <ColorSettingsItem
             key={p}
             pentomino={p}
-            color={curPColors[p]}
-            curPColors={curPColors}
-            setCurPColors={setCurPColors}
-            curDColors={curDColors}
+            color={pentominoColors[p]}
+            pentominoColors={pentominoColors}
+            updatePentominoColors={updatePentominoColors}
+            displayColors={displayColors}
           ></ColorSettingsItem>
         ))}
       </div>
@@ -117,15 +116,15 @@ const ColorSettingsRow = ({
 const ColorSettingsItem = ({
   pentomino,
   color,
-  curPColors,
-  setCurPColors,
-  curDColors,
+  pentominoColors,
+  updatePentominoColors,
+  displayColors,
 }: {
   pentomino: string;
   color: number;
-  curPColors: Colors;
-  setCurPColors: Dispatch<SetStateAction<Colors>>;
-  curDColors: string[];
+  pentominoColors: Colors;
+  updatePentominoColors: (newColors: Colors) => void;
+  displayColors: string[];
 }) => {
   const [, dragRef] = useDrag(() => ({
     type: PENTOMINO_COLOR_DRAGGABLE_TYPE,
@@ -136,13 +135,13 @@ const ColorSettingsItem = ({
     () => ({
       accept: PENTOMINO_COLOR_DRAGGABLE_TYPE,
       drop: ({ draggingPentomino, prevColor }: { draggingPentomino: string; prevColor: number }) => {
-        setCurPColors({ ...curPColors, [draggingPentomino]: color, [pentomino]: prevColor } as Colors);
+        updatePentominoColors({ ...pentominoColors, [draggingPentomino]: color, [pentomino]: prevColor } as Colors);
       },
       collect: (monitor) => ({
         isHovered: !!monitor.isOver(),
       }),
     }),
-    [curPColors]
+    [pentominoColors]
   );
 
   return (
@@ -152,7 +151,7 @@ const ColorSettingsItem = ({
     >
       <PentominoDisplay
         pentomino={PENTOMINOES[pentomino]}
-        color={curDColors[color]}
+        color={displayColors[color]}
         checkGrid={false}
       ></PentominoDisplay>
     </div>

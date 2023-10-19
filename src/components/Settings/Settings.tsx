@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { range, toNumber } from "lodash";
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   Colors,
@@ -20,6 +20,18 @@ import { ColorSettings } from "../ColorSettings/ColorSettings";
 import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 import { Modal } from "../Modal/Modal";
 import { Button } from "../Button/Button";
+
+interface CurrentState {
+  pentominoSize: number;
+  height: number;
+  width: number;
+  numVisibleColors: number;
+  displayColors: string[];
+  pentominoColors: Colors;
+  surface: Surface;
+  showKeyboardIndicators: boolean;
+  copyImage: boolean;
+}
 
 export const Settings = () => {
   const {
@@ -42,23 +54,28 @@ export const Settings = () => {
     showKeyboardIndicators,
     setShowKeyboardIndicators,
   } = useContext(GameStateContext);
-  const [curPentominoSize, setCurPentominoSize] = useState(pentominoSize);
-  const [curHeight, setCurHeight] = useState(grid.length);
-  const [curWidth, setCurWidth] = useState(grid[0].length);
-  const [curNumColors, setCurNumColors] = useState(numVisibleColors);
-  const [curDColors, setCurDColors] = useState(displayColors);
-  const [curPColors, setCurPColors] = useState<Colors>({ ...pentominoColors });
-  const [curSurface, setCurSurface] = useState<Surface>(surface);
-  const [curShowIndicators, setCurShowIndicators] = useState<boolean>(showKeyboardIndicators);
-  const [curCopyImage, setCurCopyImage] = useState<boolean>(copyImage);
 
-  useEffect(() => {
-    // this can be modified outside of settings
-    setCurShowIndicators(showKeyboardIndicators);
-  }, [showKeyboardIndicators]);
+  const getCurrentState = () => ({
+    height: grid.length,
+    width: grid[0].length,
+    pentominoSize,
+    numVisibleColors,
+    displayColors,
+    pentominoColors,
+    surface,
+    showKeyboardIndicators,
+    copyImage,
+  });
+
+  const [currentState, setCurrentState] = useState<CurrentState>(getCurrentState);
 
   return (
-    <Modal button={<Cog8ToothIcon className="h-6 w-6" />}>
+    <Modal
+      trigger={<Cog8ToothIcon className="h-6 w-6" />}
+      onOpenAutoFocus={() => {
+        setCurrentState(getCurrentState());
+      }}
+    >
       <Dialog.Title className="text-center font-bold text-md mb-2">Tile Size</Dialog.Title>
       <fieldset className="flex gap-4 items-center mb-4">
         <label className="text-right" htmlFor="name">
@@ -67,9 +84,9 @@ export const Settings = () => {
         <select
           className="bg-white dark:bg-slate-950"
           id="name"
-          value={curPentominoSize}
+          value={currentState.pentominoSize}
           onChange={(e) => {
-            setCurPentominoSize(toNumber(e.target.value));
+            setCurrentState({ ...currentState, pentominoSize: toNumber(e.target.value) });
           }}
         >
           <option value="4">4</option>
@@ -90,12 +107,12 @@ export const Settings = () => {
           className="bg-white dark:bg-slate-950"
           size={4}
           id="width"
-          value={curWidth}
+          value={currentState.width}
           pattern="[0-9]*"
           onChange={(e) => {
             const valAsNum = toNumber(e.target.value);
             if (isNaN(valAsNum)) return;
-            setCurWidth(Math.min(valAsNum, MAX_DIMENSION_SIZE));
+            setCurrentState({ ...currentState, width: Math.min(valAsNum, MAX_DIMENSION_SIZE) });
           }}
         />
       </fieldset>
@@ -107,19 +124,19 @@ export const Settings = () => {
           className="bg-white dark:bg-slate-950"
           size={4}
           id="height"
-          value={curHeight}
+          value={currentState.height}
           pattern="[0-9]*"
           onChange={(e) => {
             const valAsNum = toNumber(e.target.value);
             if (isNaN(valAsNum)) return;
-            setCurHeight(Math.min(valAsNum, MAX_DIMENSION_SIZE));
+            setCurrentState({ ...currentState, height: Math.min(valAsNum, MAX_DIMENSION_SIZE) });
           }}
         />
       </fieldset>
       <div className="ml-4">
         Computed area:{" "}
-        <span className={clsx(curHeight * curWidth >= 60 ? "text-green-700" : "text-red-500")}>
-          {curWidth * curHeight}
+        <span className={clsx(currentState.height * currentState.width >= 60 ? "text-green-700" : "text-red-500")}>
+          {currentState.width * currentState.height}
         </span>{" "}
         (min: 60)
       </div>
@@ -130,9 +147,9 @@ export const Settings = () => {
         <select
           className="bg-white dark:bg-slate-950"
           id="surface"
-          value={curSurface.name}
+          value={currentState.surface.name}
           onChange={(e) => {
-            setCurSurface(SURFACES[e.target.value as keyof typeof SURFACES]);
+            setCurrentState({ ...currentState, surface: SURFACES[e.target.value as keyof typeof SURFACES] });
           }}
         >
           <optgroup label="Orientable">
@@ -148,8 +165,8 @@ export const Settings = () => {
           </optgroup>
         </select>
       </fieldset>
-      {curSurface === SURFACES.Sphere && curWidth !== curHeight && (
-        <ErrorText>{curSurface.name} requires equal width & height</ErrorText>
+      {currentState.surface === SURFACES.Sphere && currentState.width !== currentState.height && (
+        <ErrorText>{currentState.surface.name} requires equal width & height</ErrorText>
       )}
       <Dialog.Title className="text-center font-bold text-md mb-2">Hotkey preferences</Dialog.Title>
       <fieldset className="flex gap-4 items-center mb-4">
@@ -160,9 +177,9 @@ export const Settings = () => {
           className="bg-white dark:bg-slate-950"
           type="checkbox"
           id="showIndicators"
-          checked={curShowIndicators}
+          checked={currentState.showKeyboardIndicators}
           onChange={(e) => {
-            setCurShowIndicators(e.target.checked);
+            setCurrentState({ ...currentState, showKeyboardIndicators: e.target.checked });
           }}
         />
       </fieldset>
@@ -176,26 +193,30 @@ export const Settings = () => {
           className="bg-white dark:bg-slate-950"
           size={4}
           id="numColors"
-          value={curNumColors}
+          value={currentState.numVisibleColors}
           pattern="[0-9]*"
           onChange={(e) => {
             const valAsNum = toNumber(e.target.value);
             if (isNaN(valAsNum)) return;
-            setCurNumColors(valAsNum);
+            setCurrentState({ ...currentState, numVisibleColors: valAsNum });
           }}
         />
       </fieldset>
       <ColorSettings
-        curDColors={curDColors}
-        setCurDColors={setCurDColors}
-        curPColors={curPColors}
-        setCurPColors={setCurPColors}
-        curNumColors={curNumColors}
+        displayColors={currentState.displayColors}
+        updateDisplayColors={(newColors) => {
+          setCurrentState({ ...currentState, displayColors: newColors });
+        }}
+        pentominoColors={currentState.pentominoColors}
+        updatePentominoColors={(newColors) => {
+          setCurrentState({ ...currentState, pentominoColors: newColors });
+        }}
+        numColors={currentState.numVisibleColors}
       ></ColorSettings>
       <div className="flex flex-row gap-4">
         <Button
           onClick={() => {
-            setCurDColors(DEFAULT_DISPLAY_COLORS);
+            setCurrentState({ ...currentState, displayColors: DEFAULT_DISPLAY_COLORS });
           }}
         >
           Reset Colors
@@ -206,14 +227,14 @@ export const Settings = () => {
             shuffleArray(pentominoes);
             const nextColors = pentominoes.reduce(
               (acc: Colors, p, i) => {
-                const val = i % curNumColors;
+                const val = i % currentState.numVisibleColors;
                 acc[p] = val;
                 return acc;
               },
               { ...DEFAULT_COLORS }
             );
 
-            setCurPColors(nextColors);
+            setCurrentState({ ...currentState, pentominoColors: nextColors });
           }}
         >
           Randomize Distribution
@@ -228,42 +249,42 @@ export const Settings = () => {
           className="bg-white dark:bg-slate-950"
           type="checkbox"
           id="copyImage"
-          checked={curCopyImage}
+          checked={currentState.copyImage}
           onChange={(e) => {
-            setCurCopyImage(e.target.checked);
+            setCurrentState({ ...currentState, copyImage: e.target.checked });
           }}
         />
       </fieldset>
-      {curCopyImage && typeof ClipboardItem === "undefined" && (
+      {currentState.copyImage && typeof ClipboardItem === "undefined" && (
         <ErrorText>
           Please enable <code>dom.events.asyncClipboard.clipboardItem</code> in <code>about:config</code> in Firefox to
           enable copying screenshots
         </ErrorText>
       )}
-      {(curWidth !== grid[0].length || curHeight !== grid.length) && (
+      {(currentState.width !== grid[0].length || currentState.height !== grid.length) && (
         <ErrorText>Saving will clear your current board!</ErrorText>
       )}{" "}
       <div className="mt-6 flex justify-end">
         <Dialog.Close asChild>
           <Button
             onClick={() => {
-              updatePentominoSize(curPentominoSize);
-              updateDisplayColors(curDColors);
-              updateNumVisibleColors(Math.min(curNumColors, MAX_NUM_COLORS));
-              if (curHeight !== grid.length || curWidth !== grid[0].length) {
+              updatePentominoSize(currentState.pentominoSize);
+              updateDisplayColors(currentState.displayColors);
+              updateNumVisibleColors(Math.min(currentState.numVisibleColors, MAX_NUM_COLORS));
+              if (currentState.height !== grid.length || currentState.width !== grid[0].length) {
                 setGrid(
-                  range(curHeight).map((x) =>
-                    range(curWidth).map((y) => {
+                  range(currentState.height).map((x) =>
+                    range(currentState.width).map((y) => {
                       return EMPTY_PENTOMINO(x, y);
                     })
                   )
                 );
               }
 
-              setSurface(curSurface);
-              setPentominoColors(curPColors);
-              setShowKeyboardIndicators(curShowIndicators);
-              updateCopyImage(curCopyImage);
+              setSurface(currentState.surface);
+              setPentominoColors(currentState.pentominoColors);
+              setShowKeyboardIndicators(currentState.showKeyboardIndicators);
+              updateCopyImage(currentState.copyImage);
             }}
           >
             Save changes

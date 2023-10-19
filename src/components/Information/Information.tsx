@@ -101,7 +101,7 @@ const exampleGrids = gridExampleStructure.map((e) => {
 export const Information = () => {
   const { darkMode } = useContext(AppStateContext);
   return (
-    <Modal button={<QuestionMarkCircleIcon className="h-6 w-6" />}>
+    <Modal trigger={<QuestionMarkCircleIcon className="h-6 w-6" />}>
       <Dialog.Title className="text-center font-bold text-md mb-2">About Pentominoes</Dialog.Title>
       <p className="mb-2">
         Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each tile
