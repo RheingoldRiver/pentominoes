@@ -10,6 +10,7 @@ export const DoubleEndedArrow = () => {
         marker-start="url(#endArrow)"
         marker-end="url(#startArrow)"
         stroke="currentColor"
+        stroke-strokeLinejoin="bevel"
       />
       <defs>
         <marker
@@ -19,21 +20,11 @@ export const DoubleEndedArrow = () => {
           refX="10"
           refY="5"
           orient="auto"
-          markerUnits="strokeWidth"
           stroke="currentColor"
         >
           <path d="M0,0 L10,5 L0,10 " fill="none" stroke-width="2" />
         </marker>
-        <marker
-          id="endArrow"
-          markerWidth="10"
-          markerHeight="10"
-          refX="0"
-          refY="5"
-          orient="auto"
-          markerUnits="strokeWidth"
-          stroke="currentColor"
-        >
+        <marker id="endArrow" markerWidth="10" markerHeight="10" refX="0" refY="5" orient="auto" stroke="currentColor">
           <path d="M10,0 L0,5 L10,10" fill="none" stroke-width="2" />
         </marker>
       </defs>
