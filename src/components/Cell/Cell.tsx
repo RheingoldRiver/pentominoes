@@ -5,6 +5,7 @@ import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { DotFilledIcon } from "@radix-ui/react-icons";
 
 const debug = false;
 
@@ -25,7 +26,8 @@ export const Cell = ({
 }) => {
   const { appPreferences } = useContext(AppStateContext);
   const { pentominoColors, currentGridCoords, clickBoard, showKeyboardIndicators } = useContext(GameStateContext);
-  const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
+  const pentomino = cell.pentomino.pentomino;
+  const hasPentomino = pentomino.name !== PENTOMINOES.None.name;
   function borderStyle(b: boolean) {
     if (b === true) return "2px solid #C4B5FD";
     if (hasPentomino) return "";
@@ -40,13 +42,22 @@ export const Cell = ({
     return { class: "bg-gray-300 dark:bg-gray-800", style: "" };
   }
   const bg = backgroundColor();
+  function displayText() {
+    if (currentGridCoords.x === x && currentGridCoords.y === y && showKeyboardIndicators) {
+      return <PlusIcon width={15} className="stroke-gray-800 dark:stroke-gray-200 stroke-2 drop-shadow-lgIcon" />;
+    }
+    if (cell.center === true && appPreferences.showCdot) {
+      return <DotFilledIcon />;
+    }
+    return "";
+  }
   return (
     <div
       className={clsx(
         board ? "cursor-pointer" : "",
         PENTOMINO_SIZES[pentominoSize],
         bg.class,
-        "flex justify-center align-center",
+        "flex justify-center items-center",
         "text-black dark:text-white"
       )}
       style={{
@@ -61,9 +72,7 @@ export const Cell = ({
       }}
     >
       {debug && `(${x}, ${y})`}
-      {currentGridCoords.x === x && currentGridCoords.y === y && showKeyboardIndicators && (
-        <PlusIcon width={15} className="stroke-gray-800 dark:stroke-gray-200 stroke-2 drop-shadow-lgIcon" />
-      )}
+      {displayText()}
     </div>
   );
 };

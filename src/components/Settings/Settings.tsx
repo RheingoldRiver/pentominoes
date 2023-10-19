@@ -31,6 +31,7 @@ interface CurrentState {
   surface: Surface;
   showKeyboardIndicators: boolean;
   copyImage: boolean;
+  showCdot: boolean;
 }
 
 export const Settings = () => {
@@ -56,6 +57,7 @@ export const Settings = () => {
     surface,
     showKeyboardIndicators,
     copyImage: appPreferences.copyImage,
+    showCdot: appPreferences.showCdot,
   });
 
   const [currentState, setCurrentState] = useState<CurrentState>(getCurrentState);
@@ -252,6 +254,22 @@ export const Settings = () => {
           enable copying screenshots
         </ErrorText>
       )}
+      <fieldset className="flex gap-4 items-center mb-4">
+        <label className="text-right" htmlFor="showCdot">
+          Show dot in tiles on board
+        </label>
+        <input
+          className="bg-white dark:bg-slate-950"
+          type="checkbox"
+          id="showCdot"
+          checked={currentState.showCdot}
+          onChange={(e) => {
+            setCurrentState({ ...currentState, showCdot: e.target.checked });
+          }}
+        />
+      </fieldset>
+      {/* End of settings area */}
+      {/* Start confirmation area */}
       {(currentState.width !== grid[0].length || currentState.height !== grid.length) && (
         <ErrorText>Saving will clear your current board!</ErrorText>
       )}{" "}
@@ -263,7 +281,8 @@ export const Settings = () => {
                 currentState.pentominoSize,
                 currentState.displayColors,
                 Math.min(currentState.numVisibleColors, MAX_NUM_COLORS),
-                currentState.copyImage
+                currentState.copyImage,
+                currentState.showCdot
               );
               if (currentState.height !== grid.length || currentState.width !== grid[0].length) {
                 setGrid(
