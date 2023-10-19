@@ -1,99 +1,89 @@
 import { createContext, ReactNode, useState } from "react";
 import { DEFAULT_DISPLAY_COLORS } from "../../constants";
 
-interface AppState {
+export interface AppPreferences {
   pentominoSize: number;
-  updatePentominoSize: (x: number) => void;
   displayColors: string[];
-  updateDisplayColors: (x: string[]) => void;
   numVisibleColors: number;
-  updateNumVisibleColors: (x: number) => void;
-  darkMode: boolean;
-  updateDarkMode: (x: boolean) => void;
   copyImage: boolean;
-  updateCopyImage: (x: boolean) => void;
+}
+
+const DEFAULT_APP_PREFERENCES: AppPreferences = {
+  pentominoSize: 12,
+  displayColors: DEFAULT_DISPLAY_COLORS,
+  numVisibleColors: 3,
+  copyImage: false,
+};
+
+interface AppState {
+  appPreferences: AppPreferences;
+  updateAppPreferences: (
+    pentominoSize: number,
+    displayColors: string[],
+    numVisibleColors: number,
+    copyImage: boolean
+  ) => void;
+  darkMode: boolean;
+  updateDarkMode: (newIsDark: boolean) => void;
 }
 
 const DEFAULT_APP_STATE: AppState = {
-  pentominoSize: 0,
-  updatePentominoSize: () => {},
-  displayColors: [],
-  updateDisplayColors: () => {},
-  numVisibleColors: 0,
-  updateNumVisibleColors: () => {},
+  appPreferences: DEFAULT_APP_PREFERENCES,
+  updateAppPreferences: () => {},
   darkMode: false,
   updateDarkMode: () => {},
-  copyImage: false,
-  updateCopyImage: () => {},
 };
 
 export const AppStateContext = createContext(DEFAULT_APP_STATE);
 
 export default function AppStateProvider({ children }: { children: ReactNode }) {
-  const [pentominoSize, setPentominoSize] = useState<number>(() => {
-    return Number(window.localStorage.getItem("size") ?? 12);
-  });
-  const [displayColors, setDisplayColors] = useState<string[]>(() => {
-    const localVal = window.localStorage.getItem("colors");
-    if (typeof localVal !== "string") return DEFAULT_DISPLAY_COLORS;
-    const nextColors = [...DEFAULT_DISPLAY_COLORS];
-    localVal.split(",").forEach((c, i) => (nextColors[i] = c));
-    return nextColors;
-  });
-  const [numVisibleColors, setNumVisibleColors] = useState<number>(() => {
-    return Number(window.localStorage.getItem("numColors") ?? 3);
-  });
-
-  const [copyImage, setCopyImage] = useState<boolean>(() => {
-    return (window.localStorage.getItem("copy") || "false") === "true";
+  const [appPreferences, setAppPreferences] = useState<AppPreferences>(() => {
+    const localColors = window.localStorage.getItem("colors");
+    const displayColors = [...DEFAULT_DISPLAY_COLORS];
+    if (typeof localColors === "string") {
+      localColors.split(",").forEach((c, i) => (displayColors[i] = c));
+    }
+    return {
+      pentominoSize: Number(window.localStorage.getItem("size") ?? DEFAULT_APP_PREFERENCES.pentominoSize),
+      displayColors: displayColors,
+      numVisibleColors: Number(window.localStorage.getItem("numColors") ?? DEFAULT_APP_PREFERENCES.numVisibleColors),
+      copyImage: (window.localStorage.getItem("theme") || "light") !== "light",
+    };
   });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return (window.localStorage.getItem("theme") || "light") !== "light";
+    return (window.localStorage.getItem("copy") || "false") === "true";
   });
 
-  function updatePentominoSize(newSize: number) {
-    setPentominoSize(newSize);
-    window.localStorage.setItem("size", newSize.toString());
-  }
-
-  function updateDisplayColors(newColors: string[]) {
-    setDisplayColors(newColors);
-    window.localStorage.setItem("colors", newColors.join(","));
-  }
-
-  function updateNumVisibleColors(newNum: number) {
-    setNumVisibleColors(newNum);
-    window.localStorage.setItem("numColors", newNum.toString());
-  }
-
-  function updateCopyImage(newVal: boolean) {
-    setCopyImage(newVal);
-    window.localStorage.setItem("copy", newVal.toString());
+  function updateAppPreferences(
+    pentominoSize: number,
+    displayColors: string[],
+    numVisibleColors: number,
+    copyImage: boolean
+  ) {
+    setAppPreferences({ pentominoSize, displayColors, numVisibleColors, copyImage });
+    window.localStorage.setItem("size", pentominoSize.toString());
+    window.localStorage.setItem("colors", displayColors.join(","));
+    window.localStorage.setItem("numColors", numVisibleColors.toString());
+    window.localStorage.setItem("copy", copyImage.toString());
   }
 
   function updateDarkMode(newIsDark: boolean) {
-    if (newIsDark === true) {
+    if (darkMode === true) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
     setDarkMode(newIsDark);
-    window.localStorage.setItem("theme", newIsDark ? "dark" : "light");
+    window.localStorage.setItem("theme", darkMode ? "dark" : "light");
   }
 
   return (
     <AppStateContext.Provider
       value={{
-        pentominoSize,
-        updatePentominoSize,
-        displayColors,
-        updateDisplayColors,
-        numVisibleColors,
-        updateNumVisibleColors,
+        appPreferences,
+        updateAppPreferences,
         darkMode,
         updateDarkMode,
-        copyImage,
-        updateCopyImage,
       }}
     >
       {children}

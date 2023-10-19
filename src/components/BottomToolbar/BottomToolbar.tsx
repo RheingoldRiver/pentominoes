@@ -8,7 +8,7 @@ import html2canvas from "html2canvas";
 
 const BottomToolbar = forwardRef(({ style }: { style: CSSProperties }, ref) => {
   const { clearGrid, grid, surface } = useContext(GameStateContext);
-  const { copyImage } = useContext(AppStateContext);
+  const { appPreferences } = useContext(AppStateContext);
   const [copied, setCopied] = useState(false);
   return (
     <Toolbar.Root
@@ -34,7 +34,7 @@ const BottomToolbar = forwardRef(({ style }: { style: CSSProperties }, ref) => {
       </ToolbarButton>
       <ToolbarButton
         onClick={() => {
-          if (copyImage === false) {
+          if (appPreferences.copyImage === false) {
             exportComponentAsPNG(ref as RefObject<ReactInstance>, {
               fileName: `Pentominoes ${grid[0].length}x${grid.length} ${surface.name}`,
             });

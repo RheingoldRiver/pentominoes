@@ -17,7 +17,7 @@ import { ChevronDoubleUpIcon } from "@heroicons/react/20/solid";
 
 export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
   const { paintedGrid, surface } = useContext(GameStateContext);
-  const { pentominoSize, darkMode } = useContext(AppStateContext);
+  const { appPreferences, darkMode } = useContext(AppStateContext);
   return (
     <div
       ref={surface.name !== SURFACES.Rectangle.name ? (ref as RefObject<HTMLDivElement>) : undefined}
@@ -63,7 +63,7 @@ export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
         paintedGrid={paintedGrid}
         gridArea="grid"
         borderColor={darkMode ? "#F3F4F6" : "white"}
-        pentominoSize={pentominoSize}
+        pentominoSize={appPreferences.pentominoSize}
         board={true}
         ref={ref}
       ></Grid>

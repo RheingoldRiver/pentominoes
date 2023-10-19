@@ -34,16 +34,7 @@ interface CurrentState {
 }
 
 export const Settings = () => {
-  const {
-    pentominoSize,
-    updatePentominoSize,
-    displayColors,
-    updateDisplayColors,
-    numVisibleColors,
-    updateNumVisibleColors,
-    copyImage,
-    updateCopyImage,
-  } = useContext(AppStateContext);
+  const { appPreferences, updateAppPreferences } = useContext(AppStateContext);
   const {
     grid,
     setGrid,
@@ -58,13 +49,13 @@ export const Settings = () => {
   const getCurrentState = () => ({
     height: grid.length,
     width: grid[0].length,
-    pentominoSize,
-    numVisibleColors,
-    displayColors,
+    pentominoSize: appPreferences.pentominoSize,
+    numVisibleColors: appPreferences.numVisibleColors,
+    displayColors: appPreferences.displayColors,
     pentominoColors,
     surface,
     showKeyboardIndicators,
-    copyImage,
+    copyImage: appPreferences.copyImage,
   });
 
   const [currentState, setCurrentState] = useState<CurrentState>(getCurrentState);
@@ -268,9 +259,12 @@ export const Settings = () => {
         <Dialog.Close asChild>
           <Button
             onClick={() => {
-              updatePentominoSize(currentState.pentominoSize);
-              updateDisplayColors(currentState.displayColors);
-              updateNumVisibleColors(Math.min(currentState.numVisibleColors, MAX_NUM_COLORS));
+              updateAppPreferences(
+                currentState.pentominoSize,
+                currentState.displayColors,
+                Math.min(currentState.numVisibleColors, MAX_NUM_COLORS),
+                currentState.copyImage
+              );
               if (currentState.height !== grid.length || currentState.width !== grid[0].length) {
                 setGrid(
                   range(currentState.height).map((x) =>
@@ -284,7 +278,6 @@ export const Settings = () => {
               setSurface(currentState.surface);
               setPentominoColors(currentState.pentominoColors);
               setShowKeyboardIndicators(currentState.showKeyboardIndicators);
-              updateCopyImage(currentState.copyImage);
             }}
           >
             Save changes

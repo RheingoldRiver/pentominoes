@@ -17,7 +17,7 @@ export const Header = ({ ...rest }) => {
     showKeyboardIndicators,
   } = useContext(GameStateContext);
 
-  const { displayColors } = useContext(AppStateContext);
+  const { appPreferences } = useContext(AppStateContext);
 
   return (
     <div
@@ -43,7 +43,7 @@ export const Header = ({ ...rest }) => {
           >
             <PentominoDisplay
               pentomino={PENTOMINOES[l]}
-              color={displayColors[pentominoColors[l]]}
+              color={appPreferences.displayColors[pentominoColors[l]]}
               onClick={() => {
                 updateCurrentPentomino(PENTOMINOES[l]);
               }}
@@ -62,7 +62,7 @@ export const Header = ({ ...rest }) => {
       >
         <PentominoDisplay
           pentomino={currentPentomino}
-          color={displayColors[pentominoColors[currentPentomino.name]]}
+          color={appPreferences.displayColors[pentominoColors[currentPentomino.name]]}
           rotation={currentRotation}
           reflection={currentReflection}
         ></PentominoDisplay>

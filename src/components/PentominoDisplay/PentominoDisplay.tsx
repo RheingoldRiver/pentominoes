@@ -27,8 +27,8 @@ export const PentominoDisplay = ({
   removeEdges?: Coordinates[];
 } & React.HTMLAttributes<HTMLSpanElement>) => {
   const { grid } = useContext(GameStateContext);
-  const { displayColors } = useContext(AppStateContext);
-  if (color === undefined) color = displayColors[0];
+  const { appPreferences } = useContext(AppStateContext);
+  if (color === undefined) color = appPreferences.displayColors[0];
   const p = pentomino.orientations[reflection][rotation];
   function bgColor(cell: number, coordinates: Coordinates) {
     if (pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };

@@ -65,7 +65,7 @@ const pentominoesTitle: TypographyPentomino[] = "PENTOMINOES"
 
 export const Wordmark = ({ gridArea }: { gridArea: string }) => {
   const { pentominoColors } = useContext(GameStateContext);
-  const { displayColors } = useContext(AppStateContext);
+  const { appPreferences } = useContext(AppStateContext);
 
   return (
     <div className={clsx("ml-16 flex flex-row gap-2 items-center mb-2")} style={{ gridArea }}>
@@ -73,7 +73,7 @@ export const Wordmark = ({ gridArea }: { gridArea: string }) => {
         <div key={i} className={clsx(p.class, "flex items-center justify-center")}>
           <PentominoDisplay
             pentomino={PENTOMINOES[p.pentomino]}
-            color={displayColors[pentominoColors[p.pentomino]]}
+            color={appPreferences.displayColors[pentominoColors[p.pentomino]]}
             reflection={p.reflection}
             checkGrid={false}
             size={2}

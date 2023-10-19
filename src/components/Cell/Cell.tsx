@@ -23,7 +23,7 @@ export const Cell = ({
   borderColor: string;
   board?: boolean;
 }) => {
-  const { displayColors } = useContext(AppStateContext);
+  const { appPreferences } = useContext(AppStateContext);
   const { pentominoColors, currentGridCoords, clickBoard, showKeyboardIndicators } = useContext(GameStateContext);
   const hasPentomino = cell.pentomino.pentomino !== PENTOMINOES.None;
   function borderStyle(b: boolean) {
@@ -36,7 +36,7 @@ export const Cell = ({
     if (cell.pentomino.pentomino.name === PENTOMINOES.R.name)
       return { class: "bg-gray-500 dark:bg-gray-600", style: "" };
     if (hasPentomino === true)
-      return { class: "", style: displayColors[pentominoColors[cell.pentomino.pentomino.name]] };
+      return { class: "", style: appPreferences.displayColors[pentominoColors[cell.pentomino.pentomino.name]] };
     return { class: "bg-gray-300 dark:bg-gray-800", style: "" };
   }
   const bg = backgroundColor();
