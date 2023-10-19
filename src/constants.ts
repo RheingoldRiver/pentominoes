@@ -58,6 +58,7 @@ export interface PaintedCell {
   pentomino: PlacedPentomino;
   conflict: boolean;
   borders: Borders;
+  center: boolean;
 }
 
 export const MAX_NUM_COLORS = 12;

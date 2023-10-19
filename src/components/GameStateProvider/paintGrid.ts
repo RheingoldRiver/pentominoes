@@ -14,6 +14,7 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
       return {
         pentomino: EMPTY_PENTOMINO(x, y),
         conflict: false,
+        center: false,
         borders: {
           borderTop: false,
           borderLeft: false,
@@ -41,6 +42,7 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
 
           // ok should be a valid placement now
           const cellToPaint = paintedGrid[newX][newY];
+          cellToPaint.center = px === orientation.center.x && py === orientation.center.y;
           if (cellToPaint.pentomino.pentomino.name !== PENTOMINOES.None.name) {
             cellToPaint.conflict = true;
           }

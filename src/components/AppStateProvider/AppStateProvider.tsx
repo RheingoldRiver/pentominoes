@@ -6,6 +6,7 @@ export interface AppPreferences {
   displayColors: string[];
   numVisibleColors: number;
   copyImage: boolean;
+  showCdot: boolean;
 }
 
 const DEFAULT_APP_PREFERENCES: AppPreferences = {
@@ -13,6 +14,7 @@ const DEFAULT_APP_PREFERENCES: AppPreferences = {
   displayColors: DEFAULT_DISPLAY_COLORS,
   numVisibleColors: 3,
   copyImage: false,
+  showCdot: false,
 };
 
 interface AppState {
@@ -21,7 +23,8 @@ interface AppState {
     pentominoSize: number,
     displayColors: string[],
     numVisibleColors: number,
-    copyImage: boolean
+    copyImage: boolean,
+    showCdot: boolean
   ) => void;
   darkMode: boolean;
   updateDarkMode: (newIsDark: boolean) => void;
@@ -48,6 +51,7 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
       displayColors: displayColors,
       numVisibleColors: Number(window.localStorage.getItem("numColors") ?? DEFAULT_APP_PREFERENCES.numVisibleColors),
       copyImage: (window.localStorage.getItem("theme") || "light") !== "light",
+      showCdot: (window.localStorage.getItem("cdot") || "false") === "true",
     };
   });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -58,23 +62,25 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
     pentominoSize: number,
     displayColors: string[],
     numVisibleColors: number,
-    copyImage: boolean
+    copyImage: boolean,
+    showCdot: boolean
   ) {
-    setAppPreferences({ pentominoSize, displayColors, numVisibleColors, copyImage });
+    setAppPreferences({ pentominoSize, displayColors, numVisibleColors, copyImage, showCdot });
     window.localStorage.setItem("size", pentominoSize.toString());
     window.localStorage.setItem("colors", displayColors.join(","));
     window.localStorage.setItem("numColors", numVisibleColors.toString());
     window.localStorage.setItem("copy", copyImage.toString());
+    window.localStorage.setItem("cdot", showCdot.toString());
   }
 
   function updateDarkMode(newIsDark: boolean) {
-    if (darkMode === true) {
+    if (newIsDark === true) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
     setDarkMode(newIsDark);
-    window.localStorage.setItem("theme", darkMode ? "dark" : "light");
+    window.localStorage.setItem("theme", newIsDark ? "dark" : "light");
   }
 
   return (
