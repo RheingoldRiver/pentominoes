@@ -47,7 +47,7 @@ export const Cell = ({
       return <PlusIcon width={15} className="stroke-gray-800 dark:stroke-gray-200 stroke-2 drop-shadow-lgIcon" />;
     }
     if (cell.center === true && appPreferences.showCdot) {
-      return <DotFilledIcon />;
+      return <DotFilledIcon className="stroke-gray-200 text-gray-200" />;
     }
     return "";
   }

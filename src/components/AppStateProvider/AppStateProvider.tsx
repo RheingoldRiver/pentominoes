@@ -74,13 +74,13 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
   }
 
   function updateDarkMode(newIsDark: boolean) {
-    if (darkMode === true) {
+    if (newIsDark === true) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
     setDarkMode(newIsDark);
-    window.localStorage.setItem("theme", darkMode ? "dark" : "light");
+    window.localStorage.setItem("theme", newIsDark ? "dark" : "light");
   }
 
   return (
