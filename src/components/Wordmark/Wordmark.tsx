@@ -64,24 +64,39 @@ const pentominoesTitle: TypographyPentomino[] = "PENTOMINOES"
   .map((l) => pentominoLetters[l as keyof typeof pentominoLetters]);
 
 export const Wordmark = ({ gridArea }: { gridArea: string }) => {
-  const { pentominoColors } = useContext(GameStateContext);
+  const { pentominoColors, showInvalidUrlError, setShowInvalidUrlError } = useContext(GameStateContext);
   const { appPreferences } = useContext(AppStateContext);
 
   return (
-    <div className={clsx("ml-16 flex flex-row gap-2 items-center mb-2")} style={{ gridArea }}>
-      {pentominoesTitle.map((p, i) => (
-        <div key={i} className={clsx(p.class, "flex items-center justify-center")}>
-          <PentominoDisplay
-            pentomino={PENTOMINOES[p.pentomino]}
-            color={appPreferences.displayColors[pentominoColors[p.pentomino]]}
-            reflection={p.reflection}
-            checkGrid={false}
-            size={2}
-            showCenter={false}
-            removeEdges={p.removeEdges}
-          />
+    <div className="ml-16" style={{ gridArea }}>
+      <div className={clsx("flex flex-row gap-2 items-center mb-2")}>
+        {pentominoesTitle.map((p, i) => (
+          <div key={i} className={clsx(p.class, "flex items-center justify-center")}>
+            <PentominoDisplay
+              pentomino={PENTOMINOES[p.pentomino]}
+              color={appPreferences.displayColors[pentominoColors[p.pentomino]]}
+              reflection={p.reflection}
+              checkGrid={false}
+              size={2}
+              showCenter={false}
+              removeEdges={p.removeEdges}
+            />
+          </div>
+        ))}
+      </div>
+      {showInvalidUrlError && (
+        <div className={clsx("text-red-500 mb-2 flex flex-row gap-3")}>
+          Invalid URL. Default settings have been applied.
+          <button
+            className="cursor-pointer font-bold"
+            onClick={() => {
+              setShowInvalidUrlError(false);
+            }}
+          >
+            OK
+          </button>
         </div>
-      ))}
+      )}
     </div>
   );
 };
