@@ -39,6 +39,8 @@ interface GameState {
   clearGrid: (preserveTerrain: boolean) => void;
   showKeyboardIndicators: boolean;
   setShowKeyboardIndicators: Dispatch<SetStateAction<boolean>>;
+  showInvalidUrlError: boolean;
+  setShowInvalidUrlError: Dispatch<SetStateAction<boolean>>;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -63,29 +65,12 @@ const DEFAULT_GAME_STATE: GameState = {
   clearGrid: () => {},
   showKeyboardIndicators: false,
   setShowKeyboardIndicators: () => {},
+  showInvalidUrlError: false,
+  setShowInvalidUrlError: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
 export default function GameStateProvider({ children }: { children: ReactNode }) {
-  const params = useParams();
-  const { config } = params;
-  const parsedConfig = config ? deserializeUrl(config) : DEFAULT_CONFIG;
-
-  const [grid, setGrid] = useState<PlacedPentomino[][]>(parsedConfig.grid);
-  const [pentominoColors, setPentominoColors] = useState<Colors>(parsedConfig.colors);
-  const [surface, setSurface] = useState<Surface>(parsedConfig.surface);
-
-  const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
-  const [toolbarPentomino, setToolbarPentomino] = useState<Pentomino>(PENTOMINOES.None);
-  const [currentGridCoords, setCurrentGridCoords] = useState<Coordinates>({ x: -1, y: -1 });
-  const [currentReflection, setCurrentReflection] = useState<number>(0); // 0, 1
-  const [currentRotation, setCurrentRotation] = useState<number>(0); // 0, 1, 2, 3
-
-  const [actionHistory, setActionHistory] = useState<Action[]>([]);
-  const navigate = useNavigate();
-
-  const [showKeyboardIndicators, setShowKeyboardIndicators] = useState<boolean>(false);
-
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
       const finalConfig = {
@@ -99,6 +84,38 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       navigate("/" + newHash);
     }, 250)
   );
+
+  const [grid, setGrid] = useState<PlacedPentomino[][]>(DEFAULT_CONFIG.grid);
+  const [pentominoColors, setPentominoColors] = useState<Colors>(DEFAULT_CONFIG.colors);
+  const [surface, setSurface] = useState<Surface>(DEFAULT_CONFIG.surface);
+
+  const [showInvalidUrlError, setShowInvalidUrlError] = useState<boolean>(false);
+  const params = useParams();
+  const { config } = params;
+
+  useEffect(() => {
+    if (!config) return;
+    try {
+      const parsedConfig = deserializeUrl(config);
+      setGrid(parsedConfig.grid);
+      setSurface(parsedConfig.surface);
+      setPentominoColors(parsedConfig.colors);
+    } catch (e) {
+      setShowInvalidUrlError(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
+  const [toolbarPentomino, setToolbarPentomino] = useState<Pentomino>(PENTOMINOES.None);
+  const [currentGridCoords, setCurrentGridCoords] = useState<Coordinates>({ x: -1, y: -1 });
+  const [currentReflection, setCurrentReflection] = useState<number>(0); // 0, 1
+  const [currentRotation, setCurrentRotation] = useState<number>(0); // 0, 1, 2, 3
+
+  const [actionHistory, setActionHistory] = useState<Action[]>([]);
+  const navigate = useNavigate();
+
+  const [showKeyboardIndicators, setShowKeyboardIndicators] = useState<boolean>(false);
 
   useEffect(() => {
     updateUrl.current({ grid, colors: pentominoColors, surface });
@@ -340,6 +357,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         clearGrid,
         showKeyboardIndicators,
         setShowKeyboardIndicators,
+        showInvalidUrlError,
+        setShowInvalidUrlError,
       }}
     >
       {children}
