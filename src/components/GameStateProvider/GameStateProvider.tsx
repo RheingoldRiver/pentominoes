@@ -71,20 +71,6 @@ const DEFAULT_GAME_STATE: GameState = {
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
 export default function GameStateProvider({ children }: { children: ReactNode }) {
-  const updateUrl = useRef(
-    debounce((config: Partial<UrlConfig>) => {
-      const finalConfig = {
-        grid,
-        surface,
-        colors: pentominoColors,
-        ...config,
-      };
-      const newHash = serializeUrl(finalConfig);
-      if (`#/${newHash}` === window.location.hash) return;
-      navigate("/" + newHash);
-    }, 250)
-  );
-
   const [grid, setGrid] = useState<PlacedPentomino[][]>(DEFAULT_CONFIG.grid);
   const [pentominoColors, setPentominoColors] = useState<Colors>(DEFAULT_CONFIG.colors);
   const [surface, setSurface] = useState<Surface>(DEFAULT_CONFIG.surface);
@@ -116,6 +102,20 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const navigate = useNavigate();
 
   const [showKeyboardIndicators, setShowKeyboardIndicators] = useState<boolean>(false);
+
+  const updateUrl = useRef(
+    debounce((config: Partial<UrlConfig>) => {
+      const finalConfig = {
+        grid,
+        surface,
+        colors: pentominoColors,
+        ...config,
+      };
+      const newHash = serializeUrl(finalConfig);
+      if (`#/${newHash}` === window.location.hash) return;
+      navigate("/" + newHash);
+    }, 250)
+  );
 
   useEffect(() => {
     updateUrl.current({ grid, colors: pentominoColors, surface });
