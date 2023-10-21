@@ -1,33 +1,11 @@
 export const DoubleEndedArrow = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" viewBox="0 0 100 50">
-      <line
-        x1="10"
-        y1="25"
-        x2="90"
-        y2="25"
-        strokeWidth="3"
-        markerStart="url(#endArrow)"
-        markerEnd="url(#startArrow)"
-        stroke="currentColor"
-        strokeLinejoin="bevel"
+    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 7.16">
+      <path
+        fill="currentColor"
+        fill-rule="evenodd"
+        d="M12.74 4.26 10.94 6a.68.68 0 0 0 1 1l2.86-2.94a.67.67 0 0 0 0-1L11.91.21a.68.68 0 0 0-1 1l1.8 1.73H2.26l1.8-1.73a.68.68 0 0 0-1-1L.2 3.1a.67.67 0 0 0 0 1L3.09 7a.68.68 0 0 0 1-1L2.26 4.26Z"
       />
-      <defs>
-        <marker
-          id="startArrow"
-          markerWidth="10"
-          markerHeight="10"
-          refX="10"
-          refY="5"
-          orient="auto"
-          stroke="currentColor"
-        >
-          <path d="M0,0 L10,5 L0,10 " fill="none" strokeWidth="2" />
-        </marker>
-        <marker id="endArrow" markerWidth="10" markerHeight="10" refX="0" refY="5" orient="auto" stroke="currentColor">
-          <path d="M10,0 L0,5 L10,10" fill="none" strokeWidth="2" />
-        </marker>
-      </defs>
     </svg>
   );
 };

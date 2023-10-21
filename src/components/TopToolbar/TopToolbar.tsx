@@ -25,7 +25,7 @@ const TopToolbar = ({ ...rest }) => {
         </div>
         Reflect X
       </ToolbarButton>
-      <ToolbarButton onClick={reflectY} aria-label="Reflect Y" className="flex flex-row items-center">
+      <ToolbarButton onClick={reflectY} aria-label="Reflect Y" className="flex flex-row items-center gap-1">
         <DoubleEndedArrow />
         Reflect Y
       </ToolbarButton>
