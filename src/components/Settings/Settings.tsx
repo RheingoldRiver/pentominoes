@@ -5,13 +5,11 @@ import { ReactNode, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   Colors,
-  DEFAULT_COLORS,
   DEFAULT_DISPLAY_COLORS,
   EMPTY_PENTOMINO,
   MAX_DIMENSION_SIZE,
   MAX_NUM_COLORS,
-  PENTOMINO_NAMES,
-  shuffleArray,
+  randomPentominoColors,
   Surface,
   SURFACES,
 } from "../../constants";
@@ -32,6 +30,15 @@ interface CurrentState {
   showKeyboardIndicators: boolean;
   copyImage: boolean;
   showCdot: boolean;
+  defaultRandomColors: boolean;
+}
+
+function getNumVisibleColors(numVisibleColors: number, defaultRandomColors: boolean, pentominoColors: Colors): number {
+  if (!defaultRandomColors) return numVisibleColors;
+  const maxColorValue = Object.values(pentominoColors).reduce((acc, c) => {
+    return Math.max(acc, c);
+  }, 0);
+  return Math.max(numVisibleColors, maxColorValue + 1);
 }
 
 export const Settings = () => {
@@ -45,19 +52,22 @@ export const Settings = () => {
     setSurface,
     showKeyboardIndicators,
     setShowKeyboardIndicators,
+    defaultRandomColors,
+    updateDefaultRandomColors,
   } = useContext(GameStateContext);
 
   const getCurrentState = () => ({
     height: grid.length,
     width: grid[0].length,
     pentominoSize: appPreferences.pentominoSize,
-    numVisibleColors: appPreferences.numVisibleColors,
+    numVisibleColors: getNumVisibleColors(appPreferences.numVisibleColors, defaultRandomColors, pentominoColors),
     displayColors: appPreferences.displayColors,
     pentominoColors,
     surface,
     showKeyboardIndicators,
     copyImage: appPreferences.copyImage,
     showCdot: appPreferences.showCdot,
+    defaultRandomColors,
   });
 
   const [currentState, setCurrentState] = useState<CurrentState>(getCurrentState);
@@ -216,18 +226,7 @@ export const Settings = () => {
         </Button>
         <Button
           onClick={() => {
-            const pentominoes = [...PENTOMINO_NAMES];
-            shuffleArray(pentominoes);
-            const nextColors = pentominoes.reduce(
-              (acc: Colors, p, i) => {
-                const val = i % currentState.numVisibleColors;
-                acc[p] = val;
-                return acc;
-              },
-              { ...DEFAULT_COLORS }
-            );
-
-            setCurrentState({ ...currentState, pentominoColors: nextColors });
+            setCurrentState({ ...currentState, pentominoColors: randomPentominoColors(currentState.numVisibleColors) });
           }}
         >
           Randomize Distribution
@@ -268,6 +267,20 @@ export const Settings = () => {
           }}
         />
       </fieldset>
+      <fieldset className="flex gap-4 items-center mb-4">
+        <label className="text-right" htmlFor="randc">
+          Default to random pentomino colors
+        </label>
+        <input
+          className="bg-white dark:bg-slate-950"
+          type="checkbox"
+          id="randc"
+          checked={currentState.defaultRandomColors}
+          onChange={(e) => {
+            setCurrentState({ ...currentState, defaultRandomColors: e.target.checked });
+          }}
+        />
+      </fieldset>
       {/* End of settings area */}
       {/* Start confirmation area */}
       {(currentState.width !== grid[0].length || currentState.height !== grid.length) && (
@@ -297,6 +310,8 @@ export const Settings = () => {
               setSurface(currentState.surface);
               setPentominoColors(currentState.pentominoColors);
               setShowKeyboardIndicators(currentState.showKeyboardIndicators);
+
+              updateDefaultRandomColors(currentState.defaultRandomColors);
             }}
           >
             Save changes

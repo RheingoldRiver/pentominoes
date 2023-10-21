@@ -183,13 +183,26 @@ export const DEFAULT_DISPLAY_COLORS = [
   "#6b21a8",
 ];
 
-export const shuffleArray = <T>(array: T[]): void => {
+const shuffleArray = <T>(array: T[]): void => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = array[i];
     array[i] = array[j];
     array[j] = temp;
   }
+};
+
+export const randomPentominoColors = (numVisibleColors: number): Colors => {
+  const pentominoes = [...PENTOMINO_NAMES];
+  shuffleArray(pentominoes);
+  return pentominoes.reduce(
+    (acc: Colors, p, i) => {
+      const val = i % numVisibleColors;
+      acc[p] = val;
+      return acc;
+    },
+    { ...DEFAULT_COLORS }
+  );
 };
 
 interface ActionPentomino {
