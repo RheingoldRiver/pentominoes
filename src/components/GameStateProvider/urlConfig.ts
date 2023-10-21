@@ -3,7 +3,9 @@ import {
   DEFAULT_COLORS,
   letterToSurface,
   MAX_NUM_COLORS,
+  PENTOMINO_NAMES,
   PlacedPentomino,
+  randomPentominoColors,
   Surface,
   SURFACES,
 } from "./../../constants";
@@ -434,7 +436,17 @@ function decodeColor(color: string | number, p: string, legacy: boolean): number
   return toNumber(color) + HALF_NUM_COLORS;
 }
 
-export function deserializeUrl(s: string): UrlConfig {
+function randomizeColorsIfNeeded(settings: UrlConfig, defaultRandomColors: boolean) {
+  if (defaultRandomColors === false) return;
+  let doChange: boolean = true;
+  Object.values(settings.colors).forEach((c) => {
+    if (c !== 0) doChange = false;
+  });
+  if (!doChange) return;
+  settings.colors = randomPentominoColors(PENTOMINO_NAMES.length);
+}
+
+export function deserializeUrl(s: string, defaultRandomColors: boolean): UrlConfig {
   const legacy = !!s[0].match(/[0-9]/);
   const config = legacy === true ? decodeSurfacelessUrl(s) : decodeUrl(s);
   const ret = {
@@ -460,5 +472,6 @@ export function deserializeUrl(s: string): UrlConfig {
     };
     if (p.p.toUpperCase() !== PENTOMINOES.R.name) ret.colors[p.p.toUpperCase()] = decodeColor(r.color, p.p, legacy);
   });
+  randomizeColorsIfNeeded(ret, defaultRandomColors);
   return ret;
 }

@@ -41,6 +41,8 @@ interface GameState {
   setShowKeyboardIndicators: Dispatch<SetStateAction<boolean>>;
   showInvalidUrlError: boolean;
   setShowInvalidUrlError: Dispatch<SetStateAction<boolean>>;
+  defaultRandomColors: boolean;
+  updateDefaultRandomColors: (newDefault: boolean) => void;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -67,6 +69,8 @@ const DEFAULT_GAME_STATE: GameState = {
   setShowKeyboardIndicators: () => {},
   showInvalidUrlError: false,
   setShowInvalidUrlError: () => {},
+  defaultRandomColors: false,
+  updateDefaultRandomColors: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -75,6 +79,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [pentominoColors, setPentominoColors] = useState<Colors>(DEFAULT_CONFIG.colors);
   const [surface, setSurface] = useState<Surface>(DEFAULT_CONFIG.surface);
 
+  const [defaultRandomColors, setDefaultRandomColors] = useState<boolean>(() => {
+    return (window.localStorage.getItem("randc") || "false") === "true";
+  });
+
   const [showInvalidUrlError, setShowInvalidUrlError] = useState<boolean>(false);
   const params = useParams();
   const { config } = params;
@@ -82,7 +90,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   useEffect(() => {
     if (!config) return;
     try {
-      const parsedConfig = deserializeUrl(config);
+      const parsedConfig = deserializeUrl(config, defaultRandomColors);
       setGrid(parsedConfig.grid);
       setSurface(parsedConfig.surface);
       setPentominoColors(parsedConfig.colors);
@@ -267,6 +275,11 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     }
   }
 
+  const updateDefaultRandomColors = (newDefault: boolean) => {
+    window.localStorage.setItem("randc", newDefault.toString());
+    setDefaultRandomColors(newDefault);
+  };
+
   useHotkey("Control", "Z", () => {
     const nextActionHistory = [...actionHistory];
     const lastAction = nextActionHistory.pop();
@@ -359,6 +372,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setShowKeyboardIndicators,
         showInvalidUrlError,
         setShowInvalidUrlError,
+        defaultRandomColors,
+        updateDefaultRandomColors,
       }}
     >
       {children}

@@ -114,12 +114,12 @@ test("[legacy urls] a URL is properly decoded, asymmetry", () => {
 test("[legacy urls] you get the right grid, no asymmetry", () => {
   const grid: PlacedPentomino[][] = EMPTY_GRID(8, 8);
   grid[4][4].pentomino = PENTOMINOES["I"];
-  expect(deserializeUrl("8_8I04_4")).toStrictEqual({
+  expect(deserializeUrl("8_8I04_4", false)).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
     surface: SURFACES.Rectangle,
   });
-  expect(deserializeUrl("8_8i044")).toStrictEqual({
+  expect(deserializeUrl("8_8i044", false)).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
     surface: SURFACES.Rectangle,
@@ -129,12 +129,12 @@ test("[legacy urls] you get the right grid, no asymmetry", () => {
 test("[legacy urls] you get the right grid, asymmetry", () => {
   const grid: PlacedPentomino[][] = EMPTY_GRID(10, 6);
   grid[4][6].pentomino = PENTOMINOES["I"];
-  expect(deserializeUrl("6_10I04_6")).toStrictEqual({
+  expect(deserializeUrl("6_10I04_6", false)).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
     surface: SURFACES.Rectangle,
   });
-  expect(deserializeUrl("6_10i046")).toStrictEqual({
+  expect(deserializeUrl("6_10i046", false)).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
     surface: SURFACES.Rectangle,

@@ -126,7 +126,7 @@ test("a URL is properly decoded with a 2-digit dimension", () => {
 test("you get the right grid with single-digit numbers", () => {
   const grid: PlacedPentomino[][] = EMPTY_GRID(8, 8);
   grid[4][4].pentomino = PENTOMINOES["I"];
-  expect(deserializeUrl("K88I044")).toStrictEqual({
+  expect(deserializeUrl("K88I044", false)).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
     surface: SURFACES.KleinBottle,
@@ -136,7 +136,7 @@ test("you get the right grid with single-digit numbers", () => {
 test("you get the right grid with two-digit  numbers", () => {
   const grid: PlacedPentomino[][] = EMPTY_GRID(10, 6);
   grid[4][6].pentomino = PENTOMINOES["I"];
-  expect(deserializeUrl("P6aI046")).toStrictEqual({
+  expect(deserializeUrl("P6aI046", false)).toStrictEqual({
     grid: grid,
     colors: DEFAULT_COLORS,
     surface: SURFACES.ProjectivePlane,
