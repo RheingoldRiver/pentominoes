@@ -5,11 +5,13 @@ import {
   Action,
   Colors,
   DEFAULT_CONFIG,
+  PENTOMINO_NAMES,
   PaintedCell,
   PlacedPentomino,
   SURFACES,
   Surface,
   UrlConfig,
+  randomPentominoColors,
 } from "../../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { deserializeUrl, serializeUrl } from "./urlConfig";
@@ -92,7 +94,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const { config } = params;
 
   useEffect(() => {
-    if (!config) return;
+    if (!config) {
+      if (defaultRandomColors) setPentominoColors(randomPentominoColors(PENTOMINO_NAMES.length));
+      return;
+    }
     try {
       const parsedConfig = deserializeUrl(config, defaultRandomColors);
       setGrid(parsedConfig.grid);
