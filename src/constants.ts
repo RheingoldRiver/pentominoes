@@ -56,7 +56,7 @@ export interface Borders {
 
 export interface PaintedCell {
   pentomino: PlacedPentomino;
-  conflict: boolean;
+  conflict: string;
   borders: Borders;
   center: boolean;
   hovered: boolean;
