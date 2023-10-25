@@ -15,22 +15,7 @@ export function getPaintedBoard(
   currentPlacedPentomino: PlacedPentomino | undefined,
   boardHovered: boolean
 ): PaintedCell[][] {
-  const paintedGrid: PaintedCell[][] = range(grid.length).map((x) =>
-    range(grid[0].length).map((y) => {
-      return {
-        pentomino: EMPTY_PENTOMINO(x, y),
-        conflict: false,
-        center: false,
-        borders: {
-          borderTop: false,
-          borderLeft: false,
-          borderBot: false,
-          borderRight: false,
-        },
-        hovered: false,
-      };
-    })
-  );
+  const paintedGrid: PaintedCell[][] = emptyPaintedGrid(grid.length, grid[0].length);
   // Update the painted grid
   grid.forEach((r) =>
     r.forEach((p) => {
@@ -48,7 +33,26 @@ export function getPaintedBoard(
   return paintedGrid;
 }
 
-const paintCell = (
+export const emptyPaintedGrid = (h: number, w: number): PaintedCell[][] => {
+  return range(h).map((x) =>
+    range(w).map((y) => {
+      return {
+        pentomino: EMPTY_PENTOMINO(x, y),
+        conflict: false,
+        center: false,
+        borders: {
+          borderTop: false,
+          borderLeft: false,
+          borderBot: false,
+          borderRight: false,
+        },
+        hovered: false,
+      };
+    })
+  );
+};
+
+export const paintCell = (
   paintedGrid: PaintedCell[][],
   p: PlacedPentomino,
   surface: Surface,
