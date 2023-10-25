@@ -35,7 +35,8 @@ export const Cell = ({
     return `1px solid ${borderColor}`;
   }
   function backgroundColor() {
-    if (cell.conflict === true && hasPentomino === true) return { class: "bg-red-700", style: "" };
+    if (cell.conflict === cell.pentomino.pentomino.name && hasPentomino === true)
+      return { class: "bg-red-700", style: "" };
     if (cell.pentomino.pentomino.name === PENTOMINOES.R.name)
       return { class: "bg-gray-500 dark:bg-gray-600", style: "" };
     if (hasPentomino === true)
