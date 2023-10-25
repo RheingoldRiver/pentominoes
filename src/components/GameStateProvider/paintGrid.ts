@@ -1,14 +1,20 @@
+import { PlacedPentomino } from "./../../constants";
 import { Borders, PaintedCell } from "../../constants";
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
-import { EMPTY_PENTOMINO, Orientation, PlacedPentomino, SURFACES, Surface } from "../../constants";
+import { EMPTY_PENTOMINO, Orientation, SURFACES, Surface } from "../../constants";
 
 interface NewCoordinates {
   newX: number;
   newY: number;
 }
 
-export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): PaintedCell[][] {
+export function getPaintedBoard(
+  grid: PlacedPentomino[][],
+  surface: Surface,
+  currentPlacedPentomino: PlacedPentomino | undefined,
+  boardHovered: boolean
+): PaintedCell[][] {
   const paintedGrid: PaintedCell[][] = range(grid.length).map((x) =>
     range(grid[0].length).map((y) => {
       return {
@@ -21,55 +27,75 @@ export function getPaintedBoard(grid: PlacedPentomino[][], surface: Surface): Pa
           borderBot: false,
           borderRight: false,
         },
+        hovered: false,
       };
     })
   );
   // Update the painted grid
-  grid.forEach((r, x) =>
-    r.forEach((p, y) => {
+  grid.forEach((r) =>
+    r.forEach((p) => {
       if (p.pentomino.name === PENTOMINOES.None.name) return;
-      const orientation = p.pentomino.orientations[p.reflection][p.rotation];
-      orientation.shape.forEach((pr, px) =>
-        pr.forEach((val, py) => {
-          if (val === 0) return; // the pentomino isn't taking up this square of its grid, return
-          const rawX = x + px - orientation.center.x;
-          const rawY = y + py - orientation.center.y;
-          const height = grid.length;
-          const width = grid[0].length;
-          const { newX, newY } = getCoordinatesToPaint(surface, height, width, rawX, rawY);
-
-          if (checkOutOfBounds(grid, paintedGrid, newX, newY)) return;
-
-          // ok should be a valid placement now
-          const cellToPaint = paintedGrid[newX][newY];
-          cellToPaint.center = px === orientation.center.x && py === orientation.center.y;
-          if (cellToPaint.pentomino.pentomino.name !== PENTOMINOES.None.name) {
-            cellToPaint.conflict = true;
-          }
-          cellToPaint.pentomino = p;
-          const flipX = outOfBounds(rawY, width) && surface.orientation.h === Orientation.Nonorientable;
-          const flipY = outOfBounds(rawX, height) && surface.orientation.w === Orientation.Nonorientable;
-          const transposeX = outOfBounds(rawX, width) && surface.consecutive;
-          const transposeY = outOfBounds(rawY, height) && surface.consecutive;
-
-          if (px === 0 || orientation.shape[px - 1][py] === 0) {
-            cellToPaint.borders[border("borderTop", flipX, transposeX, transposeY)] = true;
-          }
-          if (py === 0 || orientation.shape[px][py - 1] === 0) {
-            cellToPaint.borders[border("borderLeft", flipY, transposeX, transposeY)] = true;
-          }
-          if (px === orientation.shape.length - 1 || orientation.shape[px + 1][py] === 0) {
-            cellToPaint.borders[border("borderBot", flipX, transposeX, transposeY)] = true;
-          }
-          if (py === orientation.shape[0].length - 1 || orientation.shape[px][py + 1] === 0) {
-            cellToPaint.borders[border("borderRight", flipY, transposeX, transposeY)] = true;
-          }
-        })
-      );
+      paintCell(paintedGrid, p, surface, grid, false);
     })
   );
+  if (currentPlacedPentomino === undefined) return paintedGrid;
+  if (
+    boardHovered &&
+    paintedGrid[currentPlacedPentomino.x][currentPlacedPentomino.y].pentomino.pentomino.name === PENTOMINOES.None.name
+  ) {
+    paintCell(paintedGrid, currentPlacedPentomino, surface, grid, true);
+  }
   return paintedGrid;
 }
+
+const paintCell = (
+  paintedGrid: PaintedCell[][],
+  p: PlacedPentomino,
+  surface: Surface,
+  grid: PlacedPentomino[][],
+  hovered: boolean
+) => {
+  const orientation = p.pentomino.orientations[p.reflection][p.rotation];
+  orientation.shape.forEach((pr, px) =>
+    pr.forEach((val, py) => {
+      if (val === 0) return; // the pentomino isn't taking up this square of its grid, return
+      const rawX = p.x + px - orientation.center.x;
+      const rawY = p.y + py - orientation.center.y;
+      const height = grid.length;
+      const width = grid[0].length;
+      const { newX, newY } = getCoordinatesToPaint(surface, height, width, rawX, rawY);
+
+      if (checkOutOfBounds(grid, paintedGrid, newX, newY)) return;
+
+      // ok should be a valid placement now
+      const cellToPaint = paintedGrid[newX][newY];
+      cellToPaint.hovered = hovered;
+      cellToPaint.center = px === orientation.center.x && py === orientation.center.y;
+      if (cellToPaint.pentomino.pentomino.name !== PENTOMINOES.None.name) {
+        cellToPaint.conflict = true;
+      }
+      cellToPaint.pentomino = p;
+      const flipX = outOfBounds(rawY, width) && surface.orientation.h === Orientation.Nonorientable;
+      const flipY = outOfBounds(rawX, height) && surface.orientation.w === Orientation.Nonorientable;
+      const transposeX = outOfBounds(rawX, width) && surface.consecutive;
+      const transposeY = outOfBounds(rawY, height) && surface.consecutive;
+
+      if (px === 0 || orientation.shape[px - 1][py] === 0) {
+        cellToPaint.borders[border("borderTop", flipX, transposeX, transposeY)] = true;
+      }
+      if (py === 0 || orientation.shape[px][py - 1] === 0) {
+        cellToPaint.borders[border("borderLeft", flipY, transposeX, transposeY)] = true;
+      }
+      if (px === orientation.shape.length - 1 || orientation.shape[px + 1][py] === 0) {
+        cellToPaint.borders[border("borderBot", flipX, transposeX, transposeY)] = true;
+      }
+      if (py === orientation.shape[0].length - 1 || orientation.shape[px][py + 1] === 0) {
+        cellToPaint.borders[border("borderRight", flipY, transposeX, transposeY)] = true;
+      }
+    })
+  );
+};
+
 const flipMap: { [key: string]: string } = {
   borderRight: "borderLeft",
   borderLeft: "borderRight",
