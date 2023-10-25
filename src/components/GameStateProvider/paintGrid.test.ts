@@ -88,7 +88,7 @@ test("no incorrect conflicts where 2 pieces touch", () => {
     grid,
     false
   );
-  // expect(paintedGrid[0][1].conflict).toBe(false);
+  expect(paintedGrid[0][1].conflict).toBe(false);
   expect(paintedGrid[0][0].conflict).toStrictEqual({
     tileName: "F",
     type: ConflictType.Overflow,
