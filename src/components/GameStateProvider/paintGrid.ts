@@ -1,4 +1,4 @@
-import { PlacedPentomino } from "./../../constants";
+import { ConflictType, PlacedPentomino } from "./../../constants";
 import { Borders, PaintedCell } from "../../constants";
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
@@ -38,7 +38,7 @@ export const emptyPaintedGrid = (h: number, w: number) => {
     range(w).map((y) => {
       return {
         pentomino: EMPTY_PENTOMINO(x, y),
-        conflict: false,
+        conflict: { type: ConflictType.None, tileName: PENTOMINOES.None.name },
         center: false,
         borders: {
           borderTop: false,
@@ -69,14 +69,15 @@ export const paintCell = (
       const width = grid[0].length;
       const { newX, newY } = getCoordinatesToPaint(surface, height, width, rawX, rawY);
 
-      if (checkOutOfBounds(grid, paintedGrid, newX, newY)) return;
+      if (checkOutOfBounds(grid, paintedGrid, newX, newY, p.pentomino.name)) return;
 
       // ok should be a valid placement now
       const cellToPaint = paintedGrid[newX][newY];
       cellToPaint.hovered = hovered;
       cellToPaint.center = px === orientation.center.x && py === orientation.center.y;
       if (cellToPaint.pentomino.pentomino.name !== PENTOMINOES.None.name) {
-        cellToPaint.conflict = true;
+        cellToPaint.conflict.tileName = cellToPaint.pentomino.pentomino.name;
+        cellToPaint.conflict.type = ConflictType.Intersection;
       }
       cellToPaint.pentomino = p;
       const flipX = outOfBounds(rawY, width) && surface.orientation.h === Orientation.Nonorientable;
@@ -207,7 +208,8 @@ function checkOutOfBounds(
   grid: PlacedPentomino[][],
   paintedGrid: PaintedCell[][],
   newX: number,
-  newY: number
+  newY: number,
+  name: string
 ): boolean {
   const height = grid.length;
   const width = grid[0].length;
@@ -216,21 +218,26 @@ function checkOutOfBounds(
   if (newX < 0 || newX > height - 1) {
     const correctedX = newX < 0 ? 0 : height - 1;
     if (newY < 0) {
-      paintedGrid[correctedX][0].conflict = true;
+      overflowConflict(paintedGrid[correctedX][0], name);
     } else if (newY > width - 1) {
-      paintedGrid[correctedX][width - 1].conflict = true;
+      overflowConflict(paintedGrid[correctedX][width - 1], name);
     } else {
-      paintedGrid[correctedX][newY].conflict = true;
+      overflowConflict(paintedGrid[correctedX][newY], name);
     }
     return true;
   }
   if (newY < 0) {
-    paintedGrid[newX][0].conflict = true;
+    overflowConflict(paintedGrid[newX][0], name);
     return true;
   }
   if (newY > width - 1) {
-    paintedGrid[newX][width - 1].conflict = true;
+    overflowConflict(paintedGrid[newX][width - 1], name);
     return true;
   }
   return false;
+}
+
+function overflowConflict(cell: PaintedCell, name: string) {
+  cell.conflict.type = ConflictType.Overflow;
+  cell.conflict.tileName = name;
 }

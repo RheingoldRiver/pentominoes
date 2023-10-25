@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useContext } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
-import { PaintedCell, PENTOMINO_SIZES } from "../../constants";
+import { ConflictType, PaintedCell, PENTOMINO_SIZES } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { PlusIcon } from "@heroicons/react/24/outline";
@@ -35,7 +35,12 @@ export const Cell = ({
     return `1px solid ${borderColor}`;
   }
   function backgroundColor() {
-    if (cell.conflict && hasPentomino) return { class: "bg-red-700", style: "" };
+    if (
+      hasPentomino &&
+      (cell.conflict.tileName === pentomino.name || cell.conflict.type === ConflictType.Intersection)
+    ) {
+      return { class: "bg-red-700", style: "" };
+    }
     if (cell.pentomino.pentomino.name === PENTOMINOES.R.name)
       return { class: "bg-gray-500 dark:bg-gray-600", style: "" };
     if (hasPentomino)
