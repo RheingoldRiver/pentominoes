@@ -32,6 +32,8 @@ interface GameState {
   reflectY: () => void;
   updateCurrentPentomino: (p: Pentomino) => void;
   clickBoard: (x: number, y: number) => void;
+  hoverBoard: (x: number, y: number) => void;
+  unhoverBoard: () => void;
   pentominoColors: Colors;
   setPentominoColors: Dispatch<SetStateAction<Colors>>;
   surface: Surface;
@@ -60,6 +62,8 @@ const DEFAULT_GAME_STATE: GameState = {
   reflectY: () => {},
   updateCurrentPentomino: () => {},
   clickBoard: () => {},
+  hoverBoard: () => {},
+  unhoverBoard: () => {},
   pentominoColors: {},
   setPentominoColors: () => {},
   surface: SURFACES.Rectangle,
@@ -110,6 +114,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const navigate = useNavigate();
 
   const [showKeyboardIndicators, setShowKeyboardIndicators] = useState<boolean>(false);
+  const [boardHovered, setBoardHovered] = useState<boolean>(false);
 
   const updateUrl = useRef(
     debounce((config: Partial<UrlConfig>) => {
@@ -136,8 +141,19 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   });
 
   const paintedGrid = useMemo(() => {
-    return getPaintedBoard(grid, surface);
-  }, [grid, surface]);
+    return getPaintedBoard(
+      grid,
+      surface,
+      {
+        pentomino: currentPentomino,
+        x: currentGridCoords.x,
+        y: currentGridCoords.y,
+        rotation: currentRotation,
+        reflection: currentReflection,
+      },
+      boardHovered
+    );
+  }, [grid, surface, currentGridCoords, boardHovered, currentPentomino, currentRotation, currentReflection]);
 
   function rotateLeft() {
     setCurrentRotation((4 + currentRotation - 1) % 4);
@@ -264,7 +280,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   function clickBoard(x: number, y: number) {
     setCurrentGridCoords({ x: x, y: y });
     const cell = paintedGrid[x][y];
-    if (cell.pentomino.pentomino.name === PENTOMINOES.None.name) {
+    if (cell.pentomino.pentomino.name === PENTOMINOES.None.name || cell.hovered) {
       drawPentomino(x, y);
     } else {
       setCurrentPentomino(cell.pentomino.pentomino);
@@ -273,6 +289,15 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       setCurrentRotation(cell.pentomino.rotation);
       setCurrentReflection(cell.pentomino.reflection);
     }
+  }
+
+  function hoverBoard(x: number, y: number) {
+    setBoardHovered(true);
+    setCurrentGridCoords({ x, y });
+  }
+
+  function unhoverBoard() {
+    setBoardHovered(false);
   }
 
   const updateDefaultRandomColors = (newDefault: boolean) => {
@@ -363,6 +388,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         reflectY,
         updateCurrentPentomino,
         clickBoard,
+        hoverBoard,
+        unhoverBoard,
         pentominoColors,
         setPentominoColors,
         surface,

@@ -192,7 +192,7 @@ export const Information = () => {
         {exampleGrids.map((grid, i) => (
           <div key={i} className="flex flex-col items-center justify-center">
             <Grid
-              paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle)}
+              paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle, undefined, false)}
               pentominoSize={4}
               borderColor={darkMode ? "#F3F4F6" : "black"}
             ></Grid>

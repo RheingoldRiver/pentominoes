@@ -59,6 +59,7 @@ export interface PaintedCell {
   conflict: boolean;
   borders: Borders;
   center: boolean;
+  hovered: boolean;
 }
 
 export const MAX_NUM_COLORS = 12;

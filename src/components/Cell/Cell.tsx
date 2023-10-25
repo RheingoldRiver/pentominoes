@@ -25,7 +25,8 @@ export const Cell = ({
   board?: boolean;
 }) => {
   const { appPreferences } = useContext(AppStateContext);
-  const { pentominoColors, currentGridCoords, clickBoard, showKeyboardIndicators } = useContext(GameStateContext);
+  const { pentominoColors, currentGridCoords, clickBoard, hoverBoard, unhoverBoard, showKeyboardIndicators } =
+    useContext(GameStateContext);
   const pentomino = cell.pentomino.pentomino;
   const hasPentomino = pentomino.name !== PENTOMINOES.None.name;
   function borderStyle(b: boolean) {
@@ -58,7 +59,8 @@ export const Cell = ({
         PENTOMINO_SIZES[pentominoSize],
         bg.class,
         "flex justify-center items-center",
-        "text-black dark:text-white"
+        "text-black dark:text-white",
+        cell.hovered ? "opacity-50" : ""
       )}
       style={{
         borderTop: borderStyle(cell.borders.borderTop),
@@ -69,6 +71,12 @@ export const Cell = ({
       }}
       onClick={() => {
         if (board) clickBoard(x, y);
+      }}
+      onMouseEnter={() => {
+        if (board) hoverBoard(x, y);
+      }}
+      onMouseLeave={() => {
+        if (board) unhoverBoard();
       }}
     >
       {debug && `(${x}, ${y})`}
