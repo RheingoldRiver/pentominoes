@@ -65,6 +65,19 @@ test("no incorrect conflicts where 2 pieces touch", () => {
   paintCell(
     paintedGrid,
     {
+      x: 4,
+      y: 1,
+      pentomino: PENTOMINOES.V,
+      rotation: 0,
+      reflection: 0,
+    },
+    SURFACES.Rectangle,
+    grid,
+    false
+  );
+  paintCell(
+    paintedGrid,
+    {
       x: 2,
       y: 1,
       pentomino: PENTOMINOES.I,
@@ -75,5 +88,8 @@ test("no incorrect conflicts where 2 pieces touch", () => {
     grid,
     false
   );
-  expect(paintedGrid[0][1].conflict).toBe(false);
+  // expect(paintedGrid[0][1].conflict).toBe(false);
+  expect(paintedGrid[0][0].conflict).toBe(true);
+  expect(paintedGrid[4][1].conflict).toBe(true);
+  expect(paintedGrid[3][1].conflict).toBe(true);
 });

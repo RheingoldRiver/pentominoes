@@ -33,12 +33,12 @@ export function getPaintedBoard(
   return paintedGrid;
 }
 
-export const emptyPaintedGrid = (h: number, w: number): PaintedCell[][] => {
+export const emptyPaintedGrid = (h: number, w: number) => {
   return range(h).map((x) =>
     range(w).map((y) => {
       return {
         pentomino: EMPTY_PENTOMINO(x, y),
-        conflict: PENTOMINOES.None.name,
+        conflict: false,
         center: false,
         borders: {
           borderTop: false,
@@ -69,14 +69,14 @@ export const paintCell = (
       const width = grid[0].length;
       const { newX, newY } = getCoordinatesToPaint(surface, height, width, rawX, rawY);
 
-      if (checkOutOfBounds(grid, paintedGrid, newX, newY, p.pentomino.name)) return;
+      if (checkOutOfBounds(grid, paintedGrid, newX, newY)) return;
 
       // ok should be a valid placement now
       const cellToPaint = paintedGrid[newX][newY];
       cellToPaint.hovered = hovered;
       cellToPaint.center = px === orientation.center.x && py === orientation.center.y;
       if (cellToPaint.pentomino.pentomino.name !== PENTOMINOES.None.name) {
-        cellToPaint.conflict = cellToPaint.pentomino.pentomino.name;
+        cellToPaint.conflict = true;
       }
       cellToPaint.pentomino = p;
       const flipX = outOfBounds(rawY, width) && surface.orientation.h === Orientation.Nonorientable;
@@ -207,8 +207,7 @@ function checkOutOfBounds(
   grid: PlacedPentomino[][],
   paintedGrid: PaintedCell[][],
   newX: number,
-  newY: number,
-  name: string
+  newY: number
 ): boolean {
   const height = grid.length;
   const width = grid[0].length;
@@ -217,20 +216,20 @@ function checkOutOfBounds(
   if (newX < 0 || newX > height - 1) {
     const correctedX = newX < 0 ? 0 : height - 1;
     if (newY < 0) {
-      paintedGrid[correctedX][0].conflict = name;
+      paintedGrid[correctedX][0].conflict = true;
     } else if (newY > width - 1) {
-      paintedGrid[correctedX][width - 1].conflict = name;
+      paintedGrid[correctedX][width - 1].conflict = true;
     } else {
-      paintedGrid[correctedX][newY].conflict = name;
+      paintedGrid[correctedX][newY].conflict = true;
     }
     return true;
   }
   if (newY < 0) {
-    paintedGrid[newX][0].conflict = name;
+    paintedGrid[newX][0].conflict = true;
     return true;
   }
   if (newY > width - 1) {
-    paintedGrid[newX][width - 1].conflict = name;
+    paintedGrid[newX][width - 1].conflict = true;
     return true;
   }
   return false;
