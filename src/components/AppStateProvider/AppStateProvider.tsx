@@ -56,7 +56,7 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
   });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return (
-      (window.localStorage.getItem("copy") || "false") === "true" ||
+      (window.localStorage.getItem("theme") || "false") === "true" ||
       !!window.matchMedia("(prefers-color-scheme: dark)").matches
     );
   });
