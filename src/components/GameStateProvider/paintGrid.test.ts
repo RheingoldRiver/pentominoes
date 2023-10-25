@@ -1,4 +1,4 @@
-import { EMPTY_GRID } from "./../../constants";
+import { ConflictType, EMPTY_GRID } from "./../../constants";
 import { expect, test } from "vitest";
 import { SURFACES } from "../../constants";
 import {
@@ -88,8 +88,17 @@ test("no incorrect conflicts where 2 pieces touch", () => {
     grid,
     false
   );
-  // expect(paintedGrid[0][1].conflict).toBe(false);
-  expect(paintedGrid[0][0].conflict).toBe(true);
-  expect(paintedGrid[4][1].conflict).toBe(true);
-  expect(paintedGrid[3][1].conflict).toBe(true);
+  expect(paintedGrid[0][1].conflict).toBe(false);
+  expect(paintedGrid[0][0].conflict).toStrictEqual({
+    tileName: "F",
+    type: ConflictType.Overflow,
+  });
+  expect(paintedGrid[4][1].conflict).toStrictEqual({
+    tileName: "V",
+    type: ConflictType.Intersection,
+  });
+  expect(paintedGrid[3][1].conflict).toStrictEqual({
+    tileName: "V",
+    type: ConflictType.Intersection,
+  });
 });

@@ -54,9 +54,20 @@ export interface Borders {
   borderRight: boolean;
 }
 
+export enum ConflictType {
+  None,
+  Overflow,
+  Intersection,
+}
+
+interface Conflict {
+  type: ConflictType;
+  tileName: string;
+}
+
 export interface PaintedCell {
   pentomino: PlacedPentomino;
-  conflict: boolean;
+  conflict: Conflict;
   borders: Borders;
   center: boolean;
   hovered: boolean;
