@@ -24,7 +24,6 @@ interface GameState {
   setGrid: Dispatch<SetStateAction<PlacedPentomino[][]>>;
   paintedGrid: PaintedCell[][];
   currentPentomino: Pentomino;
-  toolbarPentomino: Pentomino;
   currentGridCoords: Coordinates;
   currentReflection: number;
   currentRotation: number;
@@ -54,7 +53,6 @@ const DEFAULT_GAME_STATE: GameState = {
   setGrid: () => {},
   paintedGrid: [],
   currentPentomino: PENTOMINOES.None,
-  toolbarPentomino: PENTOMINOES.None,
   currentGridCoords: { x: 0, y: 0 },
   currentReflection: 0,
   currentRotation: 0,
@@ -110,7 +108,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   }, []);
 
   const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
-  const [toolbarPentomino, setToolbarPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [currentGridCoords, setCurrentGridCoords] = useState<Coordinates>({ x: -1, y: -1 });
   const [currentReflection, setCurrentReflection] = useState<number>(0); // 0, 1
   const [currentRotation, setCurrentRotation] = useState<number>(0); // 0, 1, 2, 3
@@ -189,9 +186,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   function updateCurrentPentomino(p: Pentomino) {
     setCurrentPentomino(p);
-    // updating current pentomino when you press a hotkey is handled separately
-    // so we won't ever call this in the same render as we pressed a hotkey for the first time
-    setToolbarPentomino(p);
     resetOrientation();
   }
 
@@ -289,7 +283,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       drawPentomino(x, y);
     } else {
       setCurrentPentomino(cell.pentomino.pentomino);
-      setToolbarPentomino(cell.pentomino.pentomino);
       erasePentomino(cell.pentomino.x, cell.pentomino.y);
       setCurrentRotation(cell.pentomino.rotation);
       setCurrentReflection(cell.pentomino.reflection);
@@ -350,14 +343,13 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   useHotkey(undefined, "W", reflectY);
 
   function updateToolbarPentomino(increment: number) {
-    const curIndex = ALL_PENTOMINO_NAMES.indexOf(toolbarPentomino.name);
+    const curIndex = ALL_PENTOMINO_NAMES.indexOf(currentPentomino.name);
     const nextPentomino =
-      toolbarPentomino.name === PENTOMINOES.None.name
+      currentPentomino.name === PENTOMINOES.None.name
         ? PENTOMINOES.R
         : PENTOMINOES[
             ALL_PENTOMINO_NAMES[(curIndex + increment + ALL_PENTOMINO_NAMES.length) % ALL_PENTOMINO_NAMES.length]
           ];
-    setToolbarPentomino(nextPentomino);
     setCurrentPentomino(nextPentomino);
     resetOrientation();
   }
@@ -383,7 +375,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setGrid,
         paintedGrid,
         currentPentomino,
-        toolbarPentomino,
         currentGridCoords,
         currentReflection,
         currentRotation,
