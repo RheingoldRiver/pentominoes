@@ -87,7 +87,7 @@ export const DEFAULT_COLORS: Colors = {};
 
 PENTOMINO_NAMES.forEach((p) => (DEFAULT_COLORS[p] = 0));
 
-export enum Orientation {
+export enum SurfaceOrientationType {
   Orientable,
   Nonorientable,
   ConsecutiveOrientable,
@@ -96,8 +96,8 @@ export enum Orientation {
 }
 
 interface SurfaceOrientation {
-  h: Orientation;
-  w: Orientation;
+  h: SurfaceOrientationType;
+  w: SurfaceOrientationType;
 }
 
 export interface Surface {
@@ -116,43 +116,43 @@ export const SURFACES: Surfaces = {
     name: "Rectangle",
     consecutive: false,
     key: "R",
-    orientation: { w: Orientation.None, h: Orientation.None },
+    orientation: { w: SurfaceOrientationType.None, h: SurfaceOrientationType.None },
   },
   Cylinder: {
     name: "Cylinder",
     consecutive: false,
     key: "C",
-    orientation: { w: Orientation.None, h: Orientation.Orientable },
+    orientation: { w: SurfaceOrientationType.None, h: SurfaceOrientationType.Orientable },
   },
   Sphere: {
     name: "Sphere",
     consecutive: true,
     key: "S",
-    orientation: { w: Orientation.ConsecutiveOrientable, h: Orientation.ConsecutiveOrientable },
+    orientation: { w: SurfaceOrientationType.ConsecutiveOrientable, h: SurfaceOrientationType.ConsecutiveOrientable },
   },
   Torus: {
     name: "Torus",
     consecutive: false,
     key: "T",
-    orientation: { w: Orientation.Orientable, h: Orientation.Orientable },
+    orientation: { w: SurfaceOrientationType.Orientable, h: SurfaceOrientationType.Orientable },
   },
   Mobius: {
     name: "Mobius",
     consecutive: false,
     key: "M",
-    orientation: { w: Orientation.None, h: Orientation.Nonorientable },
+    orientation: { w: SurfaceOrientationType.None, h: SurfaceOrientationType.Nonorientable },
   },
   ProjectivePlane: {
     name: "ProjectivePlane",
     consecutive: false,
     key: "P",
-    orientation: { w: Orientation.Nonorientable, h: Orientation.Nonorientable },
+    orientation: { w: SurfaceOrientationType.Nonorientable, h: SurfaceOrientationType.Nonorientable },
   },
   KleinBottle: {
     name: "KleinBottle",
     consecutive: false,
     key: "K",
-    orientation: { w: Orientation.Orientable, h: Orientation.Nonorientable },
+    orientation: { w: SurfaceOrientationType.Orientable, h: SurfaceOrientationType.Nonorientable },
   },
 };
 
