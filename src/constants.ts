@@ -1,5 +1,5 @@
 import { range } from "lodash";
-import { Pentomino, PENTOMINOES } from "./pentominoes";
+import { Coordinates, Pentomino, PENTOMINOES } from "./pentominoes";
 
 interface PentominoSizes {
   [key: number]: string;
@@ -37,8 +37,7 @@ export interface Orientation {
 export interface PlacedPentomino {
   pentomino: Pentomino;
   orientation: Orientation;
-  x: number;
-  y: number;
+  coordinates: Coordinates;
 }
 
 export function EMPTY_PENTOMINO(x: number, y: number): PlacedPentomino {
@@ -48,8 +47,7 @@ export function EMPTY_PENTOMINO(x: number, y: number): PlacedPentomino {
       rotation: 0,
       reflection: 0,
     },
-    x: x,
-    y: y,
+    coordinates: { x, y },
   };
 }
 
@@ -226,8 +224,7 @@ export const randomPentominoColors = (numVisibleColors: number): Colors => {
 interface ActionPentomino {
   prevName: string;
   prevOrientation: Orientation;
-  x: number;
-  y: number;
+  prevCoordinates: Coordinates;
 }
 
 export interface Action {

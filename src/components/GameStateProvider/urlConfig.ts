@@ -470,8 +470,7 @@ export function deserializeUrl(s: string, defaultRandomColors: boolean): UrlConf
     ret.grid[x][y] = {
       pentomino: PENTOMINOES[p.p.toUpperCase()],
       orientation: { ...r.orientation },
-      x: x,
-      y: y,
+      coordinates: { x, y },
     };
     if (p.p.toUpperCase() !== PENTOMINOES.R.name) ret.colors[p.p.toUpperCase()] = decodeColor(r.color, p.p, legacy);
   });

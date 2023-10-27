@@ -146,9 +146,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       surface,
       {
         pentomino: currentPentomino,
-        x: currentGridCoords.x,
-        y: currentGridCoords.y,
         orientation: { ...currentOrientation },
+        coordinates: { ...currentGridCoords },
       },
       boardHovered
     );
@@ -210,8 +209,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
             // grid not nextGrid
             prevName: grid[x][y].pentomino.name,
             prevOrientation: { ...grid[x][y].orientation },
-            x: x,
-            y: y,
+            prevCoordinates: { x, y },
           },
         ],
       },
@@ -226,8 +224,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     newGrid[newX][newY] = {
       pentomino: currentPentomino,
       orientation: { ...currentOrientation },
-      x: newX,
-      y: newY,
+      coordinates: { x: newX, y: newY },
     };
     setGrid(newGrid);
   }
@@ -242,8 +239,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
               reflection: 0,
               rotation: 0,
             },
-            x: x,
-            y: y,
+            coordinates: { x, y },
           };
         }
         return c;
@@ -262,8 +258,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
           nextAction.pentominoes.push({
             prevName: c.pentomino.name,
             prevOrientation: { ...c.orientation },
-            x,
-            y,
+            prevCoordinates: { x, y },
           });
         }
         return {
@@ -283,7 +278,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       drawPentomino(x, y);
     } else {
       setCurrentPentomino(cell.pentomino.pentomino);
-      erasePentomino(cell.pentomino.x, cell.pentomino.y);
+      erasePentomino(cell.pentomino.coordinates.x, cell.pentomino.coordinates.y);
       setCurrentOrientation({ ...cell.pentomino.orientation });
     }
   }
@@ -308,8 +303,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     if (lastAction === undefined) return;
     const nextGrid = cloneDeep(grid);
     lastAction.pentominoes.forEach((p) => {
-      nextGrid[p.x][p.y].pentomino = PENTOMINOES[p.prevName];
-      nextGrid[p.x][p.y].orientation = { ...p.prevOrientation };
+      nextGrid[p.prevCoordinates.x][p.prevCoordinates.y].pentomino = PENTOMINOES[p.prevName];
+      nextGrid[p.prevCoordinates.x][p.prevCoordinates.y].orientation = { ...p.prevOrientation };
     });
     setGrid(nextGrid);
     setActionHistory(nextActionHistory);

@@ -52,8 +52,7 @@ test("no incorrect conflicts where 2 pieces touch", () => {
   paintCell(
     paintedGrid,
     {
-      x: 0,
-      y: 0,
+      coordinates: { x: 0, y: 0 },
       pentomino: PENTOMINOES.F,
       orientation: {
         rotation: 0,
@@ -67,8 +66,7 @@ test("no incorrect conflicts where 2 pieces touch", () => {
   paintCell(
     paintedGrid,
     {
-      x: 4,
-      y: 1,
+      coordinates: { x: 4, y: 1 },
       pentomino: PENTOMINOES.V,
       orientation: {
         rotation: 0,
@@ -82,8 +80,7 @@ test("no incorrect conflicts where 2 pieces touch", () => {
   paintCell(
     paintedGrid,
     {
-      x: 2,
-      y: 1,
+      coordinates: { x: 2, y: 1 },
       pentomino: PENTOMINOES.I,
       orientation: {
         rotation: 0,
@@ -94,7 +91,10 @@ test("no incorrect conflicts where 2 pieces touch", () => {
     grid,
     false
   );
-  expect(paintedGrid[0][1].conflict).toBe(false);
+  expect(paintedGrid[0][1].conflict).toStrictEqual({
+    tileName: "F",
+    type: ConflictType.Overflow,
+  });
   expect(paintedGrid[0][0].conflict).toStrictEqual({
     tileName: "F",
     type: ConflictType.Overflow,
