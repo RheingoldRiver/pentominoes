@@ -59,7 +59,7 @@ export const paintCell = (
   grid: PlacedPentomino[][],
   hovered: boolean
 ) => {
-  const orientation = p.pentomino.orientations[p.reflection][p.rotation];
+  const orientation = p.pentomino.shapes[p.orientation.reflection][p.orientation.rotation];
   orientation.shape.forEach((pr, px) =>
     pr.forEach((val, py) => {
       if (val === 0) return; // the pentomino isn't taking up this square of its grid, return

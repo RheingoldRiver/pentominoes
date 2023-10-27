@@ -29,10 +29,14 @@ export const PENTOMINO_DIMENSIONS: PentominoDimensions = {
   5: "grid-cols-5",
 };
 
-export interface PlacedPentomino {
-  pentomino: Pentomino;
+export interface Orientation {
   rotation: number;
   reflection: number;
+}
+
+export interface PlacedPentomino {
+  pentomino: Pentomino;
+  orientation: Orientation;
   x: number;
   y: number;
 }
@@ -40,8 +44,10 @@ export interface PlacedPentomino {
 export function EMPTY_PENTOMINO(x: number, y: number): PlacedPentomino {
   return {
     pentomino: PENTOMINOES.None,
-    rotation: 0,
-    reflection: 0,
+    orientation: {
+      rotation: 0,
+      reflection: 0,
+    },
     x: x,
     y: y,
   };
@@ -219,8 +225,7 @@ export const randomPentominoColors = (numVisibleColors: number): Colors => {
 
 interface ActionPentomino {
   prevName: string;
-  prevRotation: number;
-  prevReflection: number;
+  prevOrientation: Orientation;
   x: number;
   y: number;
 }

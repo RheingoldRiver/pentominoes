@@ -150,8 +150,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         pentomino: currentPentomino,
         x: currentGridCoords.x,
         y: currentGridCoords.y,
-        rotation: currentRotation,
-        reflection: currentReflection,
+        orientation: {
+          rotation: currentRotation,
+          reflection: currentReflection,
+        },
       },
       boardHovered
     );
@@ -208,8 +210,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
           {
             // grid not nextGrid
             prevName: grid[x][y].pentomino.name,
-            prevRotation: grid[x][y].rotation,
-            prevReflection: grid[x][y].reflection,
+            prevOrientation: { ...grid[x][y].orientation },
             x: x,
             y: y,
           },
@@ -225,8 +226,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     const newGrid = [...grid];
     newGrid[newX][newY] = {
       pentomino: currentPentomino,
-      reflection: currentReflection,
-      rotation: currentRotation,
+      orientation: {
+        reflection: currentReflection,
+        rotation: currentRotation,
+      },
       x: newX,
       y: newY,
     };
@@ -239,8 +242,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         if (x === givenX && y === givenY) {
           return {
             pentomino: PENTOMINOES.None,
-            reflection: 0,
-            rotation: 0,
+            orientation: {
+              reflection: 0,
+              rotation: 0,
+            },
             x: x,
             y: y,
           };
@@ -260,8 +265,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         ) {
           nextAction.pentominoes.push({
             prevName: c.pentomino.name,
-            prevReflection: c.reflection,
-            prevRotation: c.rotation,
+            prevOrientation: { ...c.orientation },
             x,
             y,
           });
@@ -284,8 +288,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     } else {
       setCurrentPentomino(cell.pentomino.pentomino);
       erasePentomino(cell.pentomino.x, cell.pentomino.y);
-      setCurrentRotation(cell.pentomino.rotation);
-      setCurrentReflection(cell.pentomino.reflection);
+      setCurrentRotation(cell.pentomino.orientation.rotation);
+      setCurrentReflection(cell.pentomino.orientation.reflection);
     }
   }
 
@@ -310,8 +314,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     const nextGrid = cloneDeep(grid);
     lastAction.pentominoes.forEach((p) => {
       nextGrid[p.x][p.y].pentomino = PENTOMINOES[p.prevName];
-      nextGrid[p.x][p.y].rotation = p.prevRotation;
-      nextGrid[p.x][p.y].reflection = p.prevReflection;
+      nextGrid[p.x][p.y].orientation = { ...p.prevOrientation };
     });
     setGrid(nextGrid);
     setActionHistory(nextActionHistory);
