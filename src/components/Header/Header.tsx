@@ -13,7 +13,6 @@ export const Header = ({ ...rest }) => {
     currentRotation,
     currentReflection,
     pentominoColors,
-    toolbarPentomino,
     showKeyboardIndicators,
   } = useContext(GameStateContext);
 
@@ -37,7 +36,7 @@ export const Header = ({ ...rest }) => {
           <div
             key={l}
             className={clsx(
-              toolbarPentomino.name === l && showKeyboardIndicators ? "border-b border-b-px border-b-slate-300" : "",
+              currentPentomino.name === l && showKeyboardIndicators ? "border-b border-b-px border-b-slate-300" : "",
               "py-3 rounded-sm"
             )}
           >
