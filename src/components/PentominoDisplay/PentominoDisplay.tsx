@@ -29,7 +29,7 @@ export const PentominoDisplay = ({
   if (color === undefined) color = appPreferences.displayColors[0];
   const p = pentomino.shapes[orientation.reflection][orientation.rotation];
   function bgColor(cell: number, coordinates: Coordinates) {
-    if (pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };
+    if (pentomino.name === PENTOMINOES.R.name) return { class: "bg-gray-600", style: "" };
     let found = false;
     if (checkGrid) {
       grid.forEach((row) =>
