@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 
@@ -7,13 +7,17 @@ export const Modal = ({
   children,
   trigger,
   onOpenAutoFocus,
+  open,
+  onOpenChange,
 }: {
   children: ReactNode;
   trigger: ReactNode;
   onOpenAutoFocus?: () => void;
+  open?: boolean | undefined;
+  onOpenChange?: Dispatch<SetStateAction<boolean>> | undefined;
 }) => {
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Trigger asChild>
         <button>{trigger}</button>
       </Dialog.Trigger>

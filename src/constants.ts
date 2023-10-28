@@ -178,7 +178,7 @@ export function EMPTY_GRID(w: number, h: number): PlacedPentomino[][] {
   );
 }
 
-export const DEFAULT_CONFIG: UrlConfig = {
+export const DEFAULT_GAME_CONFIG: UrlConfig = {
   grid: EMPTY_GRID(8, 8),
   colors: DEFAULT_COLORS,
   surface: SURFACES.Rectangle,
