@@ -95,7 +95,7 @@ export const Settings = () => {
             if (!warnGridReset) {
               setWarnGridReset(true);
               returnEarly = true;
-            } else {
+            } else if (!returnEarly) {
               setGrid(
                 range(currentState.height).map((x) =>
                   range(currentState.width).map((y) => {
@@ -105,6 +105,7 @@ export const Settings = () => {
               );
             }
           }
+          console.log(`return early: ${returnEarly}`);
           if (returnEarly) return;
 
           // done with validation
@@ -352,7 +353,10 @@ export const Settings = () => {
         </fieldset>
         {/* End of settings area */}
         {/* Start confirmation area */}
-        {warnGridReset && <ErrorText>Saving will clear your current board! Submit again to proceed.</ErrorText>}{" "}
+        {warnGridReset && <ErrorText>Saving will clear your current board! Submit again to proceed.</ErrorText>}
+        {showErrors && errorConfig(currentState) && (
+          <ErrorText>One or more errors detected, see field-specific warnings.</ErrorText>
+        )}
         <div className="mt-6 flex justify-end">
           <Button type="submit">Save changes</Button>
         </div>
