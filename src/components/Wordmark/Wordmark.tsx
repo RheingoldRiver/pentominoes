@@ -75,7 +75,7 @@ export const Wordmark = ({ gridArea }: { gridArea: string }) => {
             <PentominoDisplay
               pentomino={PENTOMINOES[p.pentomino]}
               color={appPreferences.displayColors[pentominoColors[p.pentomino]]}
-              reflection={p.reflection}
+              orientation={{ rotation: 0, reflection: p.reflection }}
               checkGrid={false}
               size={2}
               showCenter={false}

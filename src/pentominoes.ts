@@ -6,18 +6,18 @@ export interface Coordinates {
   y: number;
 }
 
-interface Orientations {
-  [key: number]: Orientation[];
-}
-
-export interface Orientation {
+export interface Shape {
   center: Coordinates;
   shape: number[][];
 }
 
+interface Shapes {
+  [key: number]: Shape[];
+}
+
 export interface Pentomino {
   name: string;
-  orientations: Orientations;
+  shapes: Shapes;
 }
 
 interface Pentominoes {
@@ -140,12 +140,12 @@ pentominoPrimitives.map((p) => {
   const reflectedShape = reflectX(p.shape);
   const expandedPentomino: Pentomino = {
     name: p.name,
-    orientations: {
+    shapes: {
       0: [{ center: center(p.shape), shape: p.shape }],
       1: [{ center: center(reflectedShape), shape: reflectedShape }],
     },
   };
-  const orientations = expandedPentomino.orientations;
+  const orientations = expandedPentomino.shapes;
   range(0, 3).forEach(() => {
     // rotate 3 times
     range(0, 2).forEach((i) => {

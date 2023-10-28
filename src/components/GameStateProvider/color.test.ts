@@ -14,7 +14,7 @@ test("we have the right half num colors", () => {
 });
 
 test("pentomino colors are encoded properly", () => {
-  expect(encodeOrientation(0, 0, 6)).toBe("0");
+  expect(encodeOrientation({ rotation: 0, reflection: 0 }, 6)).toBe("0");
 });
 
 test("a color is encoded properly", () => {

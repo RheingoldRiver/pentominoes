@@ -1,10 +1,22 @@
 import { cloneDeep, debounce } from "lodash";
-import { createContext, ReactNode, useState, Dispatch, SetStateAction, useRef, useEffect, useMemo } from "react";
+import {
+  createContext,
+  ReactNode,
+  useState,
+  Dispatch,
+  SetStateAction,
+  useRef,
+  useEffect,
+  useMemo,
+  Reducer,
+  useReducer,
+} from "react";
 import {
   ALL_PENTOMINO_NAMES,
   Action,
   Colors,
   DEFAULT_CONFIG,
+  Orientation,
   PENTOMINO_NAMES,
   PaintedCell,
   PlacedPentomino,
@@ -18,6 +30,13 @@ import { deserializeUrl, serializeUrl } from "./urlConfig";
 import { useNavigate, useParams } from "react-router-dom";
 import useHotkey from "../../hooks/use-hotkey";
 import { getPaintedBoard } from "./paintGrid";
+import {
+  OrientationAction,
+  OrientationActionType,
+  ReflectionDirection,
+  RotationDirection,
+  orientationReducer,
+} from "./currentPentominoReducer";
 
 interface GameState {
   grid: PlacedPentomino[][];
@@ -25,12 +44,8 @@ interface GameState {
   paintedGrid: PaintedCell[][];
   currentPentomino: Pentomino;
   currentGridCoords: Coordinates;
-  currentReflection: number;
-  currentRotation: number;
-  rotateLeft: () => void;
-  rotateRight: () => void;
-  reflectX: () => void;
-  reflectY: () => void;
+  currentOrientation: Orientation;
+  orientationDispatch: Dispatch<OrientationAction>;
   updateCurrentPentomino: (p: Pentomino) => void;
   clickBoard: (x: number, y: number) => void;
   hoverBoard: (x: number, y: number) => void;
@@ -54,12 +69,8 @@ const DEFAULT_GAME_STATE: GameState = {
   paintedGrid: [],
   currentPentomino: PENTOMINOES.None,
   currentGridCoords: { x: 0, y: 0 },
-  currentReflection: 0,
-  currentRotation: 0,
-  rotateLeft: () => {},
-  rotateRight: () => {},
-  reflectX: () => {},
-  reflectY: () => {},
+  currentOrientation: { reflection: 0, rotation: 0 },
+  orientationDispatch: () => {},
   updateCurrentPentomino: () => {},
   clickBoard: () => {},
   hoverBoard: () => {},
@@ -109,8 +120,10 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   const [currentPentomino, setCurrentPentomino] = useState<Pentomino>(PENTOMINOES.None);
   const [currentGridCoords, setCurrentGridCoords] = useState<Coordinates>({ x: -1, y: -1 });
-  const [currentReflection, setCurrentReflection] = useState<number>(0); // 0, 1
-  const [currentRotation, setCurrentRotation] = useState<number>(0); // 0, 1, 2, 3
+  const [currentOrientation, orientationDispatch] = useReducer<Reducer<Orientation, OrientationAction>>(
+    orientationReducer,
+    { reflection: 0, rotation: 0 }
+  );
 
   const [actionHistory, setActionHistory] = useState<Action[]>([]);
   const navigate = useNavigate();
@@ -148,45 +161,16 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       surface,
       {
         pentomino: currentPentomino,
-        x: currentGridCoords.x,
-        y: currentGridCoords.y,
-        rotation: currentRotation,
-        reflection: currentReflection,
+        orientation: { ...currentOrientation },
+        coordinates: { ...currentGridCoords },
       },
       boardHovered
     );
-  }, [grid, surface, currentGridCoords, boardHovered, currentPentomino, currentRotation, currentReflection]);
-
-  function rotateLeft() {
-    setCurrentRotation((4 + currentRotation - 1) % 4);
-  }
-
-  function rotateRight() {
-    setCurrentRotation((currentRotation + 1) % 4);
-  }
-
-  function reflectX() {
-    if (currentRotation % 2 === 1) {
-      setCurrentRotation((currentRotation + 2) % 4);
-    }
-    setCurrentReflection((currentReflection + 1) % 2);
-  }
-
-  function reflectY() {
-    if (currentRotation % 2 === 0) {
-      setCurrentRotation((currentRotation + 2) % 4);
-    }
-    setCurrentReflection((currentReflection + 1) % 2);
-  }
-
-  function resetOrientation() {
-    setCurrentReflection(0);
-    setCurrentRotation(0);
-  }
+  }, [grid, surface, currentGridCoords, boardHovered, currentPentomino, currentOrientation]);
 
   function updateCurrentPentomino(p: Pentomino) {
     setCurrentPentomino(p);
-    resetOrientation();
+    orientationDispatch({ type: OrientationActionType.replace });
   }
 
   function updateGridCoords(dim: keyof Coordinates, dir: number) {
@@ -208,10 +192,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
           {
             // grid not nextGrid
             prevName: grid[x][y].pentomino.name,
-            prevRotation: grid[x][y].rotation,
-            prevReflection: grid[x][y].reflection,
-            x: x,
-            y: y,
+            prevOrientation: { ...grid[x][y].orientation },
+            prevCoordinates: { x, y },
           },
         ],
       },
@@ -225,10 +207,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     const newGrid = [...grid];
     newGrid[newX][newY] = {
       pentomino: currentPentomino,
-      reflection: currentReflection,
-      rotation: currentRotation,
-      x: newX,
-      y: newY,
+      orientation: { ...currentOrientation },
+      coordinates: { x: newX, y: newY },
     };
     setGrid(newGrid);
   }
@@ -239,10 +219,11 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         if (x === givenX && y === givenY) {
           return {
             pentomino: PENTOMINOES.None,
-            reflection: 0,
-            rotation: 0,
-            x: x,
-            y: y,
+            orientation: {
+              reflection: 0,
+              rotation: 0,
+            },
+            coordinates: { x, y },
           };
         }
         return c;
@@ -260,10 +241,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         ) {
           nextAction.pentominoes.push({
             prevName: c.pentomino.name,
-            prevReflection: c.reflection,
-            prevRotation: c.rotation,
-            x,
-            y,
+            prevOrientation: { ...c.orientation },
+            prevCoordinates: { x, y },
           });
         }
         return {
@@ -283,9 +262,11 @@ export default function GameStateProvider({ children }: { children: ReactNode })
       drawPentomino(x, y);
     } else {
       setCurrentPentomino(cell.pentomino.pentomino);
-      erasePentomino(cell.pentomino.x, cell.pentomino.y);
-      setCurrentRotation(cell.pentomino.rotation);
-      setCurrentReflection(cell.pentomino.reflection);
+      erasePentomino(cell.pentomino.coordinates.x, cell.pentomino.coordinates.y);
+      orientationDispatch({
+        type: OrientationActionType.replace,
+        newOrientation: cell.pentomino.orientation,
+      });
     }
   }
 
@@ -309,9 +290,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     if (lastAction === undefined) return;
     const nextGrid = cloneDeep(grid);
     lastAction.pentominoes.forEach((p) => {
-      nextGrid[p.x][p.y].pentomino = PENTOMINOES[p.prevName];
-      nextGrid[p.x][p.y].rotation = p.prevRotation;
-      nextGrid[p.x][p.y].reflection = p.prevReflection;
+      nextGrid[p.prevCoordinates.x][p.prevCoordinates.y].pentomino = PENTOMINOES[p.prevName];
+      nextGrid[p.prevCoordinates.x][p.prevCoordinates.y].orientation = { ...p.prevOrientation };
     });
     setGrid(nextGrid);
     setActionHistory(nextActionHistory);
@@ -337,10 +317,18 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     updateGridCoords("x", 1);
   });
 
-  useHotkey(undefined, "A", rotateLeft);
-  useHotkey(undefined, "D", rotateRight);
-  useHotkey(undefined, "S", reflectX);
-  useHotkey(undefined, "W", reflectY);
+  useHotkey(undefined, "A", () => {
+    orientationDispatch({ type: OrientationActionType.rotate, direction: RotationDirection.Left });
+  });
+  useHotkey(undefined, "D", () => {
+    orientationDispatch({ type: OrientationActionType.rotate, direction: RotationDirection.Right });
+  });
+  useHotkey(undefined, "S", () => {
+    orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.X });
+  });
+  useHotkey(undefined, "W", () => {
+    orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.Y });
+  });
 
   function updateToolbarPentomino(increment: number) {
     const curIndex = ALL_PENTOMINO_NAMES.indexOf(currentPentomino.name);
@@ -351,7 +339,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
             ALL_PENTOMINO_NAMES[(curIndex + increment + ALL_PENTOMINO_NAMES.length) % ALL_PENTOMINO_NAMES.length]
           ];
     setCurrentPentomino(nextPentomino);
-    resetOrientation();
+    orientationDispatch({ type: OrientationActionType.replace });
   }
 
   useHotkey(undefined, "E", () => {
@@ -376,12 +364,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         paintedGrid,
         currentPentomino,
         currentGridCoords,
-        currentReflection,
-        currentRotation,
-        rotateLeft,
-        rotateRight,
-        reflectX,
-        reflectY,
+        currentOrientation,
+        orientationDispatch,
         updateCurrentPentomino,
         clickBoard,
         hoverBoard,

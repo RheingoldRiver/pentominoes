@@ -3,6 +3,7 @@ import {
   DEFAULT_COLORS,
   letterToSurface,
   MAX_NUM_COLORS,
+  Orientation,
   PENTOMINO_NAMES,
   PlacedPentomino,
   randomPentominoColors,
@@ -39,9 +40,8 @@ export interface StringifiedUrlConfig {
   surface: Surface;
 }
 
-interface Orientation {
-  rotation: number;
-  reflection: number;
+interface OrientationCharacter {
+  orientation: Orientation;
   color: number; // index of the color in an array
 }
 
@@ -85,8 +85,8 @@ export function encodePentomino(p: string, color: number) {
   return p.toLowerCase();
 }
 
-export function encodeOrientation(rotation: number, reflection: number, color: number): string {
-  const r = reflection === 0 ? rotation : NUM_ROTATIONS + rotation;
+export function encodeOrientation(orientation: Orientation, color: number): string {
+  const r = orientation.reflection === 0 ? orientation.rotation : NUM_ROTATIONS + orientation.rotation;
 
   if (color >= HALF_NUM_COLORS) color = color - HALF_NUM_COLORS;
   if (color === 0 || color === undefined) return r.toString();
@@ -196,7 +196,7 @@ export function serializeUrl({ grid, colors, surface }: UrlConfig): string {
       } else if (p.pentomino.name !== PENTOMINOES.None.name)
         placedPentominoes.push({
           p: encodePentomino(p.pentomino.name, colors[p.pentomino.name]),
-          r: encodeOrientation(p.rotation, p.reflection, colors[p.pentomino.name]),
+          r: encodeOrientation(p.orientation, colors[p.pentomino.name]),
           c: `${encodeNumber(x)}${encodeNumber(y)}`,
         });
     })
@@ -383,12 +383,14 @@ export function decodeUrl(s: string): StringifiedUrlConfig {
   return config;
 }
 
-export function decodeOrientation(r: string): Orientation {
+export function decodeOrientation(r: string): OrientationCharacter {
   const asNumber = toNumber(r);
   if (!isNaN(asNumber)) {
     return {
-      rotation: asNumber % NUM_ROTATIONS,
-      reflection: asNumber >= NUM_ROTATIONS ? 1 : 0,
+      orientation: {
+        rotation: asNumber % NUM_ROTATIONS,
+        reflection: asNumber >= NUM_ROTATIONS ? 1 : 0,
+      },
       color: 0,
     };
   } else {
@@ -399,8 +401,10 @@ export function decodeOrientation(r: string): Orientation {
         : charCode - UPPERCASE_START_INDEX;
     const o = charValue % NUM_SPATIAL_ORIENTATIONS;
     return {
-      rotation: o % 4,
-      reflection: o >= 4 ? 1 : 0,
+      orientation: {
+        rotation: o % 4,
+        reflection: o >= 4 ? 1 : 0,
+      },
       // color 0 is a digit not a letter so add 1
       color: Math.floor(charValue / NUM_SPATIAL_ORIENTATIONS) + 1,
     };
@@ -465,10 +469,8 @@ export function deserializeUrl(s: string, defaultRandomColors: boolean): UrlConf
     const { x, y } = decodeCoordinates(p.c, p.p === p.p.toUpperCase());
     ret.grid[x][y] = {
       pentomino: PENTOMINOES[p.p.toUpperCase()],
-      rotation: r.rotation,
-      reflection: r.reflection,
-      x: x,
-      y: y,
+      orientation: { ...r.orientation },
+      coordinates: { x, y },
     };
     if (p.p.toUpperCase() !== PENTOMINOES.R.name) ret.colors[p.p.toUpperCase()] = decodeColor(r.color, p.p, legacy);
   });

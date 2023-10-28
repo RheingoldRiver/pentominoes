@@ -2,7 +2,7 @@ import { ConflictType, PlacedPentomino } from "./../../constants";
 import { Borders, PaintedCell } from "../../constants";
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
-import { EMPTY_PENTOMINO, Orientation, SURFACES, Surface } from "../../constants";
+import { EMPTY_PENTOMINO, OrientabilityType, SURFACES, Surface } from "../../constants";
 
 interface NewCoordinates {
   newX: number;
@@ -26,7 +26,8 @@ export function getPaintedBoard(
   if (currentPlacedPentomino === undefined) return paintedGrid;
   if (
     boardHovered &&
-    paintedGrid[currentPlacedPentomino.x][currentPlacedPentomino.y].pentomino.pentomino.name === PENTOMINOES.None.name
+    paintedGrid[currentPlacedPentomino.coordinates.x][currentPlacedPentomino.coordinates.y].pentomino.pentomino.name ===
+      PENTOMINOES.None.name
   ) {
     paintCell(paintedGrid, currentPlacedPentomino, surface, grid, true);
   }
@@ -59,12 +60,12 @@ export const paintCell = (
   grid: PlacedPentomino[][],
   hovered: boolean
 ) => {
-  const orientation = p.pentomino.orientations[p.reflection][p.rotation];
+  const orientation = p.pentomino.shapes[p.orientation.reflection][p.orientation.rotation];
   orientation.shape.forEach((pr, px) =>
     pr.forEach((val, py) => {
       if (val === 0) return; // the pentomino isn't taking up this square of its grid, return
-      const rawX = p.x + px - orientation.center.x;
-      const rawY = p.y + py - orientation.center.y;
+      const rawX = p.coordinates.x + px - orientation.center.x;
+      const rawY = p.coordinates.y + py - orientation.center.y;
       const height = grid.length;
       const width = grid[0].length;
       const { newX, newY } = getCoordinatesToPaint(surface, height, width, rawX, rawY);
@@ -80,8 +81,8 @@ export const paintCell = (
         cellToPaint.conflict.type = ConflictType.Intersection;
       }
       cellToPaint.pentomino = p;
-      const flipX = outOfBounds(rawY, width) && surface.orientation.h === Orientation.Nonorientable;
-      const flipY = outOfBounds(rawX, height) && surface.orientation.w === Orientation.Nonorientable;
+      const flipX = outOfBounds(rawY, width) && surface.orientability.h === OrientabilityType.Nonorientable;
+      const flipY = outOfBounds(rawX, height) && surface.orientability.w === OrientabilityType.Nonorientable;
       const transposeX = outOfBounds(rawX, width) && surface.consecutive;
       const transposeY = outOfBounds(rawY, height) && surface.consecutive;
 

@@ -7,14 +7,8 @@ import { ALL_PENTOMINO_NAMES } from "../../constants";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 
 export const Header = ({ ...rest }) => {
-  const {
-    currentPentomino,
-    updateCurrentPentomino,
-    currentRotation,
-    currentReflection,
-    pentominoColors,
-    showKeyboardIndicators,
-  } = useContext(GameStateContext);
+  const { currentPentomino, updateCurrentPentomino, currentOrientation, pentominoColors, showKeyboardIndicators } =
+    useContext(GameStateContext);
 
   const { appPreferences } = useContext(AppStateContext);
 
@@ -62,8 +56,7 @@ export const Header = ({ ...rest }) => {
         <PentominoDisplay
           pentomino={currentPentomino}
           color={appPreferences.displayColors[pentominoColors[currentPentomino.name]]}
-          rotation={currentRotation}
-          reflection={currentReflection}
+          orientation={currentOrientation}
         ></PentominoDisplay>
       </div>
     </div>

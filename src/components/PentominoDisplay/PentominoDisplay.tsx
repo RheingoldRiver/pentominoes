@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { PENTOMINO_DIMENSIONS, PENTOMINO_SIZES } from "../../constants";
+import { Orientation, PENTOMINO_DIMENSIONS, PENTOMINO_SIZES } from "../../constants";
 import { Coordinates, Pentomino, PENTOMINOES } from "../../pentominoes";
 import { useContext } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
@@ -9,8 +9,7 @@ import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 export const PentominoDisplay = ({
   pentomino,
   color,
-  rotation = 0,
-  reflection = 0,
+  orientation = { rotation: 0, reflection: 0 },
   checkGrid = true,
   size = 5,
   showCenter = true,
@@ -19,8 +18,7 @@ export const PentominoDisplay = ({
 }: {
   pentomino: Pentomino;
   color?: string;
-  rotation?: number;
-  reflection?: number;
+  orientation?: Orientation;
   checkGrid?: boolean;
   size?: number;
   showCenter?: boolean;
@@ -29,9 +27,9 @@ export const PentominoDisplay = ({
   const { grid } = useContext(GameStateContext);
   const { appPreferences } = useContext(AppStateContext);
   if (color === undefined) color = appPreferences.displayColors[0];
-  const p = pentomino.orientations[reflection][rotation];
+  const p = pentomino.shapes[orientation.reflection][orientation.rotation];
   function bgColor(cell: number, coordinates: Coordinates) {
-    if (pentomino === PENTOMINOES.R) return { class: "bg-gray-600", style: "" };
+    if (pentomino.name === PENTOMINOES.R.name) return { class: "bg-gray-600", style: "" };
     let found = false;
     if (checkGrid) {
       grid.forEach((row) =>
