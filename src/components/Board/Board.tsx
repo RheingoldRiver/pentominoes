@@ -12,7 +12,7 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
-import { SurfaceOrientationType, SURFACES } from "../../constants";
+import { OrientabilityType, SURFACES } from "../../constants";
 import { ChevronDoubleUpIcon } from "@heroicons/react/20/solid";
 
 export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
@@ -32,31 +32,31 @@ export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
       }}
     >
       <div className="flex flex-row justify-center items-center h-8" style={{ gridArea: "topOrientation" }}>
-        {surface.orientation.w !== SurfaceOrientationType.None ? <ChevronRightIcon width={20} /> : ""}
+        {surface.orientability.w !== OrientabilityType.None ? <ChevronRightIcon width={20} /> : ""}
       </div>
       <div className="flex flex-col justify-center items-center w-8" style={{ gridArea: "leftOrientation" }}>
-        {surface.orientation.h !== SurfaceOrientationType.None ? <ChevronDoubleUpIcon width={20} /> : ""}
+        {surface.orientability.h !== OrientabilityType.None ? <ChevronDoubleUpIcon width={20} /> : ""}
       </div>
       <div className="flex flex-col justify-center items-center w-8" style={{ gridArea: "rightOrientation" }}>
         {
           {
-            [SurfaceOrientationType.None]: "",
-            [SurfaceOrientationType.Orientable]: <ChevronDoubleUpIcon width={20} />,
-            [SurfaceOrientationType.Nonorientable]: <ChevronDoubleDownIcon width={20} />,
-            [SurfaceOrientationType.ConsecutiveNonorientable]: <ChevronDownIcon width={20} />,
-            [SurfaceOrientationType.ConsecutiveOrientable]: <ChevronUpIcon width={20} />,
-          }[surface.orientation.h]
+            [OrientabilityType.None]: "",
+            [OrientabilityType.Orientable]: <ChevronDoubleUpIcon width={20} />,
+            [OrientabilityType.Nonorientable]: <ChevronDoubleDownIcon width={20} />,
+            [OrientabilityType.ConsecutiveNonorientable]: <ChevronDownIcon width={20} />,
+            [OrientabilityType.ConsecutiveOrientable]: <ChevronUpIcon width={20} />,
+          }[surface.orientability.h]
         }
       </div>
       <div className="flex flex-row justify-center items-center h-8" style={{ gridArea: "botOrientation" }}>
         {
           {
-            [SurfaceOrientationType.None]: "",
-            [SurfaceOrientationType.Orientable]: <ChevronRightIcon width={20} />,
-            [SurfaceOrientationType.Nonorientable]: <ChevronLeftIcon width={20} />,
-            [SurfaceOrientationType.ConsecutiveNonorientable]: <ChevronDoubleLeftIcon width={20} />,
-            [SurfaceOrientationType.ConsecutiveOrientable]: <ChevronDoubleRightIcon width={20} />,
-          }[surface.orientation.w]
+            [OrientabilityType.None]: "",
+            [OrientabilityType.Orientable]: <ChevronRightIcon width={20} />,
+            [OrientabilityType.Nonorientable]: <ChevronLeftIcon width={20} />,
+            [OrientabilityType.ConsecutiveNonorientable]: <ChevronDoubleLeftIcon width={20} />,
+            [OrientabilityType.ConsecutiveOrientable]: <ChevronDoubleRightIcon width={20} />,
+          }[surface.orientability.w]
         }
       </div>
       <Grid

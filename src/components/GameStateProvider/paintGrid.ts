@@ -2,7 +2,7 @@ import { ConflictType, PlacedPentomino } from "./../../constants";
 import { Borders, PaintedCell } from "../../constants";
 import { range } from "lodash";
 import { PENTOMINOES } from "../../pentominoes";
-import { EMPTY_PENTOMINO, SurfaceOrientationType, SURFACES, Surface } from "../../constants";
+import { EMPTY_PENTOMINO, OrientabilityType, SURFACES, Surface } from "../../constants";
 
 interface NewCoordinates {
   newX: number;
@@ -81,8 +81,8 @@ export const paintCell = (
         cellToPaint.conflict.type = ConflictType.Intersection;
       }
       cellToPaint.pentomino = p;
-      const flipX = outOfBounds(rawY, width) && surface.orientation.h === SurfaceOrientationType.Nonorientable;
-      const flipY = outOfBounds(rawX, height) && surface.orientation.w === SurfaceOrientationType.Nonorientable;
+      const flipX = outOfBounds(rawY, width) && surface.orientability.h === OrientabilityType.Nonorientable;
+      const flipY = outOfBounds(rawX, height) && surface.orientability.w === OrientabilityType.Nonorientable;
       const transposeX = outOfBounds(rawX, width) && surface.consecutive;
       const transposeY = outOfBounds(rawY, height) && surface.consecutive;
 
