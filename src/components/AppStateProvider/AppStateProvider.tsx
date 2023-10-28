@@ -1,13 +1,6 @@
 import { createContext, ReactNode, useState } from "react";
 import { DEFAULT_DISPLAY_COLORS } from "../../constants";
-
-export interface AppPreferences {
-  pentominoSize: number;
-  displayColors: string[];
-  numVisibleColors: number;
-  copyImage: boolean;
-  showCdot: boolean;
-}
+import { AppPreferences } from "./appConstants";
 
 const DEFAULT_APP_PREFERENCES: AppPreferences = {
   pentominoSize: 12,

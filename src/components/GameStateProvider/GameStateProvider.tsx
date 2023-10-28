@@ -15,7 +15,7 @@ import {
   ALL_PENTOMINO_NAMES,
   Action,
   Colors,
-  DEFAULT_CONFIG,
+  DEFAULT_GAME_CONFIG,
   Orientation,
   PENTOMINO_NAMES,
   PaintedCell,
@@ -37,6 +37,7 @@ import {
   RotationDirection,
   orientationReducer,
 } from "./currentPentominoReducer";
+import { DEFAULT_GAME_PREFERENCES } from "./gameConstants";
 
 interface GameState {
   grid: PlacedPentomino[][];
@@ -90,12 +91,14 @@ const DEFAULT_GAME_STATE: GameState = {
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
 export default function GameStateProvider({ children }: { children: ReactNode }) {
-  const [grid, setGrid] = useState<PlacedPentomino[][]>(DEFAULT_CONFIG.grid);
-  const [pentominoColors, setPentominoColors] = useState<Colors>(DEFAULT_CONFIG.colors);
-  const [surface, setSurface] = useState<Surface>(DEFAULT_CONFIG.surface);
+  const [grid, setGrid] = useState<PlacedPentomino[][]>(DEFAULT_GAME_CONFIG.grid);
+  const [pentominoColors, setPentominoColors] = useState<Colors>(DEFAULT_GAME_CONFIG.colors);
+  const [surface, setSurface] = useState<Surface>(DEFAULT_GAME_CONFIG.surface);
 
   const [defaultRandomColors, setDefaultRandomColors] = useState<boolean>(() => {
-    return (window.localStorage.getItem("randc") || "false") === "true";
+    return (
+      (window.localStorage.getItem("randc") || DEFAULT_GAME_PREFERENCES.showKeyboardIndicators.toString()) === "true"
+    );
   });
 
   const [showInvalidUrlError, setShowInvalidUrlError] = useState<boolean>(false);
@@ -128,7 +131,9 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const [actionHistory, setActionHistory] = useState<Action[]>([]);
   const navigate = useNavigate();
 
-  const [showKeyboardIndicators, setShowKeyboardIndicators] = useState<boolean>(false);
+  const [showKeyboardIndicators, setShowKeyboardIndicators] = useState<boolean>(
+    DEFAULT_GAME_PREFERENCES.showKeyboardIndicators
+  );
   const [boardHovered, setBoardHovered] = useState<boolean>(false);
 
   const updateUrl = useRef(
