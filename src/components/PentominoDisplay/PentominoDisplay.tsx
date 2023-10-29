@@ -74,7 +74,9 @@ export const PentominoDisplay = ({
                 backgroundColor: bg.style,
               }}
             >
-              {x === p.center.x && y === p.center.y && showCenter && <DotFilledIcon />}
+              {x === p.center.x && y === p.center.y && showCenter && pentomino.name !== PENTOMINOES.R.name && (
+                <DotFilledIcon />
+              )}
             </div>
           );
         })

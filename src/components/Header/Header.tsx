@@ -16,14 +16,15 @@ export const Header = ({ ...rest }) => {
     <div
       {...rest}
       className={clsx(
-        "flex flex-col md:flex-row p-4 rounded-lg mb-3",
+        "flex flex-row flex-wrap justify-center p-4 rounded-lg mb-3 mx-2",
         "bg-slate-100 dark:bg-slate-800",
-        "shadow-md shadow-slate-300 dark:shadow-none"
+        "shadow-md shadow-slate-300 dark:shadow-none",
+        "max-w-[calc(100vw_-_2rem)]"
       )}
     >
       <div
         className={clsx(
-          "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 px-2"
+          "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 px-2 py-3"
         )}
       >
         {ALL_PENTOMINO_NAMES.map((l) => (
@@ -31,7 +32,7 @@ export const Header = ({ ...rest }) => {
             key={l}
             className={clsx(
               currentPentomino.name === l && showKeyboardIndicators ? "border-b border-b-px border-b-slate-300" : "",
-              "py-3 rounded-sm"
+              "rounded-sm"
             )}
           >
             <PentominoDisplay
@@ -49,7 +50,7 @@ export const Header = ({ ...rest }) => {
       </div>
       <div
         className={clsx(
-          "lg:ml-6 xl:ml-16 p-1 border-solid  rounded border w-[8em] h-[8em] flex justify-center items-center self-end",
+          "lg:ml-6 xl:ml-16 p-1 border-solid  rounded border w-28 h-28 md:w-32 md:h-32 flex justify-center items-center self-end",
           "border-black dark:border-slate-50"
         )}
       >
