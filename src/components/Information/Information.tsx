@@ -104,108 +104,110 @@ export const Information = () => {
   return (
     <Modal trigger={<QuestionMarkCircleIcon className="h-10 w-10 text-gray-800 dark:text-gray-300" />}>
       <Dialog.Title className="text-center font-bold text-md mb-2">About Pentominoes</Dialog.Title>
-      <p className="mb-2">
-        Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each tile
-        having somewhere between 2 (the {<InformationPentominoDisplay p="I" />} tile) and 8 (
-        {<InformationPentominoDisplay p="F" />} {<InformationPentominoDisplay p="L" />}{" "}
-        {<InformationPentominoDisplay p="N" />} {<InformationPentominoDisplay p="P" />}{" "}
-        {<InformationPentominoDisplay p="Y" />}) distinct orientations.
-      </p>
-      <p className="mb-2">
-        This puzzle game also provides a one-square-unit-area tile that you can use as terrain (the{" "}
-        <InformationPentominoDisplay p="R"></InformationPentominoDisplay> tile).
-      </p>
-      <p className="mb-2">
-        There are several different ways to enjoy Pentominoes, but the common theme is that you will try to fully tile a
-        grid of total area 60 (5x12=60) such that no pentominoes overlap or fall off the edge, and no empty squares
-        remain (other than whatever terrain you choose to place before starting to solve the puzzle).
-      </p>
-      <p className="mb-2">
-        Generally, you want to use one of each pentomino to tile the board, but you're welcome to use this app however
-        you like, and there are no prohibitions against using a tile more than once unless you want there to be. One
-        suggestion is to attempt to tile an area with just the {<InformationPentominoDisplay p="P" />} tile.
-      </p>
-      <p className="mb-2">
-        For an added challenge, you can also choose to apply "colorways" to your tiles. Then, constrain yourself to make
-        a solve where the 4 tiles of some color must be pairwise non-adjacent; or must be adjacent; or must be adjacent
-        and form a line spanning the grid area (this last one is especially fun in 8x8 grids with 4 squares of terrain).
-        Setting these colorways is available in the Settings dialog.
-      </p>
-      <p>
-        If you're new to pentominoes, feel free to "cheat" in your first few solve attempts and move terrain around, or
-        use one piece twice - this is a single-player puzzle game, so the rules are whatever you make them to be!
-      </p>
-      <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
-      <KeyboardKeyInfo>
-        <KeyboardKey>Ctrl</KeyboardKey> + <KeyboardKey>Z</KeyboardKey>
-        <span>=</span>Undo last action that modified the grid
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>W</KeyboardKey>
-        <span>=</span>Reflect current pentomino along the y-axis (horizontally)
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>S</KeyboardKey>
-        <span>=</span>Reflect current pentomino along the x-axis (vertically)
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>A</KeyboardKey>
-        <span>=</span>Rotate current pentomino counter-clockwise
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>D</KeyboardKey>
-        <span>=</span>Rotate current pentomino clockwise
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>Q</KeyboardKey>
-        <span>=</span>Select previous pentomino
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>E</KeyboardKey>
-        <span>=</span>Select next pentomino
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>
-          <ArrowUpIcon width={15} className="my-1" />
-        </KeyboardKey>
-        <span>=</span>Move grid cursor up
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>
-          <ArrowRightIcon width={15} className="my-1" />
-        </KeyboardKey>
-        <span>=</span>Move grid cursor to the right
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>
-          <ArrowDownIcon width={15} className="my-1" />
-        </KeyboardKey>
-        <span>=</span>Move grid cursor down
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>
-          <ArrowLeftIcon width={15} className="my-1" />
-        </KeyboardKey>
-        <span>=</span> Move grid cursor to the left
-      </KeyboardKeyInfo>
-      <KeyboardKeyInfo>
-        <KeyboardKey>Enter</KeyboardKey>
-        <span>=</span>Add/remove pentomino from board at selected grid location
-      </KeyboardKeyInfo>
-      <Dialog.Title className="text-center font-bold text-md mb-2">Suggested Puzzles</Dialog.Title>
-      <div className="flex flex-row flex-wrap gap-3 justify-center">
-        {exampleGrids.map((grid, i) => (
-          <div key={i} className="flex flex-col items-center justify-center">
-            <InfoGrid grid={grid}>
-              <Grid
-                pentominoSize={4}
-                paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle, undefined, false)}
-                borderColor={darkMode ? "#F3F4F6" : "black"}
-              />
-            </InfoGrid>
-            Width: {grid[0].length} Length: {grid.length}
-          </div>
-        ))}
+      <div className="px-4">
+        <p className="mb-2">
+          Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each
+          tile having somewhere between 2 (the {<InformationPentominoDisplay p="I" />} tile) and 8 (
+          {<InformationPentominoDisplay p="F" />} {<InformationPentominoDisplay p="L" />}{" "}
+          {<InformationPentominoDisplay p="N" />} {<InformationPentominoDisplay p="P" />}{" "}
+          {<InformationPentominoDisplay p="Y" />}) distinct orientations.
+        </p>
+        <p className="mb-2">
+          This puzzle game also provides a one-square-unit-area tile that you can use as terrain (the{" "}
+          <InformationPentominoDisplay p="R"></InformationPentominoDisplay> tile).
+        </p>
+        <p className="mb-2">
+          There are several different ways to enjoy Pentominoes, but the common theme is that you will try to fully tile
+          a grid of total area 60 (5x12=60) such that no pentominoes overlap or fall off the edge, and no empty squares
+          remain (other than whatever terrain you choose to place before starting to solve the puzzle).
+        </p>
+        <p className="mb-2">
+          Generally, you want to use one of each pentomino to tile the board, but you're welcome to use this app however
+          you like, and there are no prohibitions against using a tile more than once unless you want there to be. One
+          suggestion is to attempt to tile an area with just the {<InformationPentominoDisplay p="P" />} tile.
+        </p>
+        <p className="mb-2">
+          For an added challenge, you can also choose to apply "colorways" to your tiles. Then, constrain yourself to
+          make a solve where the 4 tiles of some color must be pairwise non-adjacent; or must be adjacent; or must be
+          adjacent and form a line spanning the grid area (this last one is especially fun in 8x8 grids with 4 squares
+          of terrain). Setting these colorways is available in the Settings dialog.
+        </p>
+        <p>
+          If you're new to pentominoes, feel free to "cheat" in your first few solve attempts and move terrain around,
+          or use one piece twice - this is a single-player puzzle game, so the rules are whatever you make them to be!
+        </p>
+        <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
+        <KeyboardKeyInfo>
+          <KeyboardKey>Ctrl</KeyboardKey> + <KeyboardKey>Z</KeyboardKey>
+          <span>=</span>Undo last action that modified the grid
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>W</KeyboardKey>
+          <span>=</span>Reflect current pentomino along the y-axis (horizontally)
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>S</KeyboardKey>
+          <span>=</span>Reflect current pentomino along the x-axis (vertically)
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>A</KeyboardKey>
+          <span>=</span>Rotate current pentomino counter-clockwise
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>D</KeyboardKey>
+          <span>=</span>Rotate current pentomino clockwise
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>Q</KeyboardKey>
+          <span>=</span>Select previous pentomino
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>E</KeyboardKey>
+          <span>=</span>Select next pentomino
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>
+            <ArrowUpIcon width={15} className="my-1" />
+          </KeyboardKey>
+          <span>=</span>Move grid cursor up
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>
+            <ArrowRightIcon width={15} className="my-1" />
+          </KeyboardKey>
+          <span>=</span>Move grid cursor to the right
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>
+            <ArrowDownIcon width={15} className="my-1" />
+          </KeyboardKey>
+          <span>=</span>Move grid cursor down
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>
+            <ArrowLeftIcon width={15} className="my-1" />
+          </KeyboardKey>
+          <span>=</span> Move grid cursor to the left
+        </KeyboardKeyInfo>
+        <KeyboardKeyInfo>
+          <KeyboardKey>Enter</KeyboardKey>
+          <span>=</span>Add/remove pentomino from board at selected grid location
+        </KeyboardKeyInfo>
+        <Dialog.Title className="text-center font-bold text-md mb-2">Suggested Puzzles</Dialog.Title>
+        <div className="flex flex-row flex-wrap gap-3 justify-center">
+          {exampleGrids.map((grid, i) => (
+            <div key={i} className="flex flex-col items-center justify-center">
+              <InfoGrid grid={grid}>
+                <Grid
+                  pentominoSize={4}
+                  paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle, undefined, false)}
+                  borderColor={darkMode ? "#F3F4F6" : "black"}
+                />
+              </InfoGrid>
+              Width: {grid[0].length} Length: {grid.length}
+            </div>
+          ))}
+        </div>
       </div>
     </Modal>
   );

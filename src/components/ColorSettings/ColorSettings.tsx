@@ -24,7 +24,7 @@ export const ColorSettings = ({
     <div
       className={"grid grid-flow-row mb-4 gap-y-4 gap-x-2"}
       style={{
-        gridTemplateColumns: "auto 24em",
+        gridTemplateColumns: "min-content minmax(auto, 24em)",
       }}
     >
       {range(numColors).map((x) => (
@@ -75,7 +75,9 @@ const ColorSettingsRow = ({
 
   return (
     <>
-      <fieldset className="flex gap-4 items-center4">
+      <fieldset
+        className={clsx("flex flex-col items-center justify-start", "sm:flex-row sm:gap-4 sm:items-start", "w-min")}
+      >
         <label className="text-right whitespace-nowrap" htmlFor={`colorNum${x}`}>
           Color {x + 1}
         </label>

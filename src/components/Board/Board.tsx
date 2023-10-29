@@ -32,13 +32,13 @@ export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
         gridArea,
       }}
     >
-      <div className="flex flex-row justify-center items-center h-8" style={{ gridArea: "topOrientation" }}>
+      <div className="flex flex-row justify-center items-center h-6 md:h-8" style={{ gridArea: "topOrientation" }}>
         {surface.orientability.w !== OrientabilityType.None ? <ChevronRightIcon width={20} /> : ""}
       </div>
-      <div className="flex flex-col justify-center items-center w-8" style={{ gridArea: "leftOrientation" }}>
+      <div className="flex flex-col justify-center items-center w-6 md:w-8" style={{ gridArea: "leftOrientation" }}>
         {surface.orientability.h !== OrientabilityType.None ? <ChevronDoubleUpIcon width={20} /> : ""}
       </div>
-      <div className="flex flex-col justify-center items-center w-8" style={{ gridArea: "rightOrientation" }}>
+      <div className="flex flex-col justify-center items-center w-6 md:w-8" style={{ gridArea: "rightOrientation" }}>
         {
           {
             [OrientabilityType.None]: "",
@@ -49,7 +49,7 @@ export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
           }[surface.orientability.h]
         }
       </div>
-      <div className="flex flex-row justify-center items-center h-8" style={{ gridArea: "botOrientation" }}>
+      <div className="flex flex-row justify-center items-center h-6 md:h-8" style={{ gridArea: "botOrientation" }}>
         {
           {
             [OrientabilityType.None]: "",
