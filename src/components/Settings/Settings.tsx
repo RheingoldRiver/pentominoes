@@ -90,7 +90,8 @@ export const Settings = () => {
       onOpenChange={setOpen}
     >
       <form
-        onSubmit={() => {
+        onSubmit={(e) => {
+          e.preventDefault();
           setShowErrors(true);
           let returnEarly = false;
           if (errorConfig(currentState)) returnEarly = true;
@@ -108,7 +109,6 @@ export const Settings = () => {
               );
             }
           }
-          console.log(`return early: ${returnEarly}`);
           if (returnEarly) return;
 
           // done with validation
