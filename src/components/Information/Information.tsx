@@ -215,7 +215,7 @@ export const Information = () => {
 
 const InformationPentominoDisplay = ({ p }: { p: string }) => {
   return (
-    <div className="inline-block align-middle">
+    <div className="inline-block align-middle mx-1">
       <PentominoDisplay pentomino={PENTOMINOES[p]} size={2} checkGrid={false}></PentominoDisplay>
     </div>
   );
@@ -227,13 +227,7 @@ const KeyboardKeyInfo = ({ children }: { children: ReactNode }) => {
 
 const KeyboardKey = ({ children }: { children: ReactNode }) => {
   return (
-    <span
-      className={clsx(
-        "px-1 border border-black dark:border-white rounded",
-        " min-w-[1.5rem] text-center",
-        "inline-block"
-      )}
-    >
+    <span className={clsx("px-1 border border-black dark:border-white rounded", " min-w-[1.5rem] text-center")}>
       {children}
     </span>
   );
