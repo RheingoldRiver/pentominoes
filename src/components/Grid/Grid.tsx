@@ -1,53 +1,32 @@
-import { PaintedCell, SURFACES } from "../../constants";
+import { PaintedCell } from "../../constants";
 import { Cell } from "../Cell/Cell";
-import clsx from "clsx";
-import { RefObject, forwardRef, memo, useContext } from "react";
-import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 
-const GridComponent = forwardRef(
-  (
-    {
-      paintedGrid,
-      pentominoSize,
-      gridArea,
-      borderColor = "white",
-      board = false,
-    }: {
-      paintedGrid: PaintedCell[][];
-      pentominoSize: number;
-      gridArea?: string;
-      borderColor?: string;
-      board?: boolean;
-    },
-    ref
-  ) => {
-    const { surface } = useContext(GameStateContext);
-    return (
-      <div
-        className={clsx("grid grid-flow-row w-fit h-fit")}
-        style={{
-          gridTemplateRows: `repeat(${paintedGrid.length}, minmax(0, 1fr))`,
-          gridTemplateColumns: `repeat(${paintedGrid[0].length}, minmax(0, 1fr))`,
-          gridArea,
-        }}
-        ref={surface.name === SURFACES.Rectangle.name ? (ref as RefObject<HTMLDivElement>) : undefined}
-      >
-        {paintedGrid.map((r, x) =>
-          r.map((c, y) => (
-            <Cell
-              key={`cell-${x}_${y}`}
-              cell={c}
-              x={x}
-              y={y}
-              pentominoSize={pentominoSize}
-              borderColor={borderColor}
-              board={board}
-            ></Cell>
-          ))
-        )}
-      </div>
-    );
-  }
-);
-
-export const Grid = memo(GridComponent);
+export const Grid = ({
+  paintedGrid,
+  pentominoSize,
+  borderColor = "white",
+  board = false,
+}: {
+  paintedGrid: PaintedCell[][];
+  pentominoSize: number;
+  borderColor?: string;
+  board?: boolean;
+}) => {
+  return (
+    <>
+      {paintedGrid.map((r, x) =>
+        r.map((c, y) => (
+          <Cell
+            key={`cell-${x}_${y}`}
+            cell={c}
+            x={x}
+            y={y}
+            pentominoSize={pentominoSize}
+            borderColor={borderColor}
+            board={board}
+          ></Cell>
+        ))
+      )}
+    </>
+  );
+};

@@ -14,6 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { OrientabilityType, SURFACES } from "../../constants";
 import { ChevronDoubleUpIcon } from "@heroicons/react/20/solid";
+import { BoardGrid } from "../Grid/BoardGrid";
 
 export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
   const { paintedGrid, surface } = useContext(GameStateContext);
@@ -59,14 +60,14 @@ export const Board = forwardRef(({ gridArea }: { gridArea: string }, ref) => {
           }[surface.orientability.w]
         }
       </div>
-      <Grid
-        paintedGrid={paintedGrid}
-        gridArea="grid"
-        borderColor={darkMode ? "#F3F4F6" : "white"}
-        pentominoSize={appPreferences.pentominoSize}
-        board={true}
-        ref={ref}
-      ></Grid>
+      <BoardGrid paintedGrid={paintedGrid} gridArea="grid" ref={ref}>
+        <Grid
+          paintedGrid={paintedGrid}
+          borderColor={darkMode ? "#F3F4F6" : "white"}
+          pentominoSize={appPreferences.pentominoSize}
+          board={true}
+        />
+      </BoardGrid>
     </div>
   );
 });

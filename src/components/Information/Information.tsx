@@ -10,6 +10,7 @@ import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import clsx from "clsx";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { getPaintedBoard } from "../GameStateProvider/paintGrid";
+import { InfoGrid } from "../Grid/InfoGrid";
 
 interface GridExample {
   w: number;
@@ -79,13 +80,13 @@ const gridExampleStructure: GridExample[] = [
     ],
   },
   {
-    w: 6,
-    l: 10,
+    w: 10,
+    l: 6,
     terrain: [],
   },
   {
-    w: 5,
-    l: 12,
+    w: 12,
+    l: 5,
     terrain: [],
   },
 ];
@@ -101,7 +102,7 @@ const exampleGrids = gridExampleStructure.map((e) => {
 export const Information = () => {
   const { darkMode } = useContext(AppStateContext);
   return (
-    <Modal trigger={<QuestionMarkCircleIcon className="h-6 w-6" />}>
+    <Modal trigger={<QuestionMarkCircleIcon className="h-10 w-10 text-gray-800 dark:text-gray-300" />}>
       <Dialog.Title className="text-center font-bold text-md mb-2">About Pentominoes</Dialog.Title>
       <p className="mb-2">
         Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each tile
@@ -111,9 +112,13 @@ export const Information = () => {
         {<InformationPentominoDisplay p="Y" />}) distinct orientations.
       </p>
       <p className="mb-2">
-        There are several different ways to enjoy the puzzle game of Pentominoes, but the common theme is that you will
-        try to fully tile a grid of total area 60 (5x12=60) such that no pentominoes overlap or fall off the edge, and
-        no empty squares remain (other than whatever terrain you choose to place before starting to solve the puzzle).
+        This puzzle game also provides a one-square-unit-area tile that you can use as terrain (the{" "}
+        <InformationPentominoDisplay p="R"></InformationPentominoDisplay> tile).
+      </p>
+      <p className="mb-2">
+        There are several different ways to enjoy Pentominoes, but the common theme is that you will try to fully tile a
+        grid of total area 60 (5x12=60) such that no pentominoes overlap or fall off the edge, and no empty squares
+        remain (other than whatever terrain you choose to place before starting to solve the puzzle).
       </p>
       <p className="mb-2">
         Generally, you want to use one of each pentomino to tile the board, but you're welcome to use this app however
@@ -191,11 +196,13 @@ export const Information = () => {
       <div className="flex flex-row flex-wrap gap-3 justify-center">
         {exampleGrids.map((grid, i) => (
           <div key={i} className="flex flex-col items-center justify-center">
-            <Grid
-              paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle, undefined, false)}
-              pentominoSize={4}
-              borderColor={darkMode ? "#F3F4F6" : "black"}
-            ></Grid>
+            <InfoGrid grid={grid}>
+              <Grid
+                pentominoSize={4}
+                paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle, undefined, false)}
+                borderColor={darkMode ? "#F3F4F6" : "black"}
+              />
+            </InfoGrid>
             Width: {grid[0].length} Length: {grid.length}
           </div>
         ))}

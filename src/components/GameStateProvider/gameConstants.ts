@@ -6,4 +6,5 @@ export interface GamePreferences {
 export const DEFAULT_GAME_PREFERENCES = {
   showKeyboardIndicators: false,
   defaultRandomColors: false,
+  defaultAddTerrain: true,
 };

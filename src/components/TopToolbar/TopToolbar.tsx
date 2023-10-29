@@ -24,7 +24,7 @@ const TopToolbar = ({ ...rest }) => {
         <div className="scale-x-[-1]">
           <ReloadIcon />
         </div>
-        Rotate Left
+        Rotate
       </ToolbarButton>
       <ToolbarButton
         onClick={() => {
@@ -34,29 +34,29 @@ const TopToolbar = ({ ...rest }) => {
         className="flex flex-row items-center gap-1"
       >
         <ReloadIcon />
-        Rotate Right
+        Rotate
       </ToolbarButton>
       <ToolbarButton
         onClick={() => {
           orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.X });
         }}
-        aria-label="Reflect X"
+        aria-label="Reflect over the X-axis"
         className="flex flex-row items-center"
       >
         <div className="rotate-90">
           <DoubleEndedArrow />
         </div>
-        Reflect X
+        Reflect
       </ToolbarButton>
       <ToolbarButton
         onClick={() => {
           orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.Y });
         }}
-        aria-label="Reflect Y"
+        aria-label="Reflect over the Y-axis"
         className="flex flex-row items-center gap-1"
       >
         <DoubleEndedArrow />
-        Reflect Y
+        Reflect
       </ToolbarButton>
     </Toolbar.Root>
   );

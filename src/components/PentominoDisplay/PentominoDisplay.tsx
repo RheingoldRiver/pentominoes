@@ -59,6 +59,7 @@ export const PentominoDisplay = ({
     <span
       {...rest}
       className={clsx("grid grid-flow-row w-fit h-fit display-block", PENTOMINO_DIMENSIONS[p.shape[0].length])}
+      title={pentomino.display || pentomino.name}
     >
       {p.shape.map((row, x) =>
         row.map((cell, y) => {

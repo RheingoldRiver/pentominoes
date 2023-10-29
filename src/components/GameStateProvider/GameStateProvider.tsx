@@ -38,6 +38,7 @@ import {
   orientationReducer,
 } from "./currentPentominoReducer";
 import { DEFAULT_GAME_PREFERENCES } from "./gameConstants";
+import { produce } from "immer";
 
 interface GameState {
   grid: PlacedPentomino[][];
@@ -62,6 +63,8 @@ interface GameState {
   setShowInvalidUrlError: Dispatch<SetStateAction<boolean>>;
   defaultRandomColors: boolean;
   updateDefaultRandomColors: (newDefault: boolean) => void;
+  defaultAddTerrain: boolean;
+  updateDefaultAddTerrain: (newDefault: boolean) => void;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -87,6 +90,8 @@ const DEFAULT_GAME_STATE: GameState = {
   setShowInvalidUrlError: () => {},
   defaultRandomColors: false,
   updateDefaultRandomColors: () => {},
+  defaultAddTerrain: true,
+  updateDefaultAddTerrain: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -97,7 +102,12 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   const [defaultRandomColors, setDefaultRandomColors] = useState<boolean>(() => {
     return (
-      (window.localStorage.getItem("randc") || DEFAULT_GAME_PREFERENCES.showKeyboardIndicators.toString()) === "true"
+      (window.localStorage.getItem("randc") ?? DEFAULT_GAME_PREFERENCES.showKeyboardIndicators.toString()) === "true"
+    );
+  });
+  const [defaultAddTerrain, setDefaultAddTerrain] = useState<boolean>(() => {
+    return (
+      (window.localStorage.getItem("initterrain") ?? DEFAULT_GAME_PREFERENCES.defaultAddTerrain.toString()) === "true"
     );
   });
 
@@ -108,6 +118,16 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   useEffect(() => {
     if (!config) {
       if (defaultRandomColors) setPentominoColors(randomPentominoColors(PENTOMINO_NAMES.length));
+      if (defaultAddTerrain) {
+        setGrid(
+          produce(grid, (draftGrid) => {
+            draftGrid[0][0].pentomino = PENTOMINOES.R;
+            draftGrid[0][7].pentomino = PENTOMINOES.R;
+            draftGrid[7][0].pentomino = PENTOMINOES.R;
+            draftGrid[7][7].pentomino = PENTOMINOES.R;
+          })
+        );
+      }
       return;
     }
     try {
@@ -209,32 +229,23 @@ export default function GameStateProvider({ children }: { children: ReactNode })
 
   function drawPentomino(newX: number, newY: number) {
     recordActionHistory(newX, newY);
-    const newGrid = [...grid];
-    newGrid[newX][newY] = {
-      pentomino: currentPentomino,
-      orientation: { ...currentOrientation },
-      coordinates: { x: newX, y: newY },
-    };
-    setGrid(newGrid);
+    setGrid(
+      produce(grid, (draftGrid) => {
+        draftGrid[newX][newY] = {
+          pentomino: currentPentomino,
+          orientation: { ...currentOrientation },
+          coordinates: { x: newX, y: newY },
+        };
+      })
+    );
   }
   function erasePentomino(givenX: number, givenY: number) {
     recordActionHistory(givenX, givenY);
-    const newGrid = grid.map((row, x) =>
-      row.map((c, y) => {
-        if (x === givenX && y === givenY) {
-          return {
-            pentomino: PENTOMINOES.None,
-            orientation: {
-              reflection: 0,
-              rotation: 0,
-            },
-            coordinates: { x, y },
-          };
-        }
-        return c;
+    setGrid(
+      produce(grid, (draftGrid) => {
+        draftGrid[givenX][givenY].pentomino = PENTOMINOES.None;
       })
     );
-    setGrid(newGrid);
   }
 
   function clearGrid(preserveTerrain: boolean) {
@@ -287,6 +298,11 @@ export default function GameStateProvider({ children }: { children: ReactNode })
   const updateDefaultRandomColors = (newDefault: boolean) => {
     window.localStorage.setItem("randc", newDefault.toString());
     setDefaultRandomColors(newDefault);
+  };
+
+  const updateDefaultAddTerrain = (newDefault: boolean) => {
+    window.localStorage.setItem("initterrain", newDefault.toString());
+    setDefaultAddTerrain(newDefault);
   };
 
   useHotkey("Control", "Z", () => {
@@ -386,6 +402,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         setShowInvalidUrlError,
         defaultRandomColors,
         updateDefaultRandomColors,
+        defaultAddTerrain,
+        updateDefaultAddTerrain,
       }}
     >
       {children}
