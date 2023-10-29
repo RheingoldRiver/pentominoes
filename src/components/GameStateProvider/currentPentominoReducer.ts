@@ -37,7 +37,8 @@ export const orientationReducer: Reducer<Orientation, OrientationAction> = (
     case OrientationActionType.reflect:
       return produce(currentOrientation, (o: Orientation) => {
         o.reflection = (o.reflection + 1) % 2;
-        if (o.rotation % 2 === 1) o.rotation = (o.rotation + 2) % 4;
+        const direction = action.direction === ReflectionDirection.Y ? 0 : 1;
+        if (o.rotation % 2 === direction) o.rotation = (o.rotation + 2) % 4;
       });
     case OrientationActionType.replace:
       return action.newOrientation ? { ...action.newOrientation } : { rotation: 0, reflection: 0 };
