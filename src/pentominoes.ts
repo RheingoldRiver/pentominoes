@@ -17,6 +17,7 @@ interface Shapes {
 
 export interface Pentomino {
   name: string;
+  display?: string;
   shapes: Shapes;
 }
 
@@ -26,6 +27,7 @@ interface Pentominoes {
 
 interface PentominoPrimitive {
   name: string;
+  display?: string;
   shape: number[][];
 }
 
@@ -129,7 +131,8 @@ const pentominoPrimitives: PentominoPrimitive[] = [
     shape: [[0]],
   },
   {
-    name: "R", // Terrain
+    name: "R",
+    display: "Terrain",
     shape: [[2]],
   },
 ];
@@ -140,6 +143,7 @@ pentominoPrimitives.map((p) => {
   const reflectedShape = reflectX(p.shape);
   const expandedPentomino: Pentomino = {
     name: p.name,
+    display: p.display,
     shapes: {
       0: [{ center: center(p.shape), shape: p.shape }],
       1: [{ center: center(reflectedShape), shape: reflectedShape }],

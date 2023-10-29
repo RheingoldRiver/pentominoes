@@ -49,6 +49,8 @@ export const Settings = () => {
     setShowKeyboardIndicators,
     defaultRandomColors,
     updateDefaultRandomColors,
+    defaultAddTerrain,
+    updateDefaultAddTerrain,
   } = useContext(GameStateContext);
 
   const [currentState, setCurrentState] = useState<CurrentState>({ ...DEFAULT_SETTINGS_CONFIG });
@@ -65,7 +67,7 @@ export const Settings = () => {
 
   return (
     <Modal
-      trigger={<Cog8ToothIcon className="h-6 w-6" />}
+      trigger={<Cog8ToothIcon className="h-10 w-10 text-gray-800 dark:text-gray-300" />}
       onOpenAutoFocus={() => {
         setCurrentState({
           height: grid.length,
@@ -75,10 +77,11 @@ export const Settings = () => {
           displayColors: appPreferences.displayColors,
           pentominoColors,
           surface,
-          showKeyboardIndicators,
           copyImage: appPreferences.copyImage,
           showCdot: appPreferences.showCdot,
+          showKeyboardIndicators,
           defaultRandomColors,
+          defaultAddTerrain,
         });
         setShowErrors(false);
         setWarnGridReset(false);
@@ -123,6 +126,7 @@ export const Settings = () => {
           setShowKeyboardIndicators(currentState.showKeyboardIndicators);
 
           updateDefaultRandomColors(currentState.defaultRandomColors);
+          updateDefaultAddTerrain(currentState.defaultAddTerrain);
           setOpen(false);
         }}
       >
@@ -348,6 +352,20 @@ export const Settings = () => {
             checked={currentState.defaultRandomColors}
             onChange={(e) => {
               setCurrentState({ ...currentState, defaultRandomColors: e.target.checked });
+            }}
+          />
+        </fieldset>
+        <fieldset className="flex gap-4 items-center mb-4">
+          <label className="text-right" htmlFor="initterrain">
+            Add 4 squares of terrain when URL is empty?
+          </label>
+          <input
+            className="bg-white dark:bg-slate-950"
+            type="checkbox"
+            id="initterrain"
+            checked={currentState.defaultAddTerrain}
+            onChange={(e) => {
+              setCurrentState({ ...currentState, defaultAddTerrain: e.target.checked });
             }}
           />
         </fieldset>

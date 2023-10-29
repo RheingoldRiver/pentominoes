@@ -34,7 +34,7 @@ const GameContent = () => {
       <Wordmark gridArea="wordmark" />
       <Header style={{ gridArea: "header" }}></Header>
       <div
-        className="flex flex-row items-start justify-end w-full h-full pr-2 gap-1 max-w-[100vw]"
+        className="flex flex-row items-start justify-end w-full h-full pr-2 gap-2 max-w-[100vw]"
         style={{ gridArea: "settings" }}
       >
         <Settings></Settings>

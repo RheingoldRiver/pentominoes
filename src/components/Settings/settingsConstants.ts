@@ -15,6 +15,7 @@ export interface CurrentState {
   copyImage: boolean;
   showCdot: boolean;
   defaultRandomColors: boolean;
+  defaultAddTerrain: boolean;
 }
 
 export const DEFAULT_SETTINGS_CONFIG: CurrentState = {
