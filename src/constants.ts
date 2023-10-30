@@ -29,6 +29,11 @@ export const PENTOMINO_DIMENSIONS: PentominoDimensions = {
   5: "grid-cols-5",
 };
 
+export interface Dimensions {
+  height: number; // corresponds to the x-coordinate
+  width: number; // corresponds to the y-coordinate
+}
+
 export interface Orientation {
   rotation: number;
   reflection: number;

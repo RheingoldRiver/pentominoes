@@ -104,7 +104,7 @@ export const Information = () => {
   return (
     <Modal trigger={<QuestionMarkCircleIcon className="h-10 w-10 text-gray-800 dark:text-gray-300" />}>
       <Dialog.Title className="text-center font-bold text-md mb-2">About Pentominoes</Dialog.Title>
-      <div className="px-4">
+      <div className="px-4 pb-4">
         <p className="mb-2">
           Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each
           tile having somewhere between 2 (the {<InformationPentominoDisplay p="I" />} tile) and 8 (

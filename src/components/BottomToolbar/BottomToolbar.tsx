@@ -13,7 +13,7 @@ const BottomToolbar = forwardRef(({ style }: { style: CSSProperties }, ref) => {
   return (
     <Toolbar.Root
       style={style as CSSProperties}
-      className="space-x-3 my-2 w-full flex justify-start"
+      className="pl-2 space-x-3 my-2 w-full flex justify-start"
       aria-label="Game controls"
     >
       <ToolbarButton
