@@ -24,13 +24,14 @@ export const Header = ({ ...rest }) => {
     >
       <div
         className={clsx(
-          "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 px-2 py-3"
+          "flex flex-wrap max-w-[calc(100vw_-_1em)] md:max-w-[calc(100vw_-_18em)] items-center gap-4 px-2"
         )}
       >
         {ALL_PENTOMINO_NAMES.map((l) => (
           <div
             key={l}
             className={clsx(
+              "py-3",
               currentPentomino.name === l && showKeyboardIndicators ? "border-b border-b-px border-b-slate-300" : "",
               "rounded-sm"
             )}
@@ -47,18 +48,18 @@ export const Header = ({ ...rest }) => {
             ></PentominoDisplay>
           </div>
         ))}
-      </div>
-      <div
-        className={clsx(
-          "lg:ml-6 xl:ml-16 p-1 border-solid  rounded border w-28 h-28 md:w-32 md:h-32 flex justify-center items-center self-end",
-          "border-black dark:border-slate-50"
-        )}
-      >
-        <PentominoDisplay
-          pentomino={currentPentomino}
-          color={appPreferences.displayColors[pentominoColors[currentPentomino.name]]}
-          orientation={currentOrientation}
-        ></PentominoDisplay>
+        <div
+          className={clsx(
+            "lg:ml-6 ml-auto p-1 border-solid rounded border w-28 h-28 md:w-32 md:h-32 flex justify-center items-center",
+            "border-black dark:border-slate-50"
+          )}
+        >
+          <PentominoDisplay
+            pentomino={currentPentomino}
+            color={appPreferences.displayColors[pentominoColors[currentPentomino.name]]}
+            orientation={currentOrientation}
+          ></PentominoDisplay>
+        </div>
       </div>
     </div>
   );

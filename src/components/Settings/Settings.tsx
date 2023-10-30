@@ -6,6 +6,7 @@ import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   Colors,
   DEFAULT_DISPLAY_COLORS,
+  Dimensions,
   EMPTY_PENTOMINO,
   MAX_DIMENSION_SIZE,
   MAX_NUM_COLORS,
@@ -58,6 +59,29 @@ export const Settings = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [warnGridReset, setWarnGridReset] = useState<boolean>(false);
 
+  const PRESET_SIZES: Dimensions[] = [
+    {
+      height: 8,
+      width: 8,
+    },
+    {
+      height: 5,
+      width: 12,
+    },
+    {
+      height: 6,
+      width: 10,
+    },
+    {
+      height: 12,
+      width: 5,
+    },
+    {
+      height: 10,
+      width: 6,
+    },
+  ];
+
   function nextColorsOnMaxChange(newMax: number) {
     return Object.entries(currentState.pentominoColors).reduce((acc: Colors, [p, c]) => {
       acc[p] = c >= newMax ? 0 : c;
@@ -65,9 +89,16 @@ export const Settings = () => {
     }, {});
   }
 
+  function updateCurrentState(newState: Partial<CurrentState>) {
+    const nextState = { ...currentState, ...newState };
+    setCurrentState(nextState);
+    if (warnGridReset) {
+      setWarnGridReset(gridChangeNeeded(nextState, grid.length, grid[0].length));
+    }
+  }
   return (
     <Modal
-      trigger={<Cog8ToothIcon className="h-10 w-10 text-gray-800 dark:text-gray-300" />}
+      trigger={<Cog8ToothIcon className="h-10 w-10  text-gray-800 dark:text-gray-300" />}
       onOpenAutoFocus={() => {
         setCurrentState({
           height: grid.length,
@@ -130,7 +161,7 @@ export const Settings = () => {
           setOpen(false);
         }}
       >
-        <div className="px-8">
+        <div className="px-4">
           <Dialog.Title className="text-center font-bold text-md mb-2">Tile Size</Dialog.Title>
           <fieldset className="flex gap-4 items-center mb-4">
             <label className="text-right" htmlFor="name">
@@ -154,45 +185,55 @@ export const Settings = () => {
             </select>
           </fieldset>
           <Dialog.Title className="text-center font-bold text-md mb-2">Grid shape</Dialog.Title>
-          <fieldset className="flex gap-4 items-center mb-4">
-            <label className="text-right" htmlFor="width">
-              Width
-            </label>
-            <input
-              className="bg-white dark:bg-slate-950"
-              size={4}
-              id="width"
-              value={currentState.width}
-              pattern="[0-9]*"
-              onChange={(e) => {
-                const valAsNum = toNumber(e.target.value);
-                if (isNaN(valAsNum)) return;
-                setCurrentState({ ...currentState, width: valAsNum });
-                setWarnGridReset(!gridChangeNeeded);
-              }}
-            />
-          </fieldset>
-          {showErrors && errorWidth(currentState) && (
-            <ErrorText>Width must be between 3 & {MAX_DIMENSION_SIZE}, inclusive</ErrorText>
-          )}
-          <fieldset className="flex gap-4 items-center mb-4">
-            <label className="text-right" htmlFor="height">
-              Length
-            </label>
-            <input
-              className="bg-white dark:bg-slate-950"
-              size={4}
-              id="height"
-              value={currentState.height}
-              pattern="[0-9]*"
-              onChange={(e) => {
-                const valAsNum = toNumber(e.target.value);
-                if (isNaN(valAsNum)) return;
-                setCurrentState({ ...currentState, height: valAsNum });
-                setWarnGridReset(!gridChangeNeeded);
-              }}
-            />
-          </fieldset>
+          <div className="flex flex-row justify-around">
+            <fieldset className="flex gap-4 items-center mb-4">
+              <label className="text-right" htmlFor="width">
+                Width
+              </label>
+              <input
+                className="bg-white dark:bg-slate-950"
+                size={4}
+                id="width"
+                value={currentState.width}
+                pattern="[0-9]*"
+                onChange={(e) => {
+                  const valAsNum = toNumber(e.target.value);
+                  if (isNaN(valAsNum)) return;
+                  updateCurrentState({ width: valAsNum });
+                }}
+              />
+            </fieldset>
+            {showErrors && errorWidth(currentState) && (
+              <ErrorText>Width must be between 3 & {MAX_DIMENSION_SIZE}, inclusive</ErrorText>
+            )}
+            <fieldset className="flex gap-4 items-center mb-4">
+              <label className="text-right" htmlFor="height">
+                Height
+              </label>
+              <input
+                className="bg-white dark:bg-slate-950"
+                size={4}
+                id="height"
+                value={currentState.height}
+                pattern="[0-9]*"
+                onChange={(e) => {
+                  const valAsNum = toNumber(e.target.value);
+                  if (isNaN(valAsNum)) return;
+                  updateCurrentState({ height: valAsNum });
+                }}
+              />
+            </fieldset>
+          </div>
+          <div className="flex flex-row justify-around">
+            {PRESET_SIZES.map((size) => (
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateCurrentState(size);
+                }}
+              >{`${size.width}x${size.height}`}</Button>
+            ))}
+          </div>
           {showErrors && errorHeight(currentState) && (
             <ErrorText>Height must be between 3 & {MAX_DIMENSION_SIZE}, inclusive</ErrorText>
           )}
@@ -373,7 +414,7 @@ export const Settings = () => {
         </div>
         {/* End of settings area */}
         {/* Start confirmation area */}
-        <div className={clsx("sticky bottom-0 px-8", "bg-gray-400 dark:bg-gray-900", "pt-4 pb-4", "rounded-t-xl")}>
+        <div className={clsx("sticky bottom-0 px-8", "bg-gray-400 dark:bg-slate-900", "pt-2", "rounded-t-xl")}>
           {warnGridReset && <ErrorText>Saving will clear your current board! Submit again to proceed.</ErrorText>}
           {showErrors && errorConfig(currentState) && (
             <ErrorText>One or more errors detected, see field-specific warnings.</ErrorText>

@@ -28,7 +28,7 @@ export const Modal = ({
           className={clsx(
             "bg-gray-300 dark:bg-gray-800 dark:text-gray-50",
             "rounded-lg pt-8 pb-0 shadow-md shadow-gray-500 dark:shadow-none",
-            "fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]",
+            "fixed top-[5vw] left-[5vw] sm:top-1/2 sm:left-1/2 sm:translate-x-[-50%] sm:translate-y-[-50%]",
             "max-h-[90vh] overflow-y-auto w-[min(90vw,_40rem)]"
           )}
         >

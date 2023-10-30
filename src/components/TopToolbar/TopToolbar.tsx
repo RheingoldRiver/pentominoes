@@ -13,7 +13,7 @@ import {
 const TopToolbar = ({ ...rest }) => {
   const { orientationDispatch } = useContext(GameStateContext);
   return (
-    <Toolbar.Root {...rest} className="space-x-3 mb-2 w-full flex justify-start" aria-label="Game controls">
+    <Toolbar.Root {...rest} className="pl-2 space-x-3 mb-2 w-full flex justify-start" aria-label="Game controls">
       <ToolbarButton
         onClick={() => {
           orientationDispatch({ type: OrientationActionType.rotate, direction: RotationDirection.Left });
