@@ -7,6 +7,15 @@ export default {
         game: [
           "settings settings .",
           "wordmark wordmark wordmark",
+          "header header header",
+          ". gameToolbar .",
+          ". board .",
+          ". botToolbar .",
+          "footer footer footer",
+        ],
+        gamexl: [
+          "settings settings .",
+          "wordmark wordmark wordmark",
           ". header .",
           ". gameToolbar .",
           ". board .",

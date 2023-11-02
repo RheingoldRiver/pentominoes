@@ -19,7 +19,8 @@ export const Header = ({ ...rest }) => {
         "py-4 px-6 rounded-lg mb-3 mx-2",
         "bg-slate-100 dark:bg-slate-800",
         "shadow-md shadow-slate-300 dark:shadow-none",
-        "flex flex-wrap max-w-[calc(100vw_-_2rem)] md:max-w-[calc(100vw_-_18em)] items-center gap-4"
+        "flex flex-wrap items-center gap-4",
+        "w-full max-w-[calc(100vw_-_1rem)] xl:max-w-[calc(100vw_-_18em)]"
       )}
     >
       {ALL_PENTOMINO_NAMES.map((l) => (

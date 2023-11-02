@@ -49,8 +49,8 @@ test("warning grid change is correct & not a real error", () => {
   const config = { ...DEFAULT_SETTINGS_CONFIG };
   config.height = 8;
   config.width = 10;
-  expect(gridChangeNeeded(config, 8, 8)).toBe(true);
-  expect(gridChangeNeeded(config, 10, 10)).toBe(true);
-  expect(gridChangeNeeded(config, 8, 10)).toBe(false);
+  expect(gridChangeNeeded(config, { height: 8, width: 8 })).toBe(true);
+  expect(gridChangeNeeded(config, { height: 10, width: 10 })).toBe(true);
+  expect(gridChangeNeeded(config, { height: 8, width: 10 })).toBe(false);
   expect(errorConfig(config)).toBe(false);
 });

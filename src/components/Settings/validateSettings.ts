@@ -1,3 +1,4 @@
+import { Dimensions, SOLVE_AREA } from "./../../constants";
 import { MAX_DIMENSION_SIZE, SURFACES } from "../../constants";
 import { CurrentState } from "./settingsConstants";
 
@@ -10,8 +11,8 @@ export const errorConfig = (currentState: CurrentState) => {
   );
 };
 
-export const errorSphere = (currentState: CurrentState) => {
-  return currentState.surface === SURFACES.Sphere && currentState.width !== currentState.height;
+export const errorSphere = (draftState: CurrentState) => {
+  return draftState.surface === SURFACES.Sphere && draftState.width !== draftState.height;
 };
 
 const errorDimension = (dim: number) => {
@@ -20,22 +21,22 @@ const errorDimension = (dim: number) => {
   return false;
 };
 
-export const errorWidth = (currentState: CurrentState) => {
-  return errorDimension(currentState.width);
+export const errorWidth = (draftState: CurrentState) => {
+  return errorDimension(draftState.width);
 };
 
-export const errorHeight = (currentState: CurrentState) => {
-  return errorDimension(currentState.height);
+export const errorHeight = (newState: CurrentState) => {
+  return errorDimension(newState.height);
 };
 
-export const errorCopyScreenshots = (currentState: CurrentState) => {
-  return currentState.copyImage && typeof ClipboardItem === "undefined";
+export const errorCopyScreenshots = (draftState: CurrentState) => {
+  return draftState.copyImage && typeof ClipboardItem === "undefined";
 };
 
-export const warnDimensions = (currentState: CurrentState) => {
-  return currentState.height * currentState.width < 60;
+export const warnDimensions = (draftState: CurrentState) => {
+  return draftState.height * draftState.width < SOLVE_AREA;
 };
 
-export const gridChangeNeeded = (currentState: CurrentState, height: number, width: number) => {
-  return currentState.height !== height || currentState.width !== width;
+export const gridChangeNeeded = (draftState: Dimensions & Partial<CurrentState>, prevDimensions: Dimensions) => {
+  return draftState.height !== prevDimensions.height || draftState.width !== prevDimensions.width;
 };

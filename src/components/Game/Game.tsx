@@ -26,7 +26,7 @@ const GameContent = () => {
   return (
     <div
       className={clsx(
-        "min-h-screen grid py-4 w-full grid-areas-game 2xl:grid-areas-game2xl",
+        "min-h-screen grid py-4 w-full grid-areas-game xl:grid-areas-gamexl 2xl:grid-areas-game2xl",
         "bg-gray-50 dark:bg-gray-950 dark:text-gray-50",
         "grid-rows-game 2xl:grid-rows-game2xl grid-cols-game"
       )}
