@@ -410,7 +410,6 @@ export const Settings = () => {
                   e.preventDefault();
                   e.stopPropagation();
                   if (e.key === hotkey.keybind) return;
-                  console.log(e);
                   setCurrentHotkeyMap(
                     produce(currentHotkeyMap, (draftHotkeyMap) => {
                       if (e.key === " ") {
