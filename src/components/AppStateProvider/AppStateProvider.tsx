@@ -1,14 +1,6 @@
 import { createContext, ReactNode, useState } from "react";
 import { DEFAULT_DISPLAY_COLORS } from "../../constants";
-import { AppPreferences } from "./appConstants";
-
-const DEFAULT_APP_PREFERENCES: AppPreferences = {
-  pentominoSize: 12,
-  displayColors: DEFAULT_DISPLAY_COLORS,
-  numVisibleColors: 3,
-  copyImage: false,
-  showCdot: false,
-};
+import { AppPreferences, DEFAULT_APP_PREFERENCES } from "./appConstants";
 
 interface AppState {
   appPreferences: AppPreferences;
@@ -21,6 +13,8 @@ interface AppState {
   ) => void;
   darkMode: boolean;
   updateDarkMode: (newIsDark: boolean) => void;
+  settingsOpen: boolean;
+  setSettingsOpen: (newVal: boolean) => void;
 }
 
 const DEFAULT_APP_STATE: AppState = {
@@ -28,11 +22,15 @@ const DEFAULT_APP_STATE: AppState = {
   updateAppPreferences: () => {},
   darkMode: false,
   updateDarkMode: () => {},
+  settingsOpen: false,
+  setSettingsOpen: () => {},
 };
 
 export const AppStateContext = createContext(DEFAULT_APP_STATE);
 
 export default function AppStateProvider({ children }: { children: ReactNode }) {
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+
   const [appPreferences, setAppPreferences] = useState<AppPreferences>(() => {
     const localColors = window.localStorage.getItem("colors");
     const displayColors = [...DEFAULT_DISPLAY_COLORS];
@@ -86,6 +84,8 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
         updateAppPreferences,
         darkMode,
         updateDarkMode,
+        settingsOpen,
+        setSettingsOpen,
       }}
     >
       {children}

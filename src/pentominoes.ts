@@ -135,6 +135,11 @@ const pentominoPrimitives: PentominoPrimitive[] = [
     display: "Terrain",
     shape: [[2]],
   },
+  {
+    name: "Found",
+    display: "Found",
+    shape: [[2]],
+  }, // this is just to execute pathfinding
 ];
 
 export const PENTOMINOES: Pentominoes = {};

@@ -1,16 +1,15 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { range, toNumber } from "lodash";
-import { ReactNode, useContext, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
   Colors,
   DEFAULT_DISPLAY_COLORS,
-  Dimensions,
-  EMPTY_PENTOMINO,
   MAX_DIMENSION_SIZE,
   MAX_NUM_COLORS,
   randomPentominoColors,
+  SOLVE_AREA,
   SURFACES,
 } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
@@ -38,10 +37,15 @@ function getNumVisibleColors(numVisibleColors: number, defaultRandomColors: bool
 }
 
 export const Settings = () => {
-  const { appPreferences, updateAppPreferences } = useContext(AppStateContext);
+  const {
+    appPreferences,
+    updateAppPreferences,
+    settingsOpen,
+    setSettingsOpen: updateSettingsOpen,
+  } = useContext(AppStateContext);
   const {
     grid,
-    setGrid,
+    resetGrid,
     pentominoColors,
     setPentominoColors,
     surface,
@@ -56,31 +60,7 @@ export const Settings = () => {
 
   const [currentState, setCurrentState] = useState<CurrentState>({ ...DEFAULT_SETTINGS_CONFIG });
   const [showErrors, setShowErrors] = useState<boolean>(false);
-  const [open, setOpen] = useState<boolean>(false);
   const [warnGridReset, setWarnGridReset] = useState<boolean>(false);
-
-  const PRESET_SIZES: Dimensions[] = [
-    {
-      height: 8,
-      width: 8,
-    },
-    {
-      height: 5,
-      width: 12,
-    },
-    {
-      height: 6,
-      width: 10,
-    },
-    {
-      height: 12,
-      width: 5,
-    },
-    {
-      height: 10,
-      width: 6,
-    },
-  ];
 
   function nextColorsOnMaxChange(newMax: number) {
     return Object.entries(currentState.pentominoColors).reduce((acc: Colors, [p, c]) => {
@@ -93,7 +73,7 @@ export const Settings = () => {
     const nextState = { ...currentState, ...newState };
     setCurrentState(nextState);
     if (warnGridReset) {
-      setWarnGridReset(gridChangeNeeded(nextState, grid.length, grid[0].length));
+      setWarnGridReset(gridChangeNeeded(nextState, { height: grid.length, width: grid[0].length }));
     }
   }
   return (
@@ -117,8 +97,8 @@ export const Settings = () => {
         setShowErrors(false);
         setWarnGridReset(false);
       }}
-      open={open}
-      onOpenChange={setOpen}
+      open={settingsOpen}
+      onOpenChange={updateSettingsOpen as Dispatch<SetStateAction<boolean>>}
     >
       <form
         onSubmit={(e) => {
@@ -126,18 +106,12 @@ export const Settings = () => {
           setShowErrors(true);
           let returnEarly = false;
           if (errorConfig(currentState)) returnEarly = true;
-          if (gridChangeNeeded(currentState, grid.length, grid[0].length)) {
+          if (gridChangeNeeded(currentState, { height: grid.length, width: grid[0].length })) {
             if (!warnGridReset) {
               setWarnGridReset(true);
               returnEarly = true;
             } else if (!returnEarly) {
-              setGrid(
-                range(currentState.height).map((x) =>
-                  range(currentState.width).map((y) => {
-                    return EMPTY_PENTOMINO(x, y);
-                  })
-                )
-              );
+              resetGrid({ height: currentState.height, width: currentState.width });
             }
           }
           if (returnEarly) return;
@@ -158,7 +132,7 @@ export const Settings = () => {
 
           updateDefaultRandomColors(currentState.defaultRandomColors);
           updateDefaultAddTerrain(currentState.defaultAddTerrain);
-          setOpen(false);
+          updateSettingsOpen(false);
         }}
       >
         <div className="px-4">
@@ -224,25 +198,19 @@ export const Settings = () => {
               />
             </fieldset>
           </div>
-          <div className="flex flex-row justify-around">
-            {PRESET_SIZES.map((size) => (
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateCurrentState(size);
-                }}
-              >{`${size.width}x${size.height}`}</Button>
-            ))}
-          </div>
           {showErrors && errorHeight(currentState) && (
             <ErrorText>Height must be between 3 & {MAX_DIMENSION_SIZE}, inclusive</ErrorText>
           )}
           <div className="ml-4">
             Computed area:{" "}
-            <span className={clsx(currentState.height * currentState.width >= 60 ? "text-green-700" : "text-red-500")}>
+            <span
+              className={clsx(
+                currentState.height * currentState.width >= SOLVE_AREA ? "text-green-700" : "text-red-500"
+              )}
+            >
               {currentState.width * currentState.height}
             </span>{" "}
-            {warnDimensions(currentState) && "(Minimum area 60 if you want to place all tiles)"}
+            {warnDimensions(currentState) && `(Minimum area ${SOLVE_AREA} if you want to place all tiles)`}
           </div>
           <fieldset className="flex gap-4 items-center mb-4">
             <label className="text-right" htmlFor="surface">

@@ -29,6 +29,8 @@ export const PENTOMINO_DIMENSIONS: PentominoDimensions = {
   5: "grid-cols-5",
 };
 
+export const SOLVE_AREA = 60;
+
 export interface Dimensions {
   height: number; // corresponds to the x-coordinate
   width: number; // corresponds to the y-coordinate

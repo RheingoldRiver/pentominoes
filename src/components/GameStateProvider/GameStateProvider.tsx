@@ -1,4 +1,4 @@
-import { cloneDeep, debounce } from "lodash";
+import { cloneDeep, debounce, range } from "lodash";
 import {
   createContext,
   ReactNode,
@@ -16,6 +16,8 @@ import {
   Action,
   Colors,
   DEFAULT_GAME_CONFIG,
+  Dimensions,
+  EMPTY_PENTOMINO,
   Orientation,
   PENTOMINO_NAMES,
   PaintedCell,
@@ -42,7 +44,8 @@ import { produce } from "immer";
 
 interface GameState {
   grid: PlacedPentomino[][];
-  setGrid: Dispatch<SetStateAction<PlacedPentomino[][]>>;
+  newGrid: (nextGrid: PlacedPentomino[][]) => void;
+  resetGrid: (dimensions: Dimensions) => void;
   paintedGrid: PaintedCell[][];
   currentPentomino: Pentomino;
   currentGridCoords: Coordinates;
@@ -69,7 +72,8 @@ interface GameState {
 
 const DEFAULT_GAME_STATE: GameState = {
   grid: [],
-  setGrid: () => {},
+  newGrid: () => {},
+  resetGrid: () => {},
   paintedGrid: [],
   currentPentomino: PENTOMINOES.None,
   currentGridCoords: { x: 0, y: 0 },
@@ -271,6 +275,27 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setGrid(nextGrid);
   }
 
+  function resetGrid(dimensions: Dimensions) {
+    setGrid(
+      range(dimensions.height).map((x) =>
+        range(dimensions.width).map((y) => {
+          return EMPTY_PENTOMINO(x, y);
+        })
+      )
+    );
+  }
+
+  function newGrid(nextGrid: PlacedPentomino[][]) {
+    let gridIsEmpty = true;
+    // check against the grid from game state
+    grid.forEach((row) =>
+      row.forEach((cell) => {
+        if (cell.pentomino.name !== PENTOMINOES.None.name) gridIsEmpty = false;
+      })
+    );
+    if (gridIsEmpty || confirm("Reset your board? You won't be able to undo.")) setGrid(nextGrid);
+  }
+
   function clickBoard(x: number, y: number) {
     setCurrentGridCoords({ x: x, y: y });
     const cell = paintedGrid[x][y];
@@ -381,7 +406,8 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     <GameStateContext.Provider
       value={{
         grid,
-        setGrid,
+        newGrid,
+        resetGrid,
         paintedGrid,
         currentPentomino,
         currentGridCoords,
