@@ -61,6 +61,28 @@ const BottomToolbar = forwardRef(({ style }: { style: CSSProperties }, ref) => {
             >
               Same Dimensions
             </DropdownItem>
+            <DropdownItem
+              onClick={() => {
+                let nextGrid: PlacedPentomino[][] = [];
+                do {
+                  nextGrid = EMPTY_GRID(RANDOM_TERRAIN_ALLOWED.height, RANDOM_TERRAIN_ALLOWED.width);
+                  range(grid.length * grid[0].length, SOLVE_AREA).forEach(() => {
+                    let x = random(RANDOM_TERRAIN_ALLOWED.height - 1);
+                    let y = random(RANDOM_TERRAIN_ALLOWED.width - 1);
+                    while (nextGrid[x][y].pentomino.name !== PENTOMINOES.None.name) {
+                      x = random(RANDOM_TERRAIN_ALLOWED.height);
+                      y = random(RANDOM_TERRAIN_ALLOWED.width);
+                    }
+                    nextGrid[x][y].pentomino = PENTOMINOES.R;
+                  });
+                } while (invalidSolve(nextGrid));
+                newGrid(nextGrid);
+                setNewBoardOpen(false);
+              }}
+              aria-label="Randomize terrain"
+            >
+              8x8 (random terrain)
+            </DropdownItem>
             {PRESET_SIZES.map((size, i) => (
               <DropdownItem
                 onClick={(e) => {
@@ -117,29 +139,6 @@ const BottomToolbar = forwardRef(({ style }: { style: CSSProperties }, ref) => {
       >
         Screenshot
       </ToolbarButton>
-      {grid.length === RANDOM_TERRAIN_ALLOWED.height && grid[0].length === RANDOM_TERRAIN_ALLOWED.width && (
-        <ToolbarButton
-          onClick={() => {
-            let nextGrid: PlacedPentomino[][] = [];
-            do {
-              nextGrid = EMPTY_GRID(RANDOM_TERRAIN_ALLOWED.height, RANDOM_TERRAIN_ALLOWED.width);
-              range(grid.length * grid[0].length, SOLVE_AREA).forEach(() => {
-                let x = random(RANDOM_TERRAIN_ALLOWED.height - 1);
-                let y = random(RANDOM_TERRAIN_ALLOWED.width - 1);
-                while (nextGrid[x][y].pentomino.name !== PENTOMINOES.None.name) {
-                  x = random(RANDOM_TERRAIN_ALLOWED.height);
-                  y = random(RANDOM_TERRAIN_ALLOWED.width);
-                }
-                nextGrid[x][y].pentomino = PENTOMINOES.R;
-              });
-            } while (invalidSolve(nextGrid));
-            newGrid(nextGrid);
-          }}
-          aria-label="Randomize terrain"
-        >
-          Random terrain
-        </ToolbarButton>
-      )}
     </Toolbar.Root>
   );
 });
