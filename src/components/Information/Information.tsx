@@ -111,39 +111,39 @@ export const Information = () => {
     >
       <Dialog.Title className="text-center font-bold text-md mb-2">About Pentominoes</Dialog.Title>
       <div className="px-4 pb-4">
-        <p className="mb-2">
+        <div className="mb-2">
           Pentominoes are tiles of area 5. There are 12 distinct pentominoes, up to rotation & reflection, with each
           tile having somewhere between 2 (the {<InformationPentominoDisplay p="I" />} tile) and 8 (
           {<InformationPentominoDisplay p="F" />} {<InformationPentominoDisplay p="L" />}{" "}
           {<InformationPentominoDisplay p="N" />} {<InformationPentominoDisplay p="P" />}{" "}
           {<InformationPentominoDisplay p="Y" />}) distinct orientations.
-        </p>
-        <p className="mb-2">
+        </div>
+        <div className="mb-2">
           This puzzle game also provides a one-square-unit-area tile that you can use as terrain (the{" "}
           <InformationPentominoDisplay p="R"></InformationPentominoDisplay> tile).
-        </p>
-        <p className="mb-2">
+        </div>
+        <div className="mb-2">
           There are several different ways to enjoy Pentominoes, but the common theme is that you will try to fully tile
           a grid of total area 60 (5x12=60) such that no pentominoes overlap or fall off the edge, and no empty squares
           remain (other than whatever terrain you choose to place before starting to solve the puzzle).
-        </p>
-        <p className="mb-2">
+        </div>
+        <div className="mb-2">
           Generally, you want to use one of each pentomino to tile the board, but you're welcome to use this app however
           you like, and there are no prohibitions against using a tile more than once unless you want there to be. One
           suggestion is to attempt to tile an area with just the {<InformationPentominoDisplay p="P" />} tile.
-        </p>
-        <p className="mb-2">
+        </div>
+        <div className="mb-2">
           For an added challenge, you can also choose to apply "colorways" to your tiles. Then, constrain yourself to
           make a solve where the 4 tiles of some color must be pairwise non-adjacent; or must be adjacent; or must be
           adjacent and form a line spanning the grid area (this last one is especially fun in 8x8 grids with 4 squares
           of terrain). Setting these colorways is available in the Settings dialog.
-        </p>
-        <p>
+        </div>
+        <div>
           If you're new to pentominoes, feel free to "cheat" in your first few solve attempts and move terrain around,
           or use one piece twice - this is a single-player puzzle game, so the rules are whatever you make them to be!
-        </p>
+        </div>
         <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
-        <div className="italic mb-2">
+        <span className="italic mb-2">
           You can{" "}
           <span
             className="text-blue-600 dark:text-blue-400 cursor-pointer underline"
@@ -156,7 +156,7 @@ export const Information = () => {
             customize hotkeys
           </span>{" "}
           in the Settings menu.
-        </div>
+        </span>
         <KeyboardKeyInfo>
           <KeyboardKey>Ctrl</KeyboardKey> + <KeyboardKey>Z</KeyboardKey>
           <span>=</span>Undo last action that modified the grid
@@ -190,9 +190,9 @@ export const Information = () => {
 
 const InformationPentominoDisplay = ({ p }: { p: string }) => {
   return (
-    <div className="inline-block align-middle mx-1">
+    <span className="inline-block align-middle mx-1">
       <PentominoDisplay pentomino={PENTOMINOES[p]} size={2} checkGrid={false}></PentominoDisplay>
-    </div>
+    </span>
   );
 };
 
