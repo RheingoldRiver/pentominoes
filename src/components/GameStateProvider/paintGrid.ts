@@ -165,7 +165,7 @@ export function getCoordinatesToPaint(
       };
     case SURFACES.Torus:
       return {
-        newX: wrap(rawX, width),
+        newX: wrap(rawX, height),
         newY: wrap(rawY, width),
       };
     case SURFACES.Sphere:
