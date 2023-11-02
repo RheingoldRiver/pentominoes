@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
-import { range, toNumber } from "lodash";
+import { cloneDeep, range, toNumber } from "lodash";
 import { Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import {
@@ -14,7 +14,7 @@ import {
 } from "../../constants";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { ColorSettings } from "../ColorSettings/ColorSettings";
-import { Cog8ToothIcon } from "@heroicons/react/24/outline";
+import { Cog8ToothIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Modal } from "../Modal/Modal";
 import { Button } from "../Button/Button";
 import { CurrentState, DEFAULT_SETTINGS_CONFIG } from "./settingsConstants";
@@ -26,7 +26,11 @@ import {
   errorWidth,
   errorHeight,
   gridChangeNeeded,
+  duplicateKeybindsAtLetter,
+  duplicateKeybinds,
 } from "./validateSettings";
+import { DEFAULT_HOTKEY_MAP, HotkeyMap, HotkeyableAction } from "../GameStateProvider/gameConstants";
+import { produce } from "immer";
 
 function getNumVisibleColors(numVisibleColors: number, defaultRandomColors: boolean, pentominoColors: Colors): number {
   if (!defaultRandomColors) return numVisibleColors;
@@ -56,9 +60,13 @@ export const Settings = () => {
     updateDefaultRandomColors,
     defaultAddTerrain,
     updateDefaultAddTerrain,
+    hotkeys,
+    hotkeyMap,
+    updateHotkeyMap,
   } = useContext(GameStateContext);
 
   const [currentState, setCurrentState] = useState<CurrentState>({ ...DEFAULT_SETTINGS_CONFIG });
+  const [currentHotkeyMap, setCurrentHotkeyMap] = useState<HotkeyMap>([]);
   const [showErrors, setShowErrors] = useState<boolean>(false);
   const [warnGridReset, setWarnGridReset] = useState<boolean>(false);
 
@@ -96,6 +104,7 @@ export const Settings = () => {
         });
         setShowErrors(false);
         setWarnGridReset(false);
+        setCurrentHotkeyMap(cloneDeep(hotkeyMap));
       }}
       open={settingsOpen}
       onOpenChange={updateSettingsOpen as Dispatch<SetStateAction<boolean>>}
@@ -106,6 +115,7 @@ export const Settings = () => {
           setShowErrors(true);
           let returnEarly = false;
           if (errorConfig(currentState)) returnEarly = true;
+          if (duplicateKeybinds(currentHotkeyMap)) returnEarly = true;
           if (gridChangeNeeded(currentState, { height: grid.length, width: grid[0].length })) {
             if (!warnGridReset) {
               setWarnGridReset(true);
@@ -129,6 +139,7 @@ export const Settings = () => {
           setSurface(currentState.surface);
           setPentominoColors(currentState.pentominoColors);
           setShowKeyboardIndicators(currentState.showKeyboardIndicators);
+          updateHotkeyMap(currentHotkeyMap);
 
           updateDefaultRandomColors(currentState.defaultRandomColors);
           updateDefaultAddTerrain(currentState.defaultAddTerrain);
@@ -380,6 +391,53 @@ export const Settings = () => {
             />
           </fieldset>
         </div>
+        <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
+        <div className="italic mb-2">
+          You can also <b>undo</b> with <code>Ctrl+Z</code>.
+        </div>
+        {currentHotkeyMap.map((hotkey, i) => {
+          return (
+            <fieldset className="flex gap-4 items-center mb-4" key={HotkeyableAction[hotkey.action]}>
+              <label className="text-right" htmlFor={`hotkey-${hotkey.action}`}>
+                {hotkeys[hotkey.action].text}
+              </label>
+              <input
+                className="bg-white dark:bg-slate-950"
+                size={10}
+                id={`hotkey-${hotkey.action}`}
+                value={hotkey.keybind}
+                onKeyDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (e.key === hotkey.keybind) return;
+                  console.log(e);
+                  setCurrentHotkeyMap(
+                    produce(currentHotkeyMap, (draftHotkeyMap) => {
+                      if (e.key === " ") {
+                        draftHotkeyMap[i].keybind = "Space";
+                        return;
+                      }
+                      draftHotkeyMap[i].keybind = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+                    })
+                  );
+                }}
+                onChange={() => {}}
+              />
+              {duplicateKeybindsAtLetter(currentHotkeyMap, hotkey.keybind) && (
+                <XMarkIcon width="25px" className="text-red-500" />
+              )}
+            </fieldset>
+          );
+        })}
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setCurrentHotkeyMap(cloneDeep(DEFAULT_HOTKEY_MAP));
+          }}
+        >
+          Reset Hotkeys
+        </Button>
         {/* End of settings area */}
         {/* Start confirmation area */}
         <div className={clsx("sticky bottom-0 px-8", "bg-gray-400 dark:bg-slate-900", "pt-2", "rounded-t-xl")}>

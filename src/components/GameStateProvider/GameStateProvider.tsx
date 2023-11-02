@@ -39,8 +39,17 @@ import {
   RotationDirection,
   orientationReducer,
 } from "./currentPentominoReducer";
-import { DEFAULT_GAME_PREFERENCES } from "./gameConstants";
+import {
+  DEFAULT_GAME_PREFERENCES,
+  DEFAULT_HOTKEYS,
+  DEFAULT_HOTKEY_MAP,
+  HotkeyMap,
+  HotkeyableAction,
+  Hotkeys,
+} from "./gameConstants";
 import { produce } from "immer";
+import useHotkeyMap from "../../hooks/use-hotkey-map";
+import { deserializeHotkeys, serializeHotkeys } from "./hotkeyMapState";
 
 interface GameState {
   grid: PlacedPentomino[][];
@@ -68,6 +77,9 @@ interface GameState {
   updateDefaultRandomColors: (newDefault: boolean) => void;
   defaultAddTerrain: boolean;
   updateDefaultAddTerrain: (newDefault: boolean) => void;
+  hotkeys: Hotkeys;
+  hotkeyMap: HotkeyMap;
+  updateHotkeyMap: (nextMap: HotkeyMap) => void;
 }
 
 const DEFAULT_GAME_STATE: GameState = {
@@ -96,6 +108,9 @@ const DEFAULT_GAME_STATE: GameState = {
   updateDefaultRandomColors: () => {},
   defaultAddTerrain: true,
   updateDefaultAddTerrain: () => {},
+  hotkeys: DEFAULT_HOTKEYS,
+  hotkeyMap: [],
+  updateHotkeyMap: () => {},
 };
 
 export const GameStateContext = createContext(DEFAULT_GAME_STATE);
@@ -343,39 +358,6 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     setActionHistory(nextActionHistory);
   });
 
-  useHotkey(undefined, "ArrowLeft", () => {
-    setShowKeyboardIndicators(true);
-    updateGridCoords("y", -1);
-  });
-
-  useHotkey(undefined, "ArrowUp", () => {
-    setShowKeyboardIndicators(true);
-    updateGridCoords("x", -1);
-  });
-
-  useHotkey(undefined, "ArrowRight", () => {
-    setShowKeyboardIndicators(true);
-    updateGridCoords("y", 1);
-  });
-
-  useHotkey(undefined, "ArrowDown", () => {
-    setShowKeyboardIndicators(true);
-    updateGridCoords("x", 1);
-  });
-
-  useHotkey(undefined, "A", () => {
-    orientationDispatch({ type: OrientationActionType.rotate, direction: RotationDirection.Left });
-  });
-  useHotkey(undefined, "D", () => {
-    orientationDispatch({ type: OrientationActionType.rotate, direction: RotationDirection.Right });
-  });
-  useHotkey(undefined, "S", () => {
-    orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.X });
-  });
-  useHotkey(undefined, "W", () => {
-    orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.Y });
-  });
-
   function updateToolbarPentomino(increment: number) {
     const curIndex = ALL_PENTOMINO_NAMES.indexOf(currentPentomino.name);
     const nextPentomino =
@@ -388,19 +370,93 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     orientationDispatch({ type: OrientationActionType.replace });
   }
 
-  useHotkey(undefined, "E", () => {
-    setShowKeyboardIndicators(true);
-    updateToolbarPentomino(1);
+  const [hotkeyMap, setHotkeyMap] = useState<HotkeyMap>(() => {
+    const cachedData = window.localStorage.getItem("hotkeys");
+    if (!cachedData) return cloneDeep(DEFAULT_HOTKEY_MAP);
+    return deserializeHotkeys(cachedData);
   });
 
-  useHotkey(undefined, "Q", () => {
-    setShowKeyboardIndicators(true);
-    updateToolbarPentomino(-1);
-  });
+  const updateHotkeyMap = (nextMap: HotkeyMap) => {
+    setHotkeyMap(nextMap);
+    window.localStorage.setItem("hotkeys", serializeHotkeys(nextMap));
+  };
 
-  useHotkey(undefined, "Enter", () => {
-    clickBoard(currentGridCoords.x, currentGridCoords.y);
-  });
+  const hotkeys = {
+    [HotkeyableAction.ReflectY]: {
+      action: () => {
+        orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.Y });
+      },
+      text: "Reflect horizontally",
+    },
+    [HotkeyableAction.ReflectX]: {
+      action: () => {
+        orientationDispatch({ type: OrientationActionType.reflect, direction: ReflectionDirection.X });
+      },
+      text: "Reflect vertically",
+    },
+    [HotkeyableAction.RotateLeft]: {
+      action: () => {
+        orientationDispatch({ type: OrientationActionType.rotate, direction: RotationDirection.Left });
+      },
+      text: "Rotate left (counter-clockwise)",
+    },
+    [HotkeyableAction.RotateRight]: {
+      action: () => {
+        orientationDispatch({ type: OrientationActionType.rotate, direction: RotationDirection.Right });
+      },
+      text: "Rotate right (clockwise)",
+    },
+    [HotkeyableAction.TilePrev]: {
+      action: () => {
+        setShowKeyboardIndicators(true);
+        updateToolbarPentomino(-1);
+      },
+      text: "Select previous tile",
+    },
+    [HotkeyableAction.TileNext]: {
+      action: () => {
+        setShowKeyboardIndicators(true);
+        updateToolbarPentomino(1);
+      },
+      text: "Select next tile",
+    },
+    [HotkeyableAction.ClickBoard]: {
+      action: () => {
+        clickBoard(currentGridCoords.x, currentGridCoords.y);
+      },
+      text: "Place or remove tile",
+    },
+    [HotkeyableAction.GridUp]: {
+      action: () => {
+        setShowKeyboardIndicators(true);
+        updateGridCoords("x", -1);
+      },
+      text: "Move grid cursor up",
+    },
+    [HotkeyableAction.GridRight]: {
+      action: () => {
+        setShowKeyboardIndicators(true);
+        updateGridCoords("y", 1);
+      },
+      text: "Move grid cursor right",
+    },
+    [HotkeyableAction.GridDown]: {
+      action: () => {
+        setShowKeyboardIndicators(true);
+        updateGridCoords("x", 1);
+      },
+      text: "Move grid cursor down",
+    },
+    [HotkeyableAction.GridLeft]: {
+      action: () => {
+        setShowKeyboardIndicators(true);
+        updateGridCoords("y", -1);
+      },
+      text: "Move grid cursor left",
+    },
+  };
+
+  useHotkeyMap(hotkeyMap, hotkeys);
 
   return (
     <GameStateContext.Provider
@@ -430,6 +486,9 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         updateDefaultRandomColors,
         defaultAddTerrain,
         updateDefaultAddTerrain,
+        hotkeys,
+        hotkeyMap,
+        updateHotkeyMap,
       }}
     >
       {children}

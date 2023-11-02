@@ -1,6 +1,7 @@
 import { Dimensions, SOLVE_AREA } from "./../../constants";
 import { MAX_DIMENSION_SIZE, SURFACES } from "../../constants";
 import { CurrentState } from "./settingsConstants";
+import { HotkeyMap } from "../GameStateProvider/gameConstants";
 
 export const errorConfig = (currentState: CurrentState) => {
   return (
@@ -39,4 +40,23 @@ export const warnDimensions = (draftState: CurrentState) => {
 
 export const gridChangeNeeded = (draftState: Dimensions & Partial<CurrentState>, prevDimensions: Dimensions) => {
   return draftState.height !== prevDimensions.height || draftState.width !== prevDimensions.width;
+};
+
+export const duplicateKeybindsAtLetter = (draftKeymap: HotkeyMap, curBind: string) => {
+  return (
+    draftKeymap.reduce((count, val) => {
+      count += val.keybind === curBind ? 1 : 0;
+      return count;
+    }, 0) >= 2
+  );
+};
+
+export const duplicateKeybinds = (draftKeymap: HotkeyMap) => {
+  const counts: { [key: string]: number } = {};
+  let maxCount = 0;
+  draftKeymap.forEach((val) => {
+    counts[val.keybind] = (counts[val.keybind] ?? 0) + 1;
+    maxCount = Math.max(maxCount, counts[val.keybind]);
+  });
+  return maxCount >= 2;
 };

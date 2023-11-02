@@ -5,12 +5,12 @@ import { Grid } from "../Grid/Grid";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 import { Modal } from "../Modal/Modal";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
 import clsx from "clsx";
-import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { getPaintedBoard } from "../GameStateProvider/paintGrid";
 import { InfoGrid } from "../Grid/InfoGrid";
+import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 
 interface GridExample {
   w: number;
@@ -100,9 +100,15 @@ const exampleGrids = gridExampleStructure.map((e) => {
 });
 
 export const Information = () => {
-  const { darkMode } = useContext(AppStateContext);
+  const { darkMode, setSettingsOpen } = useContext(AppStateContext);
+  const { hotkeyMap, hotkeys } = useContext(GameStateContext);
+  const [infoOpen, setInfoOpen] = useState<boolean>(false);
   return (
-    <Modal trigger={<QuestionMarkCircleIcon className="h-10 w-10 text-gray-800 dark:text-gray-300" />}>
+    <Modal
+      open={infoOpen}
+      onOpenChange={setInfoOpen}
+      trigger={<QuestionMarkCircleIcon className="h-10 w-10 text-gray-800 dark:text-gray-300" />}
+    >
       <Dialog.Title className="text-center font-bold text-md mb-2">About Pentominoes</Dialog.Title>
       <div className="px-4 pb-4">
         <p className="mb-2">
@@ -137,62 +143,31 @@ export const Information = () => {
           or use one piece twice - this is a single-player puzzle game, so the rules are whatever you make them to be!
         </p>
         <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
+        <div className="italic mb-2">
+          You can{" "}
+          <span
+            className="text-blue-600 dark:text-blue-400 cursor-pointer underline"
+            onClick={(e) => {
+              e.preventDefault();
+              setInfoOpen(false);
+              setSettingsOpen(true);
+            }}
+          >
+            customize hotkeys
+          </span>{" "}
+          in the Settings menu.
+        </div>
         <KeyboardKeyInfo>
           <KeyboardKey>Ctrl</KeyboardKey> + <KeyboardKey>Z</KeyboardKey>
           <span>=</span>Undo last action that modified the grid
         </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>W</KeyboardKey>
-          <span>=</span>Reflect current pentomino along the y-axis (horizontally)
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>S</KeyboardKey>
-          <span>=</span>Reflect current pentomino along the x-axis (vertically)
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>A</KeyboardKey>
-          <span>=</span>Rotate current pentomino counter-clockwise
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>D</KeyboardKey>
-          <span>=</span>Rotate current pentomino clockwise
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>Q</KeyboardKey>
-          <span>=</span>Select previous pentomino
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>E</KeyboardKey>
-          <span>=</span>Select next pentomino
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>
-            <ArrowUpIcon width={15} className="my-1" />
-          </KeyboardKey>
-          <span>=</span>Move grid cursor up
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>
-            <ArrowRightIcon width={15} className="my-1" />
-          </KeyboardKey>
-          <span>=</span>Move grid cursor to the right
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>
-            <ArrowDownIcon width={15} className="my-1" />
-          </KeyboardKey>
-          <span>=</span>Move grid cursor down
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>
-            <ArrowLeftIcon width={15} className="my-1" />
-          </KeyboardKey>
-          <span>=</span> Move grid cursor to the left
-        </KeyboardKeyInfo>
-        <KeyboardKeyInfo>
-          <KeyboardKey>Enter</KeyboardKey>
-          <span>=</span>Add/remove pentomino from board at selected grid location
-        </KeyboardKeyInfo>
+        {hotkeyMap.map((hotkey, i) => (
+          <KeyboardKeyInfo key={i}>
+            <KeyboardKey>{hotkey.keybind}</KeyboardKey>
+            <span>=</span>
+            {hotkeys[hotkey.action].text}
+          </KeyboardKeyInfo>
+        ))}
         <Dialog.Title className="text-center font-bold text-md mb-2">Suggested Puzzles</Dialog.Title>
         <div className="flex flex-row flex-wrap gap-3 justify-center">
           {exampleGrids.map((grid, i) => (
