@@ -41,15 +41,16 @@ export default function AppStateProvider({ children }: { children: ReactNode }) 
       pentominoSize: Number(window.localStorage.getItem("size") ?? DEFAULT_APP_PREFERENCES.pentominoSize),
       displayColors: displayColors,
       numVisibleColors: Number(window.localStorage.getItem("numColors") ?? DEFAULT_APP_PREFERENCES.numVisibleColors),
-      copyImage: (window.localStorage.getItem("theme") || "light") !== "light",
+      copyImage: (window.localStorage.getItem("copy") || "false") === "true",
       showCdot: (window.localStorage.getItem("cdot") || "false") === "true",
     };
   });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return (
-      (window.localStorage.getItem("theme") || "false") === "true" ||
-      !!window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
+    const storedTheme = window.localStorage.getItem("theme");
+    if (storedTheme !== undefined) {
+      return storedTheme === "dark";
+    }
+    return !!window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
   function updateAppPreferences(
