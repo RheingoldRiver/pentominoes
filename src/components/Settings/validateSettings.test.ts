@@ -1,7 +1,16 @@
+import { DEFAULT_HOTKEY_MAP } from "./../GameStateProvider/gameConstants";
 import { SURFACES } from "./../../constants";
 import { expect, test } from "vitest";
 import { DEFAULT_SETTINGS_CONFIG } from "./settingsConstants";
-import { errorConfig, errorHeight, errorSphere, gridChangeNeeded, warnDimensions } from "./validateSettings";
+import {
+  duplicateKeybindsAtLetter,
+  errorConfig,
+  errorHeight,
+  errorSphere,
+  gridChangeNeeded,
+  warnDimensions,
+} from "./validateSettings";
+import { cloneDeep } from "lodash";
 
 test("default config has no errors", () => {
   expect(errorConfig({ ...DEFAULT_SETTINGS_CONFIG })).toBe(false);
@@ -53,4 +62,12 @@ test("warning grid change is correct & not a real error", () => {
   expect(gridChangeNeeded(config, { height: 10, width: 10 })).toBe(true);
   expect(gridChangeNeeded(config, { height: 8, width: 10 })).toBe(false);
   expect(errorConfig(config)).toBe(false);
+});
+
+test("detecting duplicate keybinds correctly", () => {
+  const hotkeyMap = cloneDeep(DEFAULT_HOTKEY_MAP);
+  expect(duplicateKeybindsAtLetter(hotkeyMap, "ArrowUp")).toBe(false);
+  hotkeyMap[0].keybind = "D";
+  expect(duplicateKeybindsAtLetter(hotkeyMap, "D")).toBe(true);
+  expect(duplicateKeybindsAtLetter(hotkeyMap, "ArrowUp")).toBe(false);
 });
