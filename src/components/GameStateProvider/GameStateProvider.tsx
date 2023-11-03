@@ -53,7 +53,7 @@ import { deserializeHotkeys, serializeHotkeys } from "./hotkeyMapState";
 
 interface GameState {
   grid: PlacedPentomino[][];
-  newGrid: (nextGrid: PlacedPentomino[][]) => void;
+  newGrid: (nextGrid: PlacedPentomino[][]) => boolean;
   resetGrid: (dimensions: Dimensions) => void;
   paintedGrid: PaintedCell[][];
   currentPentomino: Pentomino;
@@ -84,7 +84,9 @@ interface GameState {
 
 const DEFAULT_GAME_STATE: GameState = {
   grid: [],
-  newGrid: () => {},
+  newGrid: () => {
+    return true;
+  },
   resetGrid: () => {},
   paintedGrid: [],
   currentPentomino: PENTOMINOES.None,
@@ -300,7 +302,7 @@ export default function GameStateProvider({ children }: { children: ReactNode })
     );
   }
 
-  function newGrid(nextGrid: PlacedPentomino[][]) {
+  function newGrid(nextGrid: PlacedPentomino[][]): boolean {
     let gridIsEmpty = true;
     // check against the grid from game state
     grid.forEach((row) =>
@@ -308,7 +310,11 @@ export default function GameStateProvider({ children }: { children: ReactNode })
         if (cell.pentomino.name !== PENTOMINOES.None.name) gridIsEmpty = false;
       })
     );
-    if (gridIsEmpty || confirm("Reset your board? You won't be able to undo.")) setGrid(nextGrid);
+    if (gridIsEmpty || confirm("Reset your board? You won't be able to undo.")) {
+      setGrid(nextGrid);
+      return true;
+    }
+    return false;
   }
 
   function clickBoard(x: number, y: number) {
