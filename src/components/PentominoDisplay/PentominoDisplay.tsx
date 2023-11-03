@@ -55,6 +55,7 @@ export const PentominoDisplay = ({
     return { class: "", style: "" };
   }
 
+  // Do not return any divs because these appear inside of <p> elements in the Information modal.
   return (
     <span
       {...rest}
@@ -65,9 +66,13 @@ export const PentominoDisplay = ({
         row.map((cell, y) => {
           const bg = bgColor(cell, { x, y });
           return (
-            <div
+            <span
               key={`${pentomino.name}_${x}_${y}`}
-              className={clsx(PENTOMINO_SIZES[size], bg.class, "text-white flex flex-row items-center justify-center")}
+              className={clsx(
+                PENTOMINO_SIZES[size],
+                bg.class,
+                "text-white flex flex-row items-center justify-center display-block"
+              )}
               style={{
                 fontSize: "1rem",
                 lineHeight: "0.5rem",
@@ -77,7 +82,7 @@ export const PentominoDisplay = ({
               {x === p.center.x && y === p.center.y && showCenter && pentomino.name !== PENTOMINOES.R.name && (
                 <DotFilledIcon />
               )}
-            </div>
+            </span>
           );
         })
       )}
