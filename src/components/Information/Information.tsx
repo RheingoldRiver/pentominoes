@@ -23,6 +23,16 @@ const gridExampleStructure: GridExample[] = [
     w: 8,
     l: 8,
     terrain: [
+      { x: 7, y: 7 },
+      { x: 0, y: 0 },
+      { x: 0, y: 7 },
+      { x: 7, y: 0 },
+    ],
+  },
+  {
+    w: 8,
+    l: 8,
+    terrain: [
       { x: 3, y: 3 },
       { x: 4, y: 4 },
       { x: 4, y: 3 },
@@ -63,16 +73,6 @@ const gridExampleStructure: GridExample[] = [
     w: 8,
     l: 8,
     terrain: [
-      { x: 7, y: 7 },
-      { x: 0, y: 0 },
-      { x: 0, y: 7 },
-      { x: 7, y: 0 },
-    ],
-  },
-  {
-    w: 8,
-    l: 8,
-    terrain: [
       { x: 1, y: 1 },
       { x: 6, y: 6 },
       { x: 1, y: 6 },
@@ -80,14 +80,14 @@ const gridExampleStructure: GridExample[] = [
     ],
   },
   {
-    w: 10,
-    l: 6,
-    terrain: [],
-  },
-  {
-    w: 12,
-    l: 5,
-    terrain: [],
+    w: 8,
+    l: 8,
+    terrain: [
+      { x: 0, y: 4 },
+      { x: 4, y: 7 },
+      { x: 3, y: 0 },
+      { x: 7, y: 3 },
+    ],
   },
 ];
 
@@ -183,10 +183,10 @@ export const Information = () => {
           </KeyboardKeyInfo>
         ))}
         <Dialog.Title className="text-center font-bold text-md mb-2">Suggested Puzzles</Dialog.Title>
-        <div className="flex flex-row flex-wrap gap-3 justify-center">
+        <div className="flex flex-row flex-wrap gap-3 justify-center mb-2">
           {exampleGrids.map((grid, i) => (
             <div key={i} className="flex flex-col items-center justify-center">
-              <InfoGrid grid={grid}>
+              <InfoGrid grid={grid} setInfoOpen={setInfoOpen}>
                 <Grid
                   pentominoSize={4}
                   paintedGrid={getPaintedBoard(grid, SURFACES.Rectangle, undefined, false)}
@@ -197,6 +197,45 @@ export const Information = () => {
             </div>
           ))}
         </div>
+        <Dialog.Title className="text-center font-bold text-md mb-2">Project Information</Dialog.Title>
+        <p className="mb-2">
+          <a
+            href="https://en.wikipedia.org/wiki/Pentomino"
+            target="_blank"
+            className="text-blue-600 dark:text-blue-400 cursor-pointer underline"
+          >
+            Pentominoes
+          </a>{" "}
+          are a classic puzzle, typically played using physical tiles. A digital implementation has the advantage of
+          playing on surfaces other than the plane, so this game is Pentominoes on Surfaces.
+        </p>
+        <p className="mb-2">
+          Pentominoes on Surfaces is{" "}
+          <a
+            href="https://github.com/RheingoldRiver/pentominoes"
+            target="_blank"
+            className="text-blue-600 dark:text-blue-400 cursor-pointer underline"
+          >
+            open source
+          </a>{" "}
+          and built in React using TypeScript and TailwindCSS, scaffolded with Vite, and hosted on GitHub Pages. You can{" "}
+          <a
+            href="https://river.me/tags/pentominoes/"
+            target="_blank"
+            className="text-blue-600 dark:text-blue-400 cursor-pointer underline"
+          >
+            read more
+          </a>{" "}
+          about this project and some of the math behind Pentominoes and surfaces on{" "}
+          <a
+            href="https://river.me/"
+            target="_blank"
+            className="text-blue-600 dark:text-blue-400 cursor-pointer underline"
+          >
+            my blog
+          </a>
+          .
+        </p>
       </div>
     </Modal>
   );
