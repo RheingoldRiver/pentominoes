@@ -14,8 +14,7 @@ export default {
           "footer footer footer",
         ],
         gamexl: [
-          "settings settings .",
-          "wordmark wordmark wordmark",
+          "wordmark wordmark settings",
           ". header .",
           ". gameToolbar .",
           ". board .",
