@@ -1,13 +1,19 @@
 import clsx from "clsx";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { GameStateContext } from "../GameStateProvider/GameStateProvider";
 import { PENTOMINOES } from "../../pentominoes";
 import { PentominoDisplay } from "../PentominoDisplay/PentominoDisplay";
 import { ALL_PENTOMINO_NAMES } from "../../constants";
 import { AppStateContext } from "../AppStateProvider/AppStateProvider";
+import {
+  OrientationActionType,
+  ReflectionDirection,
+  RotationDirection,
+} from "../GameStateProvider/currentPentominoReducer";
+import { useLongPress } from "use-long-press";
 
 export const Header = ({ ...rest }) => {
-  const { currentPentomino, updateCurrentPentomino, currentOrientation, pentominoColors, showKeyboardIndicators } =
+  const { currentPentomino, updateCurrentPentomino, pentominoColors, showKeyboardIndicators } =
     useContext(GameStateContext);
 
   const { appPreferences } = useContext(AppStateContext);
@@ -49,12 +55,56 @@ export const Header = ({ ...rest }) => {
           "border-black dark:border-slate-50"
         )}
       >
-        <PentominoDisplay
-          pentomino={currentPentomino}
-          color={appPreferences.displayColors[pentominoColors[currentPentomino.name]]}
-          orientation={currentOrientation}
-        ></PentominoDisplay>
+        <CurrentPentominoDisplay />
       </div>
     </div>
+  );
+};
+
+const CurrentPentominoDisplay = () => {
+  const { currentPentomino, currentOrientation, orientationDispatch, pentominoColors } = useContext(GameStateContext);
+
+  // ensure that the normal onclick doesn't trigger when releasing the long-press hook
+  // by monitoring status of the mouse button
+  // 1. set to false on mouse down (don't know what to handle yet)
+  // 2. if mouse up before it's changed, fire normal event
+  // 3. set to true when long-press happens
+  // 4. if mouse up after this, do nothing
+  // 5. will be set back to false on next mouse-down event
+  const longPressTriggered = useRef(false);
+
+  const { appPreferences } = useContext(AppStateContext);
+  const bind = useLongPress((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    orientationDispatch({
+      type: OrientationActionType.reflect,
+      direction: ReflectionDirection.Y,
+    });
+    longPressTriggered.current = true;
+  });
+
+  return (
+    <button
+      className="cursor-pointer"
+      onMouseDown={() => (longPressTriggered.current = false)}
+      onMouseUp={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (longPressTriggered.current === true) return;
+        orientationDispatch({
+          type: OrientationActionType.rotate,
+          direction: RotationDirection.Right,
+        });
+      }}
+      onContextMenu={(e) => e.preventDefault()}
+      {...bind()}
+    >
+      <PentominoDisplay
+        pentomino={currentPentomino}
+        color={appPreferences.displayColors[pentominoColors[currentPentomino.name]]}
+        orientation={currentOrientation}
+      ></PentominoDisplay>
+    </button>
   );
 };
