@@ -251,21 +251,6 @@ export const Settings = () => {
           {showErrors && errorSphere(currentState) && (
             <ErrorText>{currentState.surface.name} requires equal width & height</ErrorText>
           )}
-          <Dialog.Title className="text-center font-bold text-md mb-2">Hotkey preferences</Dialog.Title>
-          <fieldset className="flex gap-4 items-center mb-4">
-            <label className="text-right" htmlFor="showIndicators">
-              Show hotkey indicators
-            </label>
-            <input
-              className="bg-white dark:bg-slate-950"
-              type="checkbox"
-              id="showIndicators"
-              checked={currentState.showKeyboardIndicators}
-              onChange={(e) => {
-                setCurrentState({ ...currentState, showKeyboardIndicators: e.target.checked });
-              }}
-            />
-          </fieldset>
           <Dialog.Title className="text-center font-bold text-md mb-2">Pentomino tile colors</Dialog.Title>
           <Dialog.Description className="italic mb-1">Click & drag to rearrange</Dialog.Description>
           <fieldset className="flex gap-4 items-center mb-4">
@@ -390,53 +375,67 @@ export const Settings = () => {
               }}
             />
           </fieldset>
+          <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
+          <fieldset className="flex gap-4 items-center mb-4">
+            <label className="text-right" htmlFor="showIndicators">
+              Show current-selection indicators
+            </label>
+            <input
+              className="bg-white dark:bg-slate-950"
+              type="checkbox"
+              id="showIndicators"
+              checked={currentState.showKeyboardIndicators}
+              onChange={(e) => {
+                setCurrentState({ ...currentState, showKeyboardIndicators: e.target.checked });
+              }}
+            />
+          </fieldset>
+          <div className="italic mb-2">
+            You can also <b>undo</b> with <code>Ctrl+Z</code>.
+          </div>
+          {currentHotkeyMap.map((hotkey, i) => {
+            return (
+              <fieldset className="flex gap-4 items-center mb-4" key={HotkeyableAction[hotkey.action]}>
+                <label className="text-right" htmlFor={`hotkey-${hotkey.action}`}>
+                  {hotkeys[hotkey.action].text}
+                </label>
+                <input
+                  className="bg-white dark:bg-slate-950"
+                  size={10}
+                  id={`hotkey-${hotkey.action}`}
+                  value={hotkey.keybind}
+                  onKeyDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (e.key === hotkey.keybind) return;
+                    setCurrentHotkeyMap(
+                      produce(currentHotkeyMap, (draftHotkeyMap) => {
+                        if (e.key === " ") {
+                          draftHotkeyMap[i].keybind = "Space";
+                          return;
+                        }
+                        draftHotkeyMap[i].keybind = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+                      })
+                    );
+                  }}
+                  onChange={() => {}}
+                />
+                {duplicateKeybindsAtLetter(currentHotkeyMap, hotkey.keybind) && (
+                  <XMarkIcon width="25px" className="text-red-500" />
+                )}
+              </fieldset>
+            );
+          })}
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setCurrentHotkeyMap(cloneDeep(DEFAULT_HOTKEY_MAP));
+            }}
+          >
+            Reset Hotkeys
+          </Button>
         </div>
-        <Dialog.Title className="text-center font-bold text-md mb-2">Hotkeys</Dialog.Title>
-        <div className="italic mb-2">
-          You can also <b>undo</b> with <code>Ctrl+Z</code>.
-        </div>
-        {currentHotkeyMap.map((hotkey, i) => {
-          return (
-            <fieldset className="flex gap-4 items-center mb-4" key={HotkeyableAction[hotkey.action]}>
-              <label className="text-right" htmlFor={`hotkey-${hotkey.action}`}>
-                {hotkeys[hotkey.action].text}
-              </label>
-              <input
-                className="bg-white dark:bg-slate-950"
-                size={10}
-                id={`hotkey-${hotkey.action}`}
-                value={hotkey.keybind}
-                onKeyDown={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (e.key === hotkey.keybind) return;
-                  setCurrentHotkeyMap(
-                    produce(currentHotkeyMap, (draftHotkeyMap) => {
-                      if (e.key === " ") {
-                        draftHotkeyMap[i].keybind = "Space";
-                        return;
-                      }
-                      draftHotkeyMap[i].keybind = e.key.length === 1 ? e.key.toUpperCase() : e.key;
-                    })
-                  );
-                }}
-                onChange={() => {}}
-              />
-              {duplicateKeybindsAtLetter(currentHotkeyMap, hotkey.keybind) && (
-                <XMarkIcon width="25px" className="text-red-500" />
-              )}
-            </fieldset>
-          );
-        })}
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setCurrentHotkeyMap(cloneDeep(DEFAULT_HOTKEY_MAP));
-          }}
-        >
-          Reset Hotkeys
-        </Button>
         {/* End of settings area */}
         {/* Start confirmation area */}
         <div className={clsx("sticky bottom-0 px-8", "bg-gray-400 dark:bg-slate-900", "pt-2", "rounded-t-xl")}>
