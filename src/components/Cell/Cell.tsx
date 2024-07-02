@@ -77,10 +77,10 @@ export const Cell = ({
       onClick={() => {
         if (board) clickBoard(x, y);
       }}
-      onMouseEnter={() => {
+      onPointerEnter={() => {
         if (board) hoverBoard(x, y);
       }}
-      onMouseLeave={() => {
+      onPointerLeave={() => {
         if (board) unhoverBoard();
       }}
     >
